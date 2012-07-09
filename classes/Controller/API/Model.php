@@ -1,16 +1,16 @@
 <?php
 
 /**
- * base api model class. if an API controller wants to work with a model, extend this class and set the {@see $this->model} property
+ * base api model class. if an API controller wants to handle model CRUD operations, extend this class and set the {@see $this->model} property
  */
 class Controller_API_Model extends Controller_API {
 	/**
-	 * @var string the model we're working with. to be set in child class.
+	 * @var string The model we're working with. to be set in child class.
 	 */
 	protected $model = null;
 
 	/**
-	 * @var API_Model an instance of a child of API_Model
+	 * @var API_Model An instance of a child of API_Model
 	 */
 	protected $api_model = null;
 
@@ -20,13 +20,13 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function before()
 	{
-		if (!$this->model)
+		if ( ! $this->model)
 		{
 			throw new Exception('You must set a model to use api > model functionality.');
 		}
-		if (!$this->api_model)
+		if ( ! $this->api_model)
 		{
-			$this->api_model = API_Model::load($this->model);
+			$this->api_model = API_Model::factory($this->model);
 		}
 
 		// must call parent before() methods
@@ -34,53 +34,60 @@ class Controller_API_Model extends Controller_API {
 	}
 
 	/**
-	 * controller method
+	 * get controller method
 	 */
 	public function action_get()
 	{
-		$id = 'id from request';
+		// get model's response
+		$model_resp = $this->api_model->get(Request::current()->param('id'));
 
-		// set the response from the api model's return value
-		$this->response->body($this->api_model->get($id));
+		// send encoded response
+		$resp = API_Request::factory()->get_encoded_response($model_resp);
+		$this->response->body($resp);
 	}
 
 	/**
-	 * controller method
+	 * edit controller method
 	 */
 	public function action_edit()
 	{
-		$id = 'id from request';
-		$params = array(
-			'a bunch of post values',
-			'a bunch of post values',
-		);
+		$api_request = API_Request::factory();
 
-		// set the response from the api model's return value
-		$this->response->body($this->api_model->edit($id, $params));
+		// get model's response
+		$model_resp = $this->api_model->edit(Request::current()->param('id'), Request::current()->post('model_data'));
+
+		// send encoded response
+		$resp = API_Request::factory()->get_encoded_response($model_resp);
+		$this->response->body($resp);
 	}
 
 	/**
-	 * controller method
+	 * add controller method
 	 */
 	public function action_add()
 	{
-		$params = array(
-			'a bunch of post values',
-			'a bunch of post values',
-		);
+		$api_request = API_Request::factory();
 
-		// set the response from the api model's return value
-		$this->response->body($this->api_model->add($params));
+		// get model's response
+		$model_resp = $this->api_model->add(Request::current()->post('model_data'));
+
+		// send encoded response
+		$resp = API_Request::factory()->get_encoded_response($model_resp);
+		$this->response->body($resp);
 	}
 
 	/**
-	 * controller method
+	 * delete controller method
 	 */
 	public function action_delete()
 	{
-		$id = 'id from request';
+		$api_request = API_Request::factory();
 
-		// set the response from the api model's return value
-		$this->response->body($this->api_model->delete($id));
+		// get model's response
+		$model_resp = $this->api_model->delete(Request::current()->param('id'));
+
+		// send encoded response
+		$resp = API_Request::factory()->get_encoded_response($model_resp);
+		$this->response->body($resp);
 	}
 }

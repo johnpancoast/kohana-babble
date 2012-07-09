@@ -1,4 +1,4 @@
-<?php
+<?php defined('SYSPATH') or die('No direct script access.');
 
 /**
  * abstract class for interacting with a model using specific API'ish calls.
@@ -10,22 +10,31 @@ abstract class API_Model {
 	/**
 	 * @var string the model we're working with
 	 */
-	private $model = null;
+	protected $model = null;
 
 	/**
 	 * load specific api model driver class
 	 * @param string $model the model the class is working with
-	 * @param string $modelDriver the driver class to load
+	 * @param string $model_driver the driver class to load
 	 * @return API_Model a child instance of this class API_Model
 	 * @access public
 	 * @static
 	 */
-	public static function load($model, $modelDriver = null)
+	public static function factory($model, $model_driver = null)
 	{
-		// if no driver passed, we'll determine from config which driver class to load.
-		// FIXME - get the value from a kohana config'.
-		$modelDriver = 'API_Model_'.ucfirst(($modelDriver ? $modelDriver : 'doctrine'));
-		return new $modelDriver;
+		// if no driver passed, pull from config or default to 'ORM'
+		$cfg_driver = Kohana::$config->load('api.driver');
+		$default_driver = $cfg_driver ? $cfg_driver : 'ORM';
+		$model_driver = 'API_Model_'.ucfirst(($model_driver ? $model_driver : $default_driver));
+		return new $model_driver($model);
+	}
+
+	/**
+	 * constructor
+	 */
+	protected final function __construct($model)
+	{
+		$this->model = $model;
 	}
 
 	/**

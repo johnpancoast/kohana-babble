@@ -1,4 +1,4 @@
-<?php
+<?php defined('SYSPATH') or die('No direct script access.');
 
 /**
  * kohana orm specific api/model interaction class
@@ -9,8 +9,12 @@ class API_Model_ORM extends API_Model {
 	 */
 	public function get($id)
 	{
-		// FIXME implement actual model call
-		return 'KOHANA ORM GET';
+		$obj = ORM::factory($this->model, $id);
+		if ($obj->loaded())
+		{
+			return $obj->as_array();
+		}
+		return FALSE;
 	}
 
 	/**
@@ -18,8 +22,22 @@ class API_Model_ORM extends API_Model {
 	 */
 	public function edit($id, array $params = array())
 	{
-		// FIXME implement actual model call
-		return 'KOHANA ORM EDIT';
+		$obj = ORM::factory($this->model, $id);
+		if ($obj->loaded())
+		{
+			foreach ($params as $k => $v)
+			{
+				$obj->{$k} = $v;
+			}
+
+			$obj->save();
+
+			// TODO checks here
+
+			return TRUE;
+		}
+
+		return FALSE;
 	}
 
 	/**
@@ -27,8 +45,16 @@ class API_Model_ORM extends API_Model {
 	 */
 	public function add(array $params = array())
 	{
-		// FIXME implement actual model call
-		return 'KOHANA ORM CREATE';
+		$obj = ORM::factory($this->model);
+		foreach ($params as $k => $v)
+		{
+			$obj->{$k} = $v;
+		}
+		$obj->save();
+
+		// TODO checks here
+
+		return $obj->id;
 	}
 
 	/**
@@ -36,7 +62,13 @@ class API_Model_ORM extends API_Model {
 	 */
 	public function delete($id)
 	{
-		// FIXME implement actual model call
-		return 'KOHANA ORM DELETE';
+		$obj = ORM::factory($this->model, $id);
+		if ($obj->loaded())
+		{
+			$obj->delete();
+			// TODO check
+			return TRUE;
+		}
+		return FALSE;
 	}
 }
