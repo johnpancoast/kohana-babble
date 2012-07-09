@@ -7,5 +7,6 @@ class API_Request_NameValue extends API_Request {
 	public function get_encoded_response($response)
 	{
 		// XXX unimplemented
+		return 'Name Value unimplemented';
 	}
 }

@@ -10,7 +10,7 @@ class Controller_API_Model extends Controller_API {
 	protected $model = null;
 
 	/**
-	 * @var API_Model An instance of a child of API_Model
+	 * @var API_Model An instance of an API_Model driver
 	 */
 	protected $api_model = null;
 
@@ -20,6 +20,9 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function before()
 	{
+		// must call parent before() methods
+		parent::before();
+
 		if ( ! $this->model)
 		{
 			throw new Exception('You must set a model to use api > model functionality.');
@@ -28,9 +31,6 @@ class Controller_API_Model extends Controller_API {
 		{
 			$this->api_model = API_Model::factory($this->model);
 		}
-
-		// must call parent before() methods
-		parent::before();
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Controller_API_Model extends Controller_API {
 		$model_resp = $this->api_model->get(Request::current()->param('id'));
 
 		// send encoded response
-		$resp = API_Request::factory()->get_encoded_response($model_resp);
+		$resp = $this->api_request->get_encoded_response($model_resp);
 		$this->response->body($resp);
 	}
 
@@ -51,13 +51,11 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_edit()
 	{
-		$api_request = API_Request::factory();
-
 		// get model's response
 		$model_resp = $this->api_model->edit(Request::current()->param('id'), Request::current()->post('model_data'));
 
 		// send encoded response
-		$resp = API_Request::factory()->get_encoded_response($model_resp);
+		$resp = $this->api_request->get_encoded_response($model_resp);
 		$this->response->body($resp);
 	}
 
@@ -66,13 +64,11 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_add()
 	{
-		$api_request = API_Request::factory();
-
 		// get model's response
 		$model_resp = $this->api_model->add(Request::current()->post('model_data'));
 
 		// send encoded response
-		$resp = API_Request::factory()->get_encoded_response($model_resp);
+		$resp = $this->api_request->get_encoded_response($model_resp);
 		$this->response->body($resp);
 	}
 
@@ -81,13 +77,11 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_delete()
 	{
-		$api_request = API_Request::factory();
-
 		// get model's response
 		$model_resp = $this->api_model->delete(Request::current()->param('id'));
 
 		// send encoded response
-		$resp = API_Request::factory()->get_encoded_response($model_resp);
+		$resp = $this->api_request->get_encoded_response($model_resp);
 		$this->response->body($resp);
 	}
 }
