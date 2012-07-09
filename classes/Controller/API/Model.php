@@ -1,7 +1,7 @@
 <?php
 
 /**
- * base api model class. if an API controller wants to handle model CRUD operations, extend this class and set the {@see $this->model} property
+ * base api model class. if an API controller wants to handle model CRUD operations, extend this class and set the {@see $this->model} property. If you just want API functionality not related to models, you can just have your API controller extend Controller_API instead.
  */
 class Controller_API_Model extends Controller_API {
 	/**
