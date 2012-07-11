@@ -1,11 +1,12 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * json api request
+ * xml api response
  */
-class API_Request_JSON extends API_Request {
+class API_Response_XML extends API_Response {
 	public function get_encoded_response($response)
 	{
-		return json_encode($response);
+		// XXX unimplemented
+		return 'XML unimplemented';
 	}
 }

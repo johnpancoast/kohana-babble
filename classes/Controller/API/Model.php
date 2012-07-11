@@ -38,12 +38,21 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_get()
 	{
-		// get model's response
-		$model_resp = $this->api_model->get(Request::current()->param('id'));
+		$model = API_Model::factory($this->model);
+		$request = API_Request::factory();
+		$response = API_Response::factory();
 
-		// send encoded response
-		$resp = $this->api_request->get_encoded_response($model_resp);
-		$this->response->body($resp);
+		// set api request response from model response
+		try 
+		{
+			$response->set_response('1', '1', $model->get($request->request_id));
+		} 
+		catch (API_Model_Exception $e)
+		{
+		}
+
+		// send out main response from api request's encoded response
+		$this->response->body($response->get_encoded_response());
 	}
 
 	/**

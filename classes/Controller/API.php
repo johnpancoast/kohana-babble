@@ -22,21 +22,7 @@ class Controller_API extends Controller {
 
 		if ( ! $this->api_request)
 		{
-			$method = Request::current()->param('method');
-			$request_driver = strtolower($method ? $method : 'json');
-			switch ($request_driver)
-			{
-				case 'json':
-					$request_driver = 'JSON';
-					break;
-				case 'xml':
-					$request_driver = 'XML';
-					break;
-				case 'nv':
-					$request_driver = 'NameValue';
-					break;
-			}
-			$this->api_request = API_Request::factory($request_driver);
+			#$this->api_request = API_Request::factory();
 		}
 	}
 }
