@@ -42,16 +42,17 @@ class Controller_API_Model extends Controller_API {
 		$request = API_Request::factory();
 		$response = API_Response::factory();
 
-		// set api request response from model response
-		try 
+		// call on model method. api response should be set there.
+		try
 		{
-			$response->set_response('1', '1', $model->get($request->request_id));
-		} 
-		catch (API_Model_Exception $e)
+			$model->get();
+		}
+		catch (API_Response_Exception $e)
 		{
+			$response->set_response($e->getResponseCode());
 		}
 
-		// send out main response from api request's encoded response
+		// send out main response from encoded api response
 		$this->response->body($response->get_encoded_response());
 	}
 

@@ -1,12 +1,12 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * xml api response
+ * name value pair api response
  */
-class API_Response_XML extends API_Response {
+class API_Response_Driver_NameValue extends API_Response {
 	public function get_encoded_response($response)
 	{
 		// XXX unimplemented
-		return 'XML unimplemented';
+		return 'Name Value unimplemented';
 	}
 }

@@ -22,7 +22,7 @@ abstract class API_Model {
 	 */
 	public static function factory($model, $model_driver = null)
 	{
-		// if no driver passed, pull from config or default to 'ORM'
+		// if no driver passed pull from config or default to 'ORM'
 		$cfg_driver = Kohana::$config->load('api.driver');
 		$default_driver = $cfg_driver ? $cfg_driver : 'ORM';
 		$model_driver = 'API_Model_'.ucfirst(($model_driver ? $model_driver : $default_driver));
@@ -37,6 +37,16 @@ abstract class API_Model {
 		$this->model = $model;
 	}
 
+	public final function get() {
+		// call the _get method and check that a response was set.
+		$this->_get();
+		$response = API_Response::factory()->get_response();
+		if ( ! isset($response['code']) || empty($response['code']))
+		{
+			throw new API_Response_Exception('no api model response', '-99999');
+		}
+	}
+
 	/**
 	 * get a model
 	 * @param int $id the id of the model to return
@@ -44,7 +54,7 @@ abstract class API_Model {
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function get($id);
+	abstract public function _get();
 
 	/**
 	 * edit a model
@@ -54,7 +64,7 @@ abstract class API_Model {
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function edit($id, array $params);
+	abstract public function _edit($id, array $params);
 
 	/**
 	 * create a model
@@ -63,7 +73,7 @@ abstract class API_Model {
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function add(array $params);
+	abstract public function _add(array $params);
 
 	/**
 	 * delete a model
@@ -72,5 +82,5 @@ abstract class API_Model {
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function delete($id);
+	abstract public function _delete($id);
 }

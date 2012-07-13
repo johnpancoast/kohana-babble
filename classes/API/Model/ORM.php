@@ -7,20 +7,34 @@ class API_Model_ORM extends API_Model {
 	/**
 	 * @see parent::get();
 	 */
-	public function get($id)
+	public function _get()
 	{
-		$obj = ORM::factory($this->model, $id);
-		if ($obj->loaded())
+		$request = API_Request::factory();
+		$response = API_Response::factory();
+
+		$obj = ORM::factory($this->model, $request->request_id);
+		// catch all exceptions
+		try
 		{
-			return $obj->as_array();
+			if ($obj->loaded())
+			{
+				$response->set_response('1', $obj->as_array());
+			}
+			else
+			{
+				$response->set_response('0');
+			}
 		}
-		return FALSE;
+		catch (Exception $e)
+		{
+			throw new API_Response_Exception('ORM exception', '-99997');
+		}
 	}
 
 	/**
 	 * @see parent::edit();
 	 */
-	public function edit($id, array $params = array())
+	public function _edit($id, array $params = array())
 	{
 		$obj = ORM::factory($this->model, $id);
 		if ($obj->loaded())
@@ -43,7 +57,7 @@ class API_Model_ORM extends API_Model {
 	/**
 	 * @see parent::add();
 	 */
-	public function add(array $params = array())
+	public function _add(array $params = array())
 	{
 		$obj = ORM::factory($this->model);
 		foreach ($params as $k => $v)
@@ -60,7 +74,7 @@ class API_Model_ORM extends API_Model {
 	/**
 	 * @see parent::delete();
 	 */
-	public function delete($id)
+	public function _delete($id)
 	{
 		$obj = ORM::factory($this->model, $id);
 		if ($obj->loaded())

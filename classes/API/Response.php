@@ -39,18 +39,43 @@ abstract class API_Response {
 
 		if ( ! isset(self::$instances[$driver]))
 		{
-			$class = 'API_Response_'.preg_replace('/[^\w]/', '', $driver);
+			$class = 'API_Response_Driver_'.preg_replace('/[^\w]/', '', $driver);
 			self::$instances[$driver] = new $class();
 		}
 		return self::$instances[$driver];
 	}
 
-	public function set_response($response_status, $response_code, $response_message) {
+	public function get_response()
+	{
+		return $this->response;
+	}
+
+	public function set_response($code, $result = null) {
+		$msgs = Kohana::$config->load('api.response_messages');
+
+		// if we were sent an invalid code, we must throw a new API_Response_Exception so
+		// the error gets logged. however, we must catch it as well
+		// in case the wrong code originated from an API_Response_Exception
+		// in the first place.
+		if ( ! in_array($code, array_keys($msgs)))
+		{
+			try 
+			{
+				throw new API_Response_Exception('unknown api response code', '-99998');
+			}
+			catch (Exception $e)
+			{
+				$code = '-99998';
+			}
+		}
 		$this->response = array(
-			'status' => $response_status,
-			'code' => $response_code,
-			'message' => $response_message
+			'code' => $code,
+			'message' => $msgs[$code]['public'],
 		);
+		if ($result)
+		{
+			$this->response['result'] = $result;
+		}
 	}
 
 	/**
