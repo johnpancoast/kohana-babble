@@ -68,13 +68,13 @@ abstract class API_Response {
 	 * @throws API_Response_Exception Upon error
 	 */
 	public function set_response($code, $result = null) {
-		$msgs = Kohana::$config->load('api.response_messages');
+		$message = Kohana::message('api', $code.'.public');
 
-		// if we were sent an invalid code, we must throw a new API_Response_Exception so
-		// the error gets logged. however, we must catch it as well
-		// in case the wrong code originated from an API_Response_Exception
-		// in the first place.
-		if ( ! in_array($code, array_keys($msgs)))
+		// if we were sent an invalid code, we must throw a new
+		// API_Response_Exception so the error gets logged. however, we must
+		// catch it as well in case the code originated from an
+		// API_Response_Exception in the first place.
+		if ( ! $message)
 		{
 			try 
 			{
@@ -83,13 +83,14 @@ abstract class API_Response {
 			catch (Exception $e)
 			{
 				$code = '-9001';
+				$message = Kohana::message('api', $code.'.public');
 			}
 		}
 		$this->response = array(
 			'code' => $code,
-			'message' => $msgs[$code]['public'],
+			'message' => $message,
 		);
-		if ($result)
+		if ($result && $code > 0)
 		{
 			$this->response['result'] = $result;
 		}
