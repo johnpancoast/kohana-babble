@@ -37,50 +37,39 @@ abstract class API_Model {
 		$this->model = $model;
 	}
 
-	public final function get() {
-		// call the _get method and check that a response was set.
-		$this->_get();
-		$response = API_Response::factory()->get_response();
-		if ( ! isset($response['code']) || empty($response['code']))
-		{
-			throw new API_Response_Exception('no api model response', '-99999');
-		}
-	}
-
 	/**
 	 * get a model
-	 * @param int $id the id of the model to return
-	 * @return array entity data
+	 * @uses API_Request
+	 * @uses API_Response
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function _get();
+	abstract public function get();
 
 	/**
 	 * edit a model
-	 * @param int $id the id of the model to return
-	 * @param array $params the values of the edited model
-	 * @return bool successfully edited
+	 * @uses API_Request
+	 * @uses API_Response
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function _edit($id, array $params);
+	abstract public function edit();
 
 	/**
 	 * create a model
-	 * @param array $params the values to create the model
-	 * @return array new model data
+	 * @uses API_Request
+	 * @uses API_Response
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function _add(array $params);
+	abstract public function add();
 
 	/**
 	 * delete a model
-	 * @param int $id the id of the model to delete
-	 * @return bool successfully deleted
+	 * @uses API_Request
+	 * @uses API_Response
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function _delete($id);
+	abstract public function delete();
 }

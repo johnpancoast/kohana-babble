@@ -5,15 +5,20 @@
  */
 abstract class API_Response {
 	/**
-	 * @var array Instances of drivers
+	 * @var array Instances of {@see API_Response} drivers
 	 * @access private
 	 */
 	private static $instances = array();
+
+	/**
+	 * @var array Our response array
+	 */
 	protected $response = array();
 
 	/**
 	 * factory method to return a driver object
 	 * @access public
+	 * @static
 	 * @param string $driver The driver object to return
 	 * @return API_Request A child of this class (a driver)
 	 */
@@ -45,11 +50,23 @@ abstract class API_Response {
 		return self::$instances[$driver];
 	}
 
+	/**
+	 * get response
+	 * @access public
+	 * @return {@see self::$response}
+	 */
 	public function get_response()
 	{
 		return $this->response;
 	}
 
+	/**
+	 * set response
+	 * @access public
+	 * @param string $code Response code. Should match our codes in config/base/api.php.
+	 * @param mixed $result Option result message. Typically an array.
+	 * @throws API_Response_Exception Upon error
+	 */
 	public function set_response($code, $result = null) {
 		$msgs = Kohana::$config->load('api.response_messages');
 
@@ -61,11 +78,11 @@ abstract class API_Response {
 		{
 			try 
 			{
-				throw new API_Response_Exception('unknown api response code', '-99998');
+				throw new API_Response_Exception('unknown api response code', '-9001');
 			}
 			catch (Exception $e)
 			{
-				$code = '-99998';
+				$code = '-9001';
 			}
 		}
 		$this->response = array(
@@ -79,8 +96,8 @@ abstract class API_Response {
 	}
 
 	/**
-	 * encode a response messsage
-	 * @param string $response The message to encode
+	 * get an encoded response messsage
+	 * @param string $response The message to encode and return
 	 */
 	abstract public function get_encoded_response();
 }

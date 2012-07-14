@@ -10,10 +10,21 @@ abstract class API_Request {
 	 */
 	private static $instances = array();
 
-	private $request = array();
+	/**
+	 * @var int The request id
+	 */
 	public $request_id = null;
+
+	/**
+	 * @var array The request POST data
+	 */
 	public $request_post = array();
 
+	/**
+	 * constructor, loads request
+	 * @access protected
+	 * @final
+	 */
 	protected final function __construct()
 	{
 		$this->load_request();
@@ -46,5 +57,12 @@ abstract class API_Request {
 		return self::$instances[$driver];
 	}
 
+	/**
+	 * load request from POST (generally)
+	 * @abstract
+	 * @access public
+	 * @uses self::$request_id
+	 * @uses self::$request_post
+	 */
 	abstract public function load_request();
 }

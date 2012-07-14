@@ -6,11 +6,13 @@
 class Controller_API_Model extends Controller_API {
 	/**
 	 * @var string The model we're working with. to be set in child class.
+	 * @access protected
 	 */
 	protected $model = null;
 
 	/**
 	 * @var API_Model An instance of an API_Model driver
+	 * @access protected
 	 */
 	protected $api_model = null;
 
@@ -27,10 +29,44 @@ class Controller_API_Model extends Controller_API {
 		{
 			throw new Exception('You must set a model to use api > model functionality.');
 		}
-		if ( ! $this->api_model)
+		
+		$this->api_model = API_Model::factory($this->model);
+	}
+
+	/**
+	 * call on a model action
+	 * @access private
+	 * @final
+	 * @param string $method The method to call upon
+	 * @uses parent::api_response
+	 * @throws API_Response_Exception On various errors
+	 */
+	private final function model_action($method)
+	{
+		if ( ! in_array($method, array('get', 'edit', 'add', 'delete')))
 		{
-			$this->api_model = API_Model::factory($this->model);
+			throw new API_Response_Exception('invalid api model action method called', '-9000');
 		}
+
+		// call on model method. api response should be set there.
+		try
+		{
+			$this->api_model->{$method}();
+			
+			// check that a response got set
+			$response = $this->api_response->get_response();
+			if ( ! $response || ! isset($response['code']))
+			{
+				throw new API_Response_Exception('no model response', '-9000');
+			}
+		}
+		catch (API_Response_Exception $e)
+		{
+			$this->api_response->set_response($e->getResponseCode());
+		}
+
+		// send out main response from encoded api response
+		$this->response->body($this->api_response->get_encoded_response());
 	}
 
 	/**
@@ -38,22 +74,7 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_get()
 	{
-		$model = API_Model::factory($this->model);
-		$request = API_Request::factory();
-		$response = API_Response::factory();
-
-		// call on model method. api response should be set there.
-		try
-		{
-			$model->get();
-		}
-		catch (API_Response_Exception $e)
-		{
-			$response->set_response($e->getResponseCode());
-		}
-
-		// send out main response from encoded api response
-		$this->response->body($response->get_encoded_response());
+		$this->model_action('get');
 	}
 
 	/**
@@ -61,12 +82,7 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_edit()
 	{
-		// get model's response
-		$model_resp = $this->api_model->edit(Request::current()->param('id'), Request::current()->post('model_data'));
-
-		// send encoded response
-		$resp = $this->api_request->get_encoded_response($model_resp);
-		$this->response->body($resp);
+		$this->model_action('edit');
 	}
 
 	/**
@@ -74,12 +90,7 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_add()
 	{
-		// get model's response
-		$model_resp = $this->api_model->add(Request::current()->post('model_data'));
-
-		// send encoded response
-		$resp = $this->api_request->get_encoded_response($model_resp);
-		$this->response->body($resp);
+		$this->model_action('add');
 	}
 
 	/**
@@ -87,11 +98,6 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_delete()
 	{
-		// get model's response
-		$model_resp = $this->api_model->delete(Request::current()->param('id'));
-
-		// send encoded response
-		$resp = $this->api_request->get_encoded_response($model_resp);
-		$this->response->body($resp);
+		$this->model_action('delete');
 	}
 }
