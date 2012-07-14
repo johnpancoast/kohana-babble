@@ -10,12 +10,11 @@ return array
 	 * private messages. public are what the client will be shown. private are mostly for our
 	 * reading and perhaps logging in the future.
 	 *
-	 * < 0 	= errored api call
-	 * 0 	= successful api call with no match (i.e., requested a non-existent id)
-	 * > 0 	= successful api call
+	 * 	< 0 	= errored api call
+	 * 	0 		= successful api call with no match (i.e., requested a non-existent id)
+	 * 	> 0 	= successful api call
 	 *
 	 * TODO - add ability for substitution from passed developer's exception message
-	 * TODO - review kohana's "messages". they may support what we're doing here.
 	 */
 	// success
 	'1'			=> array('public' => 'Success'),
