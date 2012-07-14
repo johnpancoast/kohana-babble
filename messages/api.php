@@ -16,18 +16,22 @@ return array
 	 *
 	 * TODO - add ability for substitution from passed developer's exception message
 	 */
-	// success
+	/** Success **/
 	'1'			=> array('public' => 'Success'),
 
-	// success but no match
-	'0'			=> array('public' => 'No Match'),
+	/** Success w/o a match **/
+	'0'			=> array('public' => 'No record found'),
 
-	// errors
-	// kohana orm/database
-	'-7000'		=> array('public' => 'Internal error', 'private' => 'generic exception during ORM interaction'),
-	'-7001'		=> array('public' => 'Failed saving: invalid data', 'private' => 'ORM validation failed'),
-	'-7002'		=> array('public' => 'Duplicate field', 'private' => 'Duplicate DB Key'),
-	'-7003'		=> array('public' => 'Internal error', 'private' => 'A generic database exception. Perhaps more should be caught or examined.'),
+	/** Errors **/
+	// database
+	'-7000'		=> array('public' => 'Internal error', 'private' => 'A generic database exception. Perhaps more should be caught or examined.'),
+	'-7001'		=> array('public' => 'Duplicate field', 'private' => 'Duplicate DB Key'),
+
+	// kohana orm
+	'-8000'		=> array('public' => 'Internal error', 'private' => 'generic exception during ORM interaction'),
+	'-8001'		=> array('public' => 'Failed saving: invalid data', 'private' => 'ORM validation failed'),
+	'-8002'		=> array('public' => 'Non-existent field passed', 'private' => 'The client attempted to set a value of a non-existen model field'),
+	'-8003'		=> array('public' => 'Internal error', 'private' => 'Failed to save the ORM model'),
 
 	// system or unknown generic errors
 	'-9000' 	=> array('public' => 'Internal error', 'private' => 'a terrible error occured'),
