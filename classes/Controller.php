@@ -29,11 +29,11 @@ class Controller extends Kohana_Controller {
 		$access = array();
 		if (isset($this->access[$check]))
 		{
-			$access[] = $this->access[$check];
+			$access = $this->access[$check];
 		}
 		if (isset($this->access['*']))
 		{
-			$access[] = array_merge($access, $this->access['*']);
+			$access = array_merge($access, $this->access['*']);
 		}
 		$allowed = ACL::instance()->check_access($access);
 		if ( ! $allowed)
