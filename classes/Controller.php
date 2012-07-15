@@ -5,14 +5,24 @@
  * this class transparently extends system/classes/Controller.php
  */
 class Controller extends Kohana_Controller {
+	/**
+	 * @var array what methods require what roles
+	 * @access protected
+	 */
 	protected $access = array();
 
+	/**
+	 * run before anything else
+	 */
 	public function before()
 	{
 		parent::before();
 		$this->check_access();
 	}
 
+	/**
+	 * check role access
+	 */
 	private function check_access()
 	{
 		$check = 'action_'.$this->request->action();
