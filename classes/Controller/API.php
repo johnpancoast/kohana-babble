@@ -17,6 +17,19 @@ class Controller_API extends Controller {
 	protected $api_response = null;
 
 	/**
+	 * ACL
+	 */
+	protected $access = array(
+		// add, delete, edit require write
+		'action_add' => array('user-write'),
+		'action_delete' => array('user-write'),
+		'action_edit' => array('user-write'),
+
+		// all other methods require at least read
+		'*' => array('user-read'),
+	);
+
+	/**
 	 * called before method actual method call
 	 * @access public
 	 * @uses API_Request
@@ -24,8 +37,8 @@ class Controller_API extends Controller {
 	 */
 	public function before()
 	{
-		$this->api_response = API_Response::factory();
 		$this->api_request = API_Request::factory();
+		$this->api_response = API_Response::factory();
 
 		// note that we have to call check_access() before the parent Controller class does.
 		// this is because parent::before() will go to 404 page (which doesn't work for API)
