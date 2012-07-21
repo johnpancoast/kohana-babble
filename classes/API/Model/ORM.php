@@ -28,11 +28,29 @@ class API_Model_ORM extends API_Model {
 		}
 		catch (ORM_Validation_Exception $e)
 		{
-			throw new API_Response_Exception('ORM validation exception: '.implode(';', $e->errors()), '-7001');
+			throw new API_Response_Exception($e->getMessage(), '-8001');
+		}
+		catch (Database_Exception $e)
+		{
+			$message = $e->getMessage();
+			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
+			{
+				// TODO add substitution ability for api config values
+				throw new API_Response_Exception($message, '-7001');
+			}
+			throw new API_Response_Exception($message, '-7000');
 		}
 		catch (Exception $e)
 		{
-			throw new API_Response_Exception('generic exception during ORM interaction', '-7000');
+			// for some reason, kohana decided to throw a general exception if you set a non-existent field.
+			// wish they threw validation exception but whatever.
+			$message = $e->getMessage();
+			if (preg_match("/The (.*) property does not exist in the (.*) class/", $message, $match))
+			{
+				// TODO add substitution ability for api config values
+				throw new API_Response_Exception($message, '-8002');
+			}
+			throw new API_Response_Exception($message, '-8000');
 		}
 	}
 
@@ -56,11 +74,11 @@ class API_Model_ORM extends API_Model {
 				}
 				if ($obj->save())
 				{
-					$response->set_response('1', '1');
+					$response->set_response('1');
 				}
 				else
 				{
-					throw new API_Response_Exception('failed to save', '-9000');
+					throw new API_Response_Exception('failed to save', '-8003');
 				}
 			}
 			else
@@ -70,7 +88,7 @@ class API_Model_ORM extends API_Model {
 		}
 		catch (ORM_Validation_Exception $e)
 		{
-			throw new API_Response_Exception('ORM validation exception: '.implode(';', $e->errors()), '--7001');
+			throw new API_Response_Exception($e->getMessage(), '-8001');
 		}
 		catch (Database_Exception $e)
 		{
@@ -78,16 +96,21 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($e->getMessage(), '-7002');
+				throw new API_Response_Exception($message, '-7001');
 			}
-			else
-			{
-				throw new API_Response_Exception($e->getMessage(), '-7003');
-			}
+			throw new API_Response_Exception($message, '-7000');
 		}
 		catch (Exception $e)
 		{
-			throw new API_Response_Exception('generic exception during ORM interaction', '-7000');
+			// for some reason, kohana decided to throw a general exception if you set a non-existent field.
+			// wish they threw validation exception but whatever.
+			$message = $e->getMessage();
+			if (preg_match("/The (.*) property does not exist in the (.*) class/", $message, $match))
+			{
+				// TODO add substitution ability for api config values
+				throw new API_Response_Exception($message, '-8002');
+			}
+			throw new API_Response_Exception($message, '-8000');
 		}
 	}
 
@@ -113,12 +136,12 @@ class API_Model_ORM extends API_Model {
 			}
 			else
 			{
-				throw new API_Response_Exception('failed to save', '-9000');
+				throw new API_Response_Exception('failed to save', '-8003');
 			}
 		}
 		catch (ORM_Validation_Exception $e)
 		{
-			throw new API_Response_Exception('ORM validation exception: '.implode(';', $e->errors()), '-7001');
+			throw new API_Response_Exception($e->getMessage(), '-8001');
 		}
 		catch (Database_Exception $e)
 		{
@@ -126,16 +149,21 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($e->getMessage(), '-7002');
+				throw new API_Response_Exception($message, '-7001');
 			}
-			else
-			{
-				throw new API_Response_Exception($e->getMessage(), '-7003');
-			}
+			throw new API_Response_Exception($message, '-7000');
 		}
 		catch (Exception $e)
 		{
-			throw new API_Response_Exception('generic exception during ORM interaction', '-7000');
+			// for some reason, kohana decided to throw a general exception if you set a non-existent field.
+			// wish they threw validation exception but whatever.
+			$message = $e->getMessage();
+			if (preg_match("/The (.*) property does not exist in the (.*) class/", $message, $match))
+			{
+				// TODO add substitution ability for api config values
+				throw new API_Response_Exception($message, '-8002');
+			}
+			throw new API_Response_Exception($message, '-8000');
 		}
 	}
 
@@ -154,7 +182,7 @@ class API_Model_ORM extends API_Model {
 			if ($obj->loaded())
 			{
 				$obj->delete();
-				$response->set_response('1', '1');
+				$response->set_response('1');
 			}
 			else
 			{
@@ -163,15 +191,29 @@ class API_Model_ORM extends API_Model {
 		}
 		catch (ORM_Validation_Exception $e)
 		{
-			throw new API_Response_Exception('ORM validation exception: '.implode(';', $e->errors()), '-7001');
+			throw new API_Response_Exception($e->getMessage(), '-8001');
 		}
 		catch (Database_Exception $e)
 		{
-			throw new API_Response_Exception($e->getMessage(), '-7003');
+			$message = $e->getMessage();
+			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
+			{
+				// TODO add substitution ability for api config values
+				throw new API_Response_Exception($message, '-7001');
+			}
+			throw new API_Response_Exception($message, '-7000');
 		}
 		catch (Exception $e)
 		{
-			throw new API_Response_Exception('generic exception during ORM interaction', '-7000');
+			// for some reason, kohana decided to throw a general exception if you set a non-existent field.
+			// wish they threw validation exception but whatever.
+			$message = $e->getMessage();
+			if (preg_match("/The (.*) property does not exist in the (.*) class/", $message, $match))
+			{
+				// TODO add substitution ability for api config values
+				throw new API_Response_Exception($message, '-8002');
+			}
+			throw new API_Response_Exception($message, '-8000');
 		}
 	}
 }
