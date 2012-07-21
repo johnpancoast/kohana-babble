@@ -24,12 +24,72 @@ class Controller_API extends Controller {
 	 */
 	public function before()
 	{
-		// TODO prob do some API security validation here.
+		$this->api_response = API_Response::factory();
+		$this->api_request = API_Request::factory();
+
+		// note that we have to call check_access() before the parent Controller class does.
+		// this is because parent::before() will go to 404 page (which doesn't work for API)
+		if ( ! $this->check_access())
+		{
+			throw new API_Response_Exception('unauthorized', '-9002');
+		}
 
 		// must call parent before()
 		parent::before();
-
-		$this->api_request = API_Request::factory();
-		$this->api_response = API_Response::factory();
 	}
+
+
+	/**
+	 * We override Controller::execute() so that we can catch API exceptions.
+	 * @see Kohana_Controller::execute()
+	 * @return string Response
+	 */
+	public function execute()
+	{
+		try
+		{
+			// Execute the "before action" method
+			$this->before();
+
+			// Determine the action to use
+			$action = 'action_'.$this->request->action();
+
+			// If the action doesn't exist, it's a 404
+			if ( ! method_exists($this, $action))
+			{
+				throw HTTP_Exception::factory(404,
+					'The requested URL :uri was not found on this server.',
+					array(':uri' => $this->request->uri())
+				)->request($this->request);
+			}
+
+			// Execute the action itself
+			$this->{$action}();
+
+			// Execute the "after action" method
+			$this->after();
+		}
+		catch (API_Response_Exception $e)
+		{
+			$this->response->body($this->api_response->set_response($e->getResponseCode())->get_encoded_response());
+		}
+		// if we received a generic error at this point, just throw/catch an API_Response_Exception.
+		// we do this so that the normal API_Response_Exception
+		// logging and api message handling can occur.
+		catch (Exception $e)
+		{
+			try
+			{
+				throw new API_Response_Exception('something aint right with API ('.$e->getMessage().')', '-9000');
+			}
+			catch (API_Response_Exception $e)
+			{
+				$this->response->body($this->api_response->set_response($e->getResponseCode())->get_encoded_response());
+			}
+		}
+
+		// Return the response
+		return $this->response;
+	}
+
 }

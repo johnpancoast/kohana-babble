@@ -1,7 +1,10 @@
 <?php
 
 /**
- * base api model class. if an API controller wants to handle model CRUD operations, extend this class and set the {@see $this->model} property. If you just want API functionality not related to models, you can just have your API controller extend Controller_API instead.
+ * base api model class. if an API controller wants to handle model CRUD
+ * operations, extend this class and set the {@see $this->model} property. If you
+ * just want API functionality not related to models, you can just have your API
+ * controller extend Controller_API instead.
  */
 class Controller_API_Model extends Controller_API {
 	/**
@@ -15,6 +18,19 @@ class Controller_API_Model extends Controller_API {
 	 * @access protected
 	 */
 	protected $api_model = null;
+
+	/**
+	 * ACL
+	 */
+	protected $access = array(
+		// add, delete, edit require write
+		'action_add' => array('api-write'),
+		'action_delete' => array('api-write'),
+		'action_edit' => array('api-write'),
+
+		// all other methods require at least read
+		'*' => array('api-read'),
+	);
 
 	/**
 	 * called before anything else
@@ -49,20 +65,13 @@ class Controller_API_Model extends Controller_API {
 		}
 
 		// call on model method. api response should be set there.
-		try
+		$this->api_model->{$method}();
+
+		// check that a response got set
+		$response = $this->api_response->get_response();
+		if ( ! $response || ! isset($response['code']))
 		{
-			$this->api_model->{$method}();
-			
-			// check that a response got set
-			$response = $this->api_response->get_response();
-			if ( ! $response || ! isset($response['code']))
-			{
-				throw new API_Response_Exception('no model response', '-9000');
-			}
-		}
-		catch (API_Response_Exception $e)
-		{
-			$this->api_response->set_response($e->getResponseCode());
+			throw new API_Response_Exception('no model response', '-9000');
 		}
 
 		// send out main response from encoded api response
