@@ -17,15 +17,22 @@ class Controller extends Kohana_Controller {
 	public function before()
 	{
 		parent::before();
-		$this->check_access();
+
+		if ( ! $this->check_access())
+		{
+			echo 'ACCESS DENIED (TODO - eventually this will 404 or throw appropriate 404\'ish exception';
+			exit;
+		}
 	}
 
 	/**
 	 * check role access
+	 * @access protected
+	 * @return bool
 	 */
-	private function check_access()
+	protected function check_access()
 	{
-		$check = 'action_'.$this->request->action();
+		$check = 'action_'.Request::current()->action();
 		$access = array();
 		if (isset($this->access[$check]))
 		{
@@ -35,11 +42,7 @@ class Controller extends Kohana_Controller {
 		{
 			$access = array_merge($access, $this->access['*']);
 		}
-		$allowed = ACL::instance()->check_access($access);
-		if ( ! $allowed)
-		{
-			echo 'ACCESS DENIED (eventually this will 404 or for APIs return an error code)';
-			exit;
-		}
+
+		return ACL::instance()->check_access($access);
 	}
 }
