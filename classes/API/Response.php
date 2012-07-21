@@ -94,6 +94,9 @@ abstract class API_Response {
 		{
 			$this->response['result'] = $result;
 		}
+
+		// allow chaining
+		return $this;
 	}
 
 	/**
