@@ -74,7 +74,7 @@ class API_Model_ORM extends API_Model {
 				}
 				if ($obj->save())
 				{
-					$response->set_response('1', '1');
+					$response->set_response('1');
 				}
 				else
 				{
@@ -182,7 +182,7 @@ class API_Model_ORM extends API_Model {
 			if ($obj->loaded())
 			{
 				$obj->delete();
-				$response->set_response('1', '1');
+				$response->set_response('1');
 			}
 			else
 			{
