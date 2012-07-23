@@ -20,6 +20,19 @@ class Controller_API_Model extends Controller_API {
 	protected $api_model = null;
 
 	/**
+	 * ACL
+	 */
+	protected $access = array(
+		// add, delete, edit require write
+		'action_add' => array('user-write'),
+		'action_delete' => array('user-write'),
+		'action_edit' => array('user-write'),
+
+		// all other methods require at least read
+		'*' => array('user-read'),
+	);
+
+	/**
 	 * called before anything else
 	 * @access public
 	 */

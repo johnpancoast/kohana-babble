@@ -17,19 +17,6 @@ class Controller_API extends Controller {
 	protected $api_response = null;
 
 	/**
-	 * ACL
-	 */
-	protected $access = array(
-		// add, delete, edit require write
-		'action_add' => array('user-write'),
-		'action_delete' => array('user-write'),
-		'action_edit' => array('user-write'),
-
-		// all other methods require at least read
-		'*' => array('user-read'),
-	);
-
-	/**
 	 * called before method actual method call
 	 * @access public
 	 * @uses API_Request
