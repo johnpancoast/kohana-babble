@@ -17,7 +17,7 @@ class Controller_API extends Controller {
 	protected $api_response = null;
 
 	/**
-	 * called before method actual method call
+	 * called before actual method call
 	 * @access public
 	 * @uses API_Request
 	 * @uses API_Response
@@ -27,11 +27,49 @@ class Controller_API extends Controller {
 		$this->api_request = API_Request::factory();
 		$this->api_response = API_Response::factory();
 
+		// if user not authentic, see if we've been passed an Authorization
+		// header and attempt to log em in with that.
+		if ( ! Auth::instance()->logged_in())
+		{
+			// get the user/key from auth header
+			if ( ! isset($this->api_request->request_header['Authorization']))
+			{
+				throw new API_Response_Exception('unauthorized user', '-9002');
+			}
+			list($user, $key) = explode(':', $this->api_request->request_header['Authorization']);
+
+			// get the api user from db.
+			// make sure it's an API user, not normal user.
+			$user = ORM::factory('user')
+				->where('username', '=', $user)
+				->where('api_user', '=', 1)
+				->find();
+			if ( ! $user->loaded())
+			{
+				throw new API_Response_Exception('unauthorized user', '-9002');
+			}
+
+			// gen a new hash from passed data and private key and check against passed hash.
+			// if hashes match then the user has authenticated and we can log them in.
+			$protocol = (! empty($_SERVER['HTTPS']) ? 'https' : 'http');
+			$url = Request::current()->url($protocol);
+			$check_key = API_Request::get_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('api_data' => $this->api_request->request_post));
+			if ( ! empty($key) && $key == $check_key)
+			{
+				Auth::instance()->force_login($user->username);
+			}
+			else
+			{
+				throw new API_Response_Exception('unauthorized user', '-9002');
+			}
+		}
+
+		// check access list perms.
 		// note that we have to call check_access() before the parent Controller class does.
 		// this is because parent::before() will go to 404 page (which doesn't work for API)
 		if ( ! $this->check_access())
 		{
-			throw new API_Response_Exception('unauthorized', '-9002');
+			throw new API_Response_Exception('unauthorized access', '-9002');
 		}
 
 		// must call parent before()
@@ -49,6 +87,7 @@ class Controller_API extends Controller {
 		try
 		{
 			// Execute the "before action" method
+			// !!IMPOTANT AUTHENTICATION HAPPENS IN THIS METHOD!!
 			$this->before();
 
 			// Determine the action to use
@@ -71,7 +110,15 @@ class Controller_API extends Controller {
 		}
 		catch (API_Response_Exception $e)
 		{
-			$this->response->body($this->api_response->set_response($e->getResponseCode())->get_encoded_response());
+			$this->response->body($this->api_response->set_response($e->get_encoded_response())->get_encoded_response());
+		}
+		catch (Kohana_HTTP_Exception $e)
+		{
+			$message = $e->getMessage();
+			if (preg_match('/The requested URL (.*) was not found on this server./', $message))
+			{
+				$this->response->body($this->api_response->set_response('-9003')->get_encoded_response());
+			}
 		}
 		// if we received a generic error at this point, just throw/catch an API_Response_Exception.
 		// we do this so that the normal API_Response_Exception
@@ -80,11 +127,11 @@ class Controller_API extends Controller {
 		{
 			try
 			{
-				throw new API_Response_Exception('something aint right with API ('.$e->getMessage().')', '-9000');
+				throw new API_Response_Exception('(almost) uncaught API exception ('.$e->getMessage().')', '-9000');
 			}
 			catch (API_Response_Exception $e)
 			{
-				$this->response->body($this->api_response->set_response($e->getResponseCode())->get_encoded_response());
+				$this->response->body($this->api_response->set_response($e->get_encoded_response())->get_encoded_response());
 			}
 		}
 
