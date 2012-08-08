@@ -26,7 +26,7 @@ class API_Response_Exception extends Exception {
 	 * @access public
 	 * @return self::$response_code
 	 */
-	public function getResponseCode()
+	public function get_response_code()
 	{
 		return $this->response_code;
 	}

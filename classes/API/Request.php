@@ -11,6 +11,12 @@ abstract class API_Request {
 	private static $instances = array();
 
 	/**
+	 * @var array Request header
+	 * @access public
+	 */
+	public $request_header = array();
+
+	/**
 	 * @var int The request id
 	 */
 	public $request_id = null;
@@ -27,6 +33,7 @@ abstract class API_Request {
 	 */
 	protected final function __construct()
 	{
+		$this->request_header = apache_request_headers();
 		$this->load_request();
 	}
 
@@ -58,11 +65,29 @@ abstract class API_Request {
 	}
 
 	/**
-	 * load request from POST (generally)
+	 * load request
 	 * @abstract
 	 * @access public
 	 * @uses self::$request_id
 	 * @uses self::$request_post
 	 */
 	abstract public function load_request();
+
+	/**
+	 * get/generate a request authentication hash key
+	 * @access public
+	 * @static
+	 * @param string $user Public username
+	 * @param string $private_key Private key
+	 * @param string $url Request url
+	 * @param string $method Request method
+	 * @param array $post Post data
+	 * @return string A hash
+	 */
+	public static function get_auth_key($user, $private_key, $url, $method, $post = array()) {
+		ksort($post);
+		$hash_data = $user.'-'.$private_key.'-'.$method.'-'.http_build_query($post);
+		return hash_hmac('sha1', $hash_data, $private_key);
+	}
+
 }

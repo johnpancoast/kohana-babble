@@ -37,4 +37,5 @@ return array
 	'-9000' 	=> array('public' => 'Internal error', 'private' => 'a terrible error occured'),
 	'-9001'		=> array('public' => 'Internal error', 'private' => 'unknown api response code'),
 	'-9002'		=> array('public' => 'Access denied', 'private' => 'Access denied due to Failed ACL::check_access() call'),
+	'-9003'		=> array('public' => 'URL not found', 'private' => 'URL not found'),
 );
