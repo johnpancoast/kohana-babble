@@ -11,16 +11,14 @@ return array
 	 * reading and perhaps logging in the future.
 	 *
 	 * 	< 0 	= errored api call
-	 * 	0 		= successful api call with no match (i.e., requested a non-existent id)
-	 * 	> 0 	= successful api call
+	 * 	>= 0 	= successful api call
 	 *
 	 * TODO - add ability for substitution from passed developer's exception message
 	 */
-	/** Success **/
-	'1'			=> array('public' => 'Success'),
 
-	/** Success w/o a match **/
-	'0'			=> array('public' => 'No record found'),
+	/** Success **/
+	//'0'			=> array('public' => 'Unknown'),
+	'1'			=> array('public' => 'Ok'),
 
 	/** Errors **/
 	// database
@@ -37,5 +35,5 @@ return array
 	'-9000' 	=> array('public' => 'Internal error', 'private' => 'a terrible error occured'),
 	'-9001'		=> array('public' => 'Internal error', 'private' => 'unknown api response code'),
 	'-9002'		=> array('public' => 'Access denied', 'private' => 'Access denied due to Failed ACL::check_access() call'),
-	'-9003'		=> array('public' => 'URL not found', 'private' => 'URL not found'),
+	'-9003'		=> array('public' => 'The requested URL was not found', 'private' => 'The requested URL was not found'),
 );
