@@ -91,7 +91,7 @@ class Controller_API extends Controller {
 			$this->before();
 
 			// Determine the action to use
-			$action = 'action_'.$this->request->action();
+			$action = 'action_'.strtolower($_SERVER['REQUEST_METHOD']);
 
 			// If the action doesn't exist, it's a 404
 			if ( ! method_exists($this, $action))

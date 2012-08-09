@@ -59,7 +59,7 @@ class Controller_API_Model extends Controller_API {
 	 */
 	private final function model_action($method)
 	{
-		if ( ! in_array($method, array('get', 'edit', 'add', 'delete')))
+		if ( ! in_array(strtolower($method), array('get', 'put', 'post', 'delete')))
 		{
 			throw new API_Response_Exception('invalid api model action method called', '-9000');
 		}
@@ -87,19 +87,19 @@ class Controller_API_Model extends Controller_API {
 	}
 
 	/**
-	 * edit controller method
+	 * put controller method
 	 */
-	public function action_edit()
+	public function action_put()
 	{
-		$this->model_action('edit');
+		$this->model_action('put');
 	}
 
 	/**
-	 * add controller method
+	 * post controller method
 	 */
-	public function action_add()
+	public function action_post()
 	{
-		$this->model_action('add');
+		$this->model_action('post');
 	}
 
 	/**
