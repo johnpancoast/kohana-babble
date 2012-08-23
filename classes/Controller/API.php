@@ -34,7 +34,7 @@ class Controller_API extends Controller {
 			// get the user/key from auth header
 			if ( ! isset($this->api_request->request_header['Authorization']))
 			{
-				throw new API_Response_Exception('unauthorized user', '-9002');
+				throw new API_Response_Exception('unauthorized user', '401-000');
 			}
 			list($user, $key) = explode(':', $this->api_request->request_header['Authorization']);
 
@@ -46,7 +46,7 @@ class Controller_API extends Controller {
 				->find();
 			if ( ! $user->loaded())
 			{
-				throw new API_Response_Exception('unauthorized user', '-9002');
+				throw new API_Response_Exception('unauthorized user', '401-000');
 			}
 
 			// gen a new hash from passed data and private key and check against passed hash.
@@ -60,7 +60,7 @@ class Controller_API extends Controller {
 			}
 			else
 			{
-				throw new API_Response_Exception('unauthorized user', '-9002');
+				throw new API_Response_Exception('unauthorized user', '401-000');
 			}
 		}
 
@@ -70,7 +70,7 @@ class Controller_API extends Controller {
 		// 404 page (which doesn't work for API)
 		if ( ! $this->check_access())
 		{
-			throw new API_Response_Exception('unauthorized access', '-9002');
+			throw new API_Response_Exception('unauthorized access', '401-001');
 		}
 
 		// must call parent before()
@@ -119,7 +119,7 @@ class Controller_API extends Controller {
 			$message = $e->getMessage();
 			if (preg_match('/The requested URL (.*) was not found on this server./', $message))
 			{
-				$this->api_response->set_response('-9003');
+				$this->api_response->set_response('404-000');
 			}
 		}
 		// if we received a generic error at this point, just throw/catch an API_Response_Exception.
@@ -129,7 +129,7 @@ class Controller_API extends Controller {
 		{
 			try
 			{
-				throw new API_Response_Exception('(almost) uncaught API exception ('.$e->getMessage().')', '-9000');
+				throw new API_Response_Exception('(almost) uncaught API exception ('.$e->getMessage().')', '500-000');
 			}
 			catch (API_Response_Exception $e)
 			{
@@ -146,13 +146,16 @@ class Controller_API extends Controller {
 		{
 			try
 			{
-				throw new API_Response_Exception('no model response', '-9000');
+				throw new API_Response_Exception('no api response', '500-000');
 			}
 			catch (API_Response_Exception $e)
 			{
 				$this->api_response->set_response($e->get_response_code());
 			}
 		}
+
+		// set http status code from response code
+		$this->response->status(substr($response['code'], 0, 3));
 
 		// send out main response from encoded api response
 		$this->response->body($this->api_response->get_encoded_response());

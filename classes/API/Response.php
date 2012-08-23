@@ -68,7 +68,7 @@ abstract class API_Response {
 	 * @throws API_Response_Exception Upon error
 	 */
 	public function set_response($code, $result = null) {
-		$message = Kohana::message('api', $code.'.public');
+		$message = Kohana::message('api', 'responses.'.$code.'.public');
 
 		// if we were sent an invalid code, we must throw a new
 		// API_Response_Exception so the error gets logged. however, we must
@@ -78,12 +78,12 @@ abstract class API_Response {
 		{
 			try 
 			{
-				throw new API_Response_Exception('unknown api response code', '-9001');
+				throw new API_Response_Exception('unknown api response code', '500-001');
 			}
 			catch (Exception $e)
 			{
-				$code = '-9001';
-				$message = Kohana::message('api', $code.'.public');
+				$code = '500-001';
+				$message = Kohana::message('api', 'responses.'.$code.'.public');
 			}
 		}
 		$this->response = array(
