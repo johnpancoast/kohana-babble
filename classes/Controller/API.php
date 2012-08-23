@@ -53,7 +53,7 @@ class Controller_API extends Controller {
 			// if hashes match then the user has authenticated and we can log them in.
 			$protocol = (! empty($_SERVER['HTTPS']) ? 'https' : 'http');
 			$url = Request::current()->url($protocol);
-			$check_key = API_Request::get_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('api_data' => $this->api_request->request_post));
+			$check_key = API_Request::get_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('api_data' => $this->api_request->request_resource_data));
 			if ( ! empty($key) && $key == $check_key)
 			{
 				Auth::instance()->force_login($user->username);
@@ -65,8 +65,9 @@ class Controller_API extends Controller {
 		}
 
 		// check access list perms.
-		// note that we have to call check_access() before the parent Controller class does.
-		// this is because parent::before() will go to 404 page (which doesn't work for API)
+		// note that we have to call check_access() before the parent::before() call.
+		// this is because if parent::before()'s call to check_access() fails it  will go to
+		// 404 page (which doesn't work for API)
 		if ( ! $this->check_access())
 		{
 			throw new API_Response_Exception('unauthorized access', '-9002');
@@ -78,7 +79,8 @@ class Controller_API extends Controller {
 
 
 	/**
-	 * We override Controller::execute() so that we can catch API exceptions.
+	 * We override Controller::execute() so that we can handle API
+	 * specifics.
 	 * @see Kohana_Controller::execute()
 	 * @return string Response
 	 */
@@ -117,7 +119,7 @@ class Controller_API extends Controller {
 			$message = $e->getMessage();
 			if (preg_match('/The requested URL (.*) was not found on this server./', $message))
 			{
-				$this->response->body($this->api_response->set_response('-9003')->get_encoded_response());
+				$this->api_response->set_response('-9003');
 			}
 		}
 		// if we received a generic error at this point, just throw/catch an API_Response_Exception.
@@ -131,11 +133,29 @@ class Controller_API extends Controller {
 			}
 			catch (API_Response_Exception $e)
 			{
-				$this->response->body($this->api_response->set_response($e->get_response_code())->get_encoded_response());
+				$this->api_response->set_response($e->get_response_code());
 			}
 		}
 
-		// Return the response
+		// check that a response got set.
+		// if we got no response at this point, just throw/catch an API_Response_Exception.
+		// we do this so that the normal API_Response_Exception
+		// logging and api message handling can occur.
+		$response = $this->api_response->get_response();
+		if ( ! $response || ! isset($response['code']))
+		{
+			try
+			{
+				throw new API_Response_Exception('no model response', '-9000');
+			}
+			catch (API_Response_Exception $e)
+			{
+				$this->api_response->set_response($e->get_response_code());
+			}
+		}
+
+		// send out main response from encoded api response
+		$this->response->body($this->api_response->get_encoded_response());
 		return $this->response;
 	}
 

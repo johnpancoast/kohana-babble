@@ -22,9 +22,9 @@ abstract class API_Request {
 	public $request_id = null;
 
 	/**
-	 * @var array The request POST data
+	 * @var array The passed resource data
 	 */
-	public $request_post = array();
+	public $request_resource_data = array();
 
 	/**
 	 * constructor, loads request
@@ -33,6 +33,7 @@ abstract class API_Request {
 	 */
 	protected final function __construct()
 	{
+		$this->request_id = Request::current()->param('api_id');
 		$this->request_header = apache_request_headers();
 		$this->load_request();
 	}
@@ -69,7 +70,7 @@ abstract class API_Request {
 	 * @abstract
 	 * @access public
 	 * @uses self::$request_id
-	 * @uses self::$request_post
+	 * @uses self::$request_resource_data
 	 */
 	abstract public function load_request();
 

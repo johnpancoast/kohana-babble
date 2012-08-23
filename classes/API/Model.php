@@ -1,9 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * abstract class for interacting with a model using specific API'ish calls.
- * it's a layer between our API and whichever ORM our system happens to be using
- * at the time.
+ * abstract class for interacting with a model using specific CRUD'sh calls.
+ * it's a layer between our API and whichever ORM/ModelLayer  our system happens to be using.
  * @abstract
  */
 abstract class API_Model {
@@ -38,7 +37,16 @@ abstract class API_Model {
 	}
 
 	/**
-	 * get a model
+	 * get a list of models
+	 * @uses API_Request
+	 * @uses API_Response
+	 * @access public
+	 * @abstract
+	 */
+	abstract public function get_list();
+
+	/**
+	 * get a spefic model
 	 * @uses API_Request
 	 * @uses API_Response
 	 * @access public
