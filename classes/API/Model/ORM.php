@@ -7,6 +7,7 @@
 class API_Model_ORM extends API_Model {
 	/**
 	 * @see parent::get_list();
+	 * TODO - this method is incomplete. needs support for limit, sorting, and searching
 	 */
 	public function get_list()
 	{
