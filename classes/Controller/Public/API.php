@@ -6,7 +6,7 @@
  * request to appropriate controller. Note, we do no auth at this point.
  * This controller's job is just to route to a versioned API controller.
  */
-class Controller_Public_API_Frontend extends Controller {
+class Controller_Public_API extends Controller {
 	public function action_index()
 	{
 		// current request

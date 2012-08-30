@@ -1,4 +1,4 @@
-All API requests should be routed to the Frontend controller. it will then
+All API requests should be routed to the API controller. That will then
 determine the version from the "Accepts:" header in the request and route to
 the appropriate versioned controller. Versions are named "inward" meaning a
 version of 1.2.5.27 would be routed to Controller/Public/API/1/2/5/27 and have
