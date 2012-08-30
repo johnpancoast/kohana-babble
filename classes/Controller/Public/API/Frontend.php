@@ -53,13 +53,17 @@ class Controller_Public_API_Frontend extends Controller {
 		{
 			$internal_response = Request::factory($route_url, $request->param(), FALSE, $internal_routes)
 				// note that we created a custom request client to override kohana's. this is so we can handle 404's in a API'ish way.
+				// FIXME we should just be overriding kohana's default error exception handling for HTTP errors (404's etc)
 				->client(new Request_Client_Internal_API($request->param()))
 				->headers($request->headers())
 				->post($request->post())
 				->query($request->query())
 				->execute();
+			$response = API_Response::factory()->get_response();
+			$this->response->status(substr($response['code'], 0, 3));
 			$this->response->body($internal_response);
 		}
+		// see FIXME above
 		catch (HTTP_Exception $e)
 		{
 			// try catch the API exception so normal logging occurs
