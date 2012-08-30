@@ -5,5 +5,5 @@
  */
 return array
 (
-	'default_version' => '1.0.0',
+	'default_version' => '0.0.1',
 );
