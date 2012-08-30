@@ -55,7 +55,7 @@ class Controller_API_Model extends Controller_API {
 	public function action_get()
 	{
 		// a get request with an id means return the resource is one object
-		if ($this->api_request->request_id)
+		if ($this->api_request->request_resource_id)
 		{
 			$this->api_model->get();
 		}

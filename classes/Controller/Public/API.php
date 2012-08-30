@@ -24,14 +24,14 @@ class Controller_Public_API extends Controller {
 		$version = str_replace('.', '_', $version);
 
 		// get the api controller we're calling
-		$controller = $request->param('api_controller');
+		$controller = $request->param('resource_controller');
 
 		// generate internal route url
 		$route_url = '/api-internal/'.$controller;
-		$api_id = $request->param('api_id');
-		if ($api_id)
+		$resource_id = $request->param('resource_id');
+		if ($resource_id)
 		{
-			$route_url .= '/'.$api_id;
+			$route_url .= '/'.$resource_id;
 		}
 
 		// create the actual kohana route that we'll pass with the internal HMVC request.

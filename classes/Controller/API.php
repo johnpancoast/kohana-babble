@@ -53,7 +53,7 @@ class Controller_API extends Controller {
 			// if hashes match then the user has authenticated and we can log them in.
 			$protocol = (! empty($_SERVER['HTTPS']) ? 'https' : 'http');
 			$url = Request::current()->url($protocol);
-			$check_key = API_Request::get_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('api_data' => $this->api_request->request_resource_data));
+			$check_key = API_Request::get_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('resource_data' => $this->api_request->request_resource_data));
 			if ( ! empty($key) && $key == $check_key)
 			{
 				Auth::instance()->force_login($user->username);

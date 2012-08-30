@@ -9,6 +9,6 @@ class API_Request_Post extends API_Request {
 	 */
 	public function load_request()
 	{
-		$this->request_resource_data = Request::current()->post('api_data');
+		$this->request_resource_data = Request::current()->post('resource_data');
 	}
 }

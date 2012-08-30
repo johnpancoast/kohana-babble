@@ -17,9 +17,9 @@ abstract class API_Request {
 	public $request_header = array();
 
 	/**
-	 * @var int The request id
+	 * @var int The requested resource id
 	 */
-	public $request_id = null;
+	public $request_resource_id = null;
 
 	/**
 	 * @var array The passed resource data
@@ -33,7 +33,7 @@ abstract class API_Request {
 	 */
 	protected final function __construct()
 	{
-		$this->request_id = Request::current()->param('api_id');
+		$this->request_resource_id = Request::current()->param('resource_id');
 		$this->request_header = apache_request_headers();
 		$this->load_request();
 	}
@@ -69,7 +69,7 @@ abstract class API_Request {
 	 * load request
 	 * @abstract
 	 * @access public
-	 * @uses self::$request_id
+	 * @uses self::$request_resource_id
 	 * @uses self::$request_resource_data
 	 */
 	abstract public function load_request();

@@ -79,7 +79,7 @@ class API_Model_ORM extends API_Model {
 		// catch all exceptions
 		try
 		{
-			$obj = ORM::factory($this->model, $request->request_id);
+			$obj = ORM::factory($this->model, $request->request_resource_id);
 			if ($obj->loaded())
 			{
 				$response->set_response('200-000', $obj->as_array());
@@ -128,7 +128,7 @@ class API_Model_ORM extends API_Model {
 		// catch all exceptions
 		try
 		{
-			$obj = ORM::factory($this->model, $request->request_id);
+			$obj = ORM::factory($this->model, $request->request_resource_id);
 			if ($obj->loaded())
 			{
 				foreach ($request->request_resource_data as $k => $v)
@@ -241,7 +241,7 @@ class API_Model_ORM extends API_Model {
 		// catch all exceptions
 		try
 		{
-			$obj = ORM::factory($this->model, $request->request_id);
+			$obj = ORM::factory($this->model, $request->request_resource_id);
 			if ($obj->loaded())
 			{
 				$obj->delete();
