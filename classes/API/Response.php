@@ -86,11 +86,16 @@ abstract class API_Response {
 				$message = Kohana::message('api', 'responses.'.$code.'.public');
 			}
 		}
+
 		$this->response = array(
 			'code' => $code,
 			'message' => $message,
 		);
-		if ($result && $code > 0)
+
+		$http_code = substr($code, 0, 3);
+
+		// set the api result if we have one and the http status codes are in 200's
+		if ($result && $http_code >= 200 && $http_code < 300)
 		{
 			$this->response['result'] = $result;
 		}
