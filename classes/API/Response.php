@@ -25,6 +25,7 @@ abstract class API_Response {
 	public static function factory()
 	{
 		// determine which driver to load
+		// FIXME change this to get method via the Accept header
 		$api_method = Request::current()->param('api_method');
 		$api_method = strtolower($api_method ? $api_method : Kohana::$config->load('api.driver.response'));
 		switch ($api_method)
