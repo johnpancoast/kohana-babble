@@ -129,6 +129,7 @@ class Controller_Public_API_Testing extends Controller {
 		}
 
 		$resp = $this->callApi($url, $method, $post);
+		echo $resp['status'].'<br/><br/>';
 		echo $resp['response'];
 	}
 }
