@@ -111,41 +111,18 @@ class Controller_API extends Controller {
 		}
 		catch (API_Response_Exception $e)
 		{
-			$this->response->body($this->api_response->set_response($e->get_response_code())->get_encoded_response());
-		}
-		catch (Kohana_HTTP_Exception $e)
-		{
-			$message = $e->getMessage();
-			if (preg_match('/The requested URL (.*) was not found on this server./', $message))
-			{
-				$this->api_response->set_response('404-000');
-			}
-		}
-		// if we received a generic error at this point, just throw/catch an API_Response_Exception.
-		// we do this so that the normal API_Response_Exception
-		// logging and api message handling can occur.
-		catch (Exception $e)
-		{
-			try
-			{
-				throw new API_Response_Exception('(almost) uncaught API exception ('.$e->getMessage().')', '500-000');
-			}
-			catch (API_Response_Exception $e)
-			{
-				$this->api_response->set_response($e->get_response_code());
-			}
+			$this->api_response->set_response($e->get_response_code());
 		}
 
 		// check that a response got set.
-		// if we got no response at this point, just throw/catch an API_Response_Exception.
-		// we do this so that the normal API_Response_Exception
-		// logging and api message handling can occur.
-		$response = $this->api_response->get_response();
-		if ( ! $response || ! isset($response['code']))
+		if ( ! $this->api_response->get_response() || ! $this->api_response->get_response_code())
 		{
+			// just throw/catch an API_Response_Exception.
+			// we do this so that the normal API_Response_Exception
+			// logging and api message handling can occur.
 			try
 			{
-				throw new API_Response_Exception('no api response', '500-000');
+				throw new API_Response_Exception('no api response', '500-002');
 			}
 			catch (API_Response_Exception $e)
 			{
@@ -153,8 +130,8 @@ class Controller_API extends Controller {
 			}
 		}
 
-		// set http status code from response code
-		$this->response->status(substr($response['code'], 0, 3));
+		// set http status code
+		$this->response->status($this->api_response->get_response_http_code());
 
 		// send out main response from encoded api response
 		$this->response->body($this->api_response->get_encoded_response());
