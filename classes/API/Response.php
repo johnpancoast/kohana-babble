@@ -62,6 +62,32 @@ abstract class API_Response {
 	}
 
 	/**
+	 * get response code
+	 * @access public
+	 * @return string response code
+	 */
+	public function get_response_code()
+	{
+		$code = NULL;
+		$response = $this->get_response();
+		if ( ! empty($response))
+		{
+			$code = $this->response['code'];
+		}
+		return $code;
+	}
+
+	/**
+	 * get response http code
+	 * @access public
+	 * @return int response http code
+	 */
+	public function get_response_http_code()
+	{
+		return substr($this->get_response_code(), 0, 3);
+	}
+
+	/**
 	 * set response
 	 * @access public
 	 * @param string $code Response code. Should match our codes in config/base/api.php.

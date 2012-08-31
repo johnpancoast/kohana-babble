@@ -17,8 +17,21 @@ class API_Response_Exception extends Exception {
 	{
 		parent::__construct($message);
 
+		// if unknown code was thrown, default to 500
+		$response_code = Kohana::message('api', 'responses.'.$response_code) ? $response_code : '500-001';
+
 		// set our response code
 		$this->response_code = $response_code;
+	}
+
+	/**
+	 * get response http code
+	 * @access publis
+	 * @return int
+	 */
+	public function get_response_http_code()
+	{
+		return substr($this->get_response_code(), 0, 3);
 	}
 
 	/**
