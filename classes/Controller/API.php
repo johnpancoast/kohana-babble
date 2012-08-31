@@ -51,8 +51,7 @@ class Controller_API extends Controller {
 
 			// gen a new hash from passed data and private key and check against passed hash.
 			// if hashes match then the user has authenticated and we can log them in.
-			$protocol = (! empty($_SERVER['HTTPS']) ? 'https' : 'http');
-			$url = Request::current()->url($protocol);
+			$url = URL::base(Request::initial()).Request::initial()->uri().'?'.http_build_query(Request::initial()->query());
 			$check_key = API_Request::get_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('resource_data' => $this->api_request->request_resource_data));
 			if ( ! empty($key) && $key == $check_key)
 			{
