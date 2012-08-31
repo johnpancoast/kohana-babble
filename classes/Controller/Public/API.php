@@ -12,6 +12,9 @@ class Controller_Public_API extends Controller {
 		// current request
 		$request = Request::current();
 
+		// we set a param to let everything know this originated as an API request
+		$request->is_api_request = TRUE;
+
 		// get the requested version from the Accept header
 		// e.g., vnd.company.app-v12+xml
 		// ^ looking for "12"
@@ -49,44 +52,13 @@ class Controller_Public_API extends Controller {
 
 		// make internal hmvc call to controller.
 		// set the main response from the response we get.
-		try
-		{
-			$internal_response = Request::factory($route_url, $request->param(), FALSE, $internal_routes)
-				// note that we created a custom request client to override kohana's. this is so we can handle 404's in a API'ish way.
-				// FIXME we should just be overriding kohana's default error exception handling for HTTP errors (404's etc)
-				->client(new Request_Client_Internal_API($request->param()))
-				->headers($request->headers())
-				->post($request->post())
-				->query($request->query())
-				->execute();
-			$response = API_Response::factory()->get_response();
-			$this->response->status(substr($response['code'], 0, 3));
-			$this->response->body($internal_response);
-		}
-		// see FIXME above
-		catch (HTTP_Exception $e)
-		{
-			// try catch the API exception so normal logging occurs
-			try
-			{
-				throw new API_Response_Exception('not found', '404-000');
-			}
-			catch (API_Response_Exception $e)
-			{
-				$this->response->body(API_Response::factory()->set_response($e->get_response_code())->get_encoded_response());
-			}
-		}
-		catch (Exception $e)
-		{
-			// try catch the API exception so normal logging occurs
-			try
-			{
-				throw new API_Response_Exception('something aint right', '500-000');
-			}
-			catch (API_Response_Exception $e)
-			{
-				$this->response->body(API_Response::factory()->set_response($e->get_response_code())->get_encode_response());
-			}
-		}
+		$internal_response = Request::factory($route_url, $request->param(), FALSE, $internal_routes)
+			->headers($request->headers())
+			->post($request->post())
+			->query($request->query())
+			->execute();
+		$response = API_Response::factory()->get_response();
+		$this->response->status(substr($response['code'], 0, 3));
+		$this->response->body($internal_response);
 	}
 }
