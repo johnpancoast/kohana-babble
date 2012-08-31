@@ -99,7 +99,7 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '401-000');
+				throw new API_Response_Exception($message, '400-000');
 			}
 			throw new API_Response_Exception($message, '500-100');
 		}
@@ -159,7 +159,7 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '401-000');
+				throw new API_Response_Exception($message, '400-000');
 			}
 			throw new API_Response_Exception($message, '500-100');
 		}
@@ -212,7 +212,7 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '401-000');
+				throw new API_Response_Exception($message, '400-000');
 			}
 			throw new API_Response_Exception($message, '500-100');
 		}
@@ -262,7 +262,7 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '401-000');
+				throw new API_Response_Exception($message, '400-000');
 			}
 			throw new API_Response_Exception($message, '500-100');
 		}
