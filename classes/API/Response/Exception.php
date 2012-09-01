@@ -3,7 +3,7 @@
 /**
  * generic api response exception
  */
-class API_Response_Exception extends Exception {
+class API_Response_Exception extends Kohana_Exception {
 	/** 
 	 * @var int A code that should correlate with an API code in config/base/api.php
 	 */

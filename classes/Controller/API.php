@@ -108,34 +108,28 @@ class Controller_API extends Controller {
 
 			// Execute the "after action" method
 			$this->after();
-		}
-		catch (API_Response_Exception $e)
-		{
-			$this->api_response->set_response($e->get_response_code());
-		}
 
-		// check that a response got set.
-		if ( ! $this->api_response->get_response() || ! $this->api_response->get_response_code())
-		{
-			// just throw/catch an API_Response_Exception.
-			// we do this so that the normal API_Response_Exception
-			// logging and api message handling can occur.
-			try
+			// check that a response got set.
+			if ( ! $this->api_response->get_response() || ! $this->api_response->get_response_code())
 			{
 				throw new API_Response_Exception('no api response', '500-002');
 			}
-			catch (API_Response_Exception $e)
-			{
-				$this->api_response->set_response($e->get_response_code());
-			}
+
+			// set http status code
+			$this->response->status($this->api_response->get_response_http_code());
+
+			// send out main response from encoded api response
+			$this->response->body($this->api_response->get_encoded_response());
+			return $this->response;
 		}
-
-		// set http status code
-		$this->response->status($this->api_response->get_response_http_code());
-
-		// send out main response from encoded api response
-		$this->response->body($this->api_response->get_encoded_response());
-		return $this->response;
+		catch (API_Response_Exception $e)
+		{
+			throw $e;
+		}
+		catch (Exception $e)
+		{
+			throw new API_Response_Exception('generic API Controller error', '500-000');
+		}
 	}
 
 }

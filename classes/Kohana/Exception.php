@@ -93,21 +93,13 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 			// response for API requests
 			if (Request::initial()->is_api_request)
 			{
-				// we try/catch so normal API message handling occurs
-				try
-				{
-					throw new API_Response_Exception('caught kohana exception', $http_status.'-000');
-				}
-				catch (API_Response_Exception $e)
-				{
-					$response->status($http_status);
+				$response->status($http_status);
 
-					// Set the response headers
-					$response->headers('Content-Type', Kohana_Exception::$error_view_content_type.'; charset='.Kohana::$charset);
+				// Set the response headers
+				$response->headers('Content-Type', Kohana_Exception::$error_view_content_type.'; charset='.Kohana::$charset);
 
-					// Set the response body
-					$response->body(API_Response::factory()->set_response($e->get_response_code())->get_encoded_response());
-				}
+				// Set the response body
+				$response->body(API_Response::factory()->set_response($e->get_response_code())->get_encoded_response());
 			}
 			// standard response
 			else
