@@ -58,6 +58,10 @@ class Controller_Public_API extends Controller {
 			->query($request->query())
 			->execute();
 		$response = API_Response::factory();
+		foreach ($response->get_header() as $key => $value)
+		{
+			$this->response->headers($key, $value);
+		}
 		$this->response->status($response->get_response_http_code());
 		$this->response->body($response->get_encoded_response());
 	}

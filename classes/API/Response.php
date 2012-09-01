@@ -12,8 +12,15 @@ abstract class API_Response {
 
 	/**
 	 * @var array Our response array
+	 * @access protected
 	 */
 	protected $response = array();
+
+	/**
+	 * @var array header
+	 * @access protected
+	 */
+	private $header = array();
 
 	/**
 	 * factory method to return a driver object
@@ -28,17 +35,24 @@ abstract class API_Response {
 		// FIXME change this to get method via the Accept header
 		$api_method = Request::current()->param('api_method');
 		$api_method = strtolower($api_method ? $api_method : Kohana::$config->load('api.driver.response'));
+
+		// for now just set content type from Accept header
+		$content_type = Request::current()->headers('accept');
+
 		switch ($api_method)
 		{
 			case 'xml':
 				$driver = 'XML';
+				$content_type = $content_type ? $content_type : 'application/xml';
 				break;
 			case 'namevalue':
 			case 'nv':
+				$content_type = $content_type ? $content_type : 'text/html';
 				$driver = 'NameValue';
 				break;
 			case 'json':
 			default:
+				$content_type = $content_type ? $content_type : 'application/json';
 				$driver = 'JSON';
 				break;
 		}
@@ -47,6 +61,9 @@ abstract class API_Response {
 		{
 			$class = 'API_Response_Driver_'.preg_replace('/[^\w]/', '', $driver);
 			self::$instances[$driver] = new $class();
+
+			// always default the charset to utf8
+			self::$instances[$driver]->add_header('Content-Type', $content_type.'; charset=utf8');
 		}
 		return self::$instances[$driver];
 	}
@@ -59,6 +76,34 @@ abstract class API_Response {
 	public function get_response()
 	{
 		return $this->response;
+	}
+
+	/**
+	 * add a header line
+	 * @param string $key header key
+	 * @param string $key header value
+	 * @access protected
+	 */
+	protected function add_header($key, $value)
+	{
+		$this->header[$key] = $value;
+	}
+
+	/**
+	 * get header
+	 * @param string $key header key to return
+	 * @return array all headers or just one line if $key provided
+	 */
+	public function get_header($key = NULL)
+	{
+		if ($key)
+		{
+			return $this->header[$key];
+		}
+		else
+		{
+			return $this->header;
+		}
 	}
 
 	/**

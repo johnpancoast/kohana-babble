@@ -115,6 +115,12 @@ class Controller_API extends Controller {
 				throw new API_Response_Exception('no api response', '500-002');
 			}
 
+			// add headers
+			foreach ($this->api_response->get_header() as $key => $value)
+			{
+				$this->response->headers($key, $value);
+			}
+
 			// set http status code
 			$this->response->status($this->api_response->get_response_http_code());
 

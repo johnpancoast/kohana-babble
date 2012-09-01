@@ -95,12 +95,17 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 			// response for API requests
 			if (Request::initial()->is_api_request)
 			{
-				// FIXME add header from API_Response
-				// <here>
+				$api_response = API_Response::factory();
+
+				// add headers
+				foreach ($api_response->get_header() as $key => $value)
+				{
+					$response->headers($key, $value);
+				}
 
 				// Set the response body
 				$code = ($e instanceof API_Response_Exception) ? $e->get_response_code() : $http_status.'-000';
-				$response->body(API_Response::factory()->set_response($code)->get_encoded_response());
+				$response->body($api_response::factory()->set_response($code)->get_encoded_response());
 			}
 			// standard response
 			else
@@ -126,10 +131,17 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 			// Added case for API access
 			if (Request::initial()->is_api_request)
 			{
+				$api_response = API_Response::factory();
+
 				$response->status(500);
-				// FIXME add header from API_Response
-				// <here>
-				$response->body(API_Response::factory()->set_response('500-000')->get_encoded_response());
+
+				// add headers
+				foreach ($api_response->get_header() as $key => $value)
+				{
+					$response->headers($key, $value);
+				}
+
+				$response->body($api_response->set_response('500-000')->get_encoded_response());
 			}
 			else
 			{
