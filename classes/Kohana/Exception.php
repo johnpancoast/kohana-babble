@@ -90,28 +90,26 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 			// response status
 			$http_status = ($e instanceof HTTP_Exception) ? $e->getCode() : 500;
 
+			$response->status($http_status);
+
 			// response for API requests
 			if (Request::initial()->is_api_request)
 			{
-				$response->status($http_status);
-
-				// Set the response headers
-				$response->headers('Content-Type', Kohana_Exception::$error_view_content_type.'; charset='.Kohana::$charset);
+				// FIXME add header from API_Response
+				// <here>
 
 				// Set the response body
-				$response->body(API_Response::factory()->set_response($e->get_response_code())->get_encoded_response());
+				$code = ($e instanceof API_Response_Exception) ? $e->get_response_code() : $http_status.'-000';
+				$response->body(API_Response::factory()->set_response($code)->get_encoded_response());
 			}
 			// standard response
 			else
 			{
-				// Instantiate the error view.
-				$view = View::factory(Kohana_Exception::$error_view, get_defined_vars());
-
-				// Set the response status
-				$response->status($http_status);
-
 				// Set the response headers
 				$response->headers('Content-Type', Kohana_Exception::$error_view_content_type.'; charset='.Kohana::$charset);
+
+				// Instantiate the error view.
+				$view = View::factory(Kohana_Exception::$error_view, get_defined_vars());
 
 				// Set the response body
 				$response->body($view->render());
@@ -124,9 +122,21 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 			 * generating a simpler response object.
 			 */
 			$response = Response::factory();
-			$response->status(500);
-			$response->headers('Content-Type', 'text/plain');
-			$response->body(Kohana_Exception::text($e));
+
+			// Added case for API access
+			if (Request::initial()->is_api_request)
+			{
+				$response->status(500);
+				// FIXME add header from API_Response
+				// <here>
+				$response->body(API_Response::factory()->set_response('500-000')->get_encoded_response());
+			}
+			else
+			{
+				$response->status(500);
+				$response->headers('Content-Type', 'text/plain');
+				$response->body(Kohana_Exception::text($e));
+			}
 		}
 
 		return $response;
