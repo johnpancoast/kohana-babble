@@ -31,28 +31,32 @@ abstract class API_Response {
 	 */
 	public static function factory()
 	{
+		$accept = Request::current()->headers('accept');
+		if (preg_match('/vnd.*\+(.*)$/', $accept, $match))
+		{
+			$request_content_type = $match[1];
+		}
+
 		// determine which driver to load
-		// FIXME change this to get method via the Accept header
-		$api_method = Request::current()->param('api_method');
-		$api_method = strtolower($api_method ? $api_method : Kohana::$config->load('api.driver.response'));
+		$request_content_type = strtolower($request_content_type ? $request_content_type : Kohana::$config->load('api.driver.response'));
 
 		// for now just set content type from Accept header
-		$content_type = Request::current()->headers('accept');
+		$response_content_type = $accept;
 
-		switch ($api_method)
+		switch ($request_content_type)
 		{
 			case 'xml':
 				$driver = 'XML';
-				$content_type = $content_type ? $content_type : 'application/xml';
+				$response_content_type = $response_content_type ? $response_content_type : 'application/xml';
 				break;
 			case 'namevalue':
 			case 'nv':
-				$content_type = $content_type ? $content_type : 'text/html';
+				$response_content_type = $response_content_type ? $response_content_type : 'text/html';
 				$driver = 'NameValue';
 				break;
 			case 'json':
 			default:
-				$content_type = $content_type ? $content_type : 'application/json';
+				$response_content_type = $response_content_type ? $response_content_type : 'application/json';
 				$driver = 'JSON';
 				break;
 		}
@@ -63,7 +67,7 @@ abstract class API_Response {
 			self::$instances[$driver] = new $class();
 
 			// always default the charset to utf8
-			self::$instances[$driver]->add_header('Content-Type', $content_type.'; charset=utf8');
+			self::$instances[$driver]->add_header('Content-Type', $response_content_type.'; charset=utf8');
 		}
 		return self::$instances[$driver];
 	}
