@@ -17,12 +17,13 @@ abstract class API_Request {
 	private $kohana_request = NULL;
 
 	/**
-	 * @var array The passed resource data. Note that code clients should not just
-	 * retrieve this data from kohana_request object the same way clients do for
-	 * headers and resource_id. This is because the way this data is loaded can differ
-	 * depending on request (i.e., loading data from standard POST vs. loading data
-	 * from POSTed XML). so we must let the abstract class decide how this variable is
-	 * set and code clients should get this data from {@see self::get_resource_data()}.
+	 * @var array The passed resource data. Note that code clients should not
+	 * just retrieve this data from kohana_request object the same way they do
+	 * for headers and resource_id. This is because the way this data is loaded can
+	 * differ depending on request (i.e., loading data from standard POST vs.
+	 * loading data from POSTed XML). so we must let the abstract class decide
+	 * how this variable is set and code clients should get this data from
+	 * {@see self::get_resource_data()}.
 	 * @access protected
 	 */
 	protected $resource_data = array();
