@@ -97,13 +97,13 @@ return array
 		// internal error - generic
 		'500-000'		=> array('public' => 'Internal error', 'private' => 'A terrible error occured'),
 		'500-001'		=> array('public' => 'Internal error', 'private' => 'Unknown API response code'),
-		'500-002'		=> array('public' => 'Internal error', 'private' => 'no API response'),
+		'500-002'		=> array('public' => 'Internal error', 'private' => 'No API response'),
 
 		// internal error - database
 		'500-100'		=> array('public' => 'Internal error', 'private' => 'A generic database exception. Perhaps more should be caught or examined.'),
 
 		// internal error - kohana orm
-		'500-200'		=> array('public' => 'Internal error', 'private' => 'generic exception during ORM interaction'),
+		'500-200'		=> array('public' => 'Internal error', 'private' => 'Generic exception during ORM interaction'),
 		'500-201'		=> array('public' => 'Internal error', 'private' => 'Failed to save the ORM model'),
 
 		// others
