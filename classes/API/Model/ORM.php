@@ -179,7 +179,7 @@ class API_Model_ORM extends API_Model {
 			$obj = ORM::factory($this->model, $request->kohana_request()->param('resource_id'));
 			if ($obj->loaded())
 			{
-				foreach ($request->request_resource_data as $k => $v)
+				foreach ($request->get_resource_data() as $k => $v)
 				{
 					$obj->{$k} = $v;
 				}
@@ -237,7 +237,7 @@ class API_Model_ORM extends API_Model {
 		try
 		{
 			$obj = ORM::factory($this->model);
-			foreach ($request->request_resource_data as $k => $v)
+			foreach ($request->get_resource_data() as $k => $v)
 			{
 				$obj->{$k} = $v;
 			}

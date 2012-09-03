@@ -17,9 +17,23 @@ abstract class API_Request {
 	private $kohana_request = NULL;
 
 	/**
-	 * @var array The passed resource data
+	 * @var array The passed resource data. Note that code clients should not just
+	 * retrieve this data from kohana_request object the same way clients do for
+	 * headers and resource_id. This is because the way this data is loaded can differ
+	 * depending on request (i.e., loading data from standard POST vs. loading data
+	 * from POSTed XML). so we must let the abstract class decide how this variable is
+	 * set and code clients should get this data from {@see self::get_resource_data()}.
+	 * @access protected
 	 */
-	public $request_resource_data = array();
+	protected $resource_data = array();
+
+	/**
+	 * load request
+	 * @abstract
+	 * @access public
+	 * @uses self::$resource_data
+	 */
+	abstract public function load_request();
 
 	/**
 	 * constructor. sets kohana request and loads request data.
@@ -28,7 +42,7 @@ abstract class API_Request {
 	 */
 	protected final function __construct()
 	{
-		$this->set_kohana_request(Request::current());
+		$this->kohana_request(Request::current());
 		$this->load_request();
 	}
 
@@ -96,13 +110,14 @@ abstract class API_Request {
 	}
 
 	/**
-	 * load request
-	 * @abstract
+	 * get resource data
 	 * @access public
-	 * @uses self::$request_resource_id
-	 * @uses self::$request_resource_data
+	 * @return resource data
 	 */
-	abstract public function load_request();
+	public function get_resource_data()
+	{
+		return $this->resource_data;
+	}
 
 	/**
 	 * get/generate a request authentication hash key
