@@ -22,6 +22,11 @@ class API_Model_ORM extends API_Model {
 	 */
 	private function remove_model_fields(array $object = array())
 	{
+		if (empty($this->model_fields))
+		{
+			return $object;
+		}
+
 		$return = array();
 		foreach ($this->model_fields as $k)
 		{
