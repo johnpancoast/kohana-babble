@@ -14,6 +14,12 @@ class Controller_API_Model extends Controller_API {
 	protected $model = null;
 
 	/**
+	 * @var array the model fields to return
+	 * @access protected
+	 */
+	protected $model_fields = array();
+
+	/**
 	 * @var API_Model An instance of an API_Model driver
 	 * @access protected
 	 */
@@ -46,7 +52,7 @@ class Controller_API_Model extends Controller_API {
 			throw new Exception('You must set a model to use api > model functionality.');
 		}
 
-		$this->api_model = API_Model::factory($this->model);
+		$this->api_model = API_Model::factory($this->model)->set_model_fields($this->model_fields);
 	}
 
 	/**

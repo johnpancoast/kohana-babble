@@ -8,8 +8,15 @@
 abstract class API_Model {
 	/**
 	 * @var string the model we're working with
+	 * @access protected
 	 */
 	protected $model = null;
+
+	/**
+	 * @var array the relevant model fields. others are unimportant in regards to the API.
+	 * @access protected
+	 */
+	protected $model_fields = array();
 
 	/**
 	 * load specific api model driver class
@@ -34,6 +41,18 @@ abstract class API_Model {
 	protected final function __construct($model)
 	{
 		$this->model = $model;
+	}
+
+	/**
+	 * set model return fields
+	 * @access public
+	 * @param array $fields the model return fields
+	 * @return self
+	 */
+	public function set_model_fields(array $fields = array())
+	{
+		$this->model_fields = $fields;
+		return $this;
 	}
 
 	/**

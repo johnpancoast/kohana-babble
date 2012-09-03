@@ -1,10 +1,53 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * kohana orm specific api/model interaction class
+ * kohana orm specific api/model interaction class.
+ *
+ * Note that due to a limitation in how Kohana's ORM works we cannot pass
+ * {@see self::$model_fields} to the selects for the ORM query. Meaning, we
+ * cannot limit the returned dataset to a selection of certain columns in
+ * the query itself. The only workaround is to loop the result set and
+ * manually set the fields to be returned. For most things this _should_
+ * be ok but for get_list() you'll get a bit of a performance hit depending
+ * on the amount of results you're returning.
+ *
  * @TODO !!!!!!! A LOT OF FIXING AND SECURITY HARDENING !!
  */
 class API_Model_ORM extends API_Model {
+	/**
+	 * remove model fields we're not instructed to return
+	 * @access private
+	 * @param array $object the object we're editing
+	 * @return array a refined object
+	 */
+	private function remove_model_fields(array $object = array())
+	{
+		$return = array();
+		foreach ($this->model_fields as $k)
+		{
+			$return[$k] = $object[$k];
+		}
+		return $return;
+	}
+
+	/**
+	 * for a set of objects, remove the model fields we're not instructed to return
+	 * @access private
+	 * @param array $object_set the list of objects we're editing
+	 * @return array a refined set of objects
+	 */
+	private function remove_model_field_set(array $object_set = array())
+	{
+		$return = array();
+		for ($i = 0, $c = count($object_list); $i < $c; ++$i)
+		{
+			$row = $object_list[$i];
+			$return[] = $this->remove_model_fields($row);
+			unset($object_list[$i]);
+		}
+		return $return;
+	}
+
 	/**
 	 * @see parent::get_list();
 	 * TODO - this method is incomplete. needs support for limit, sorting, and searching
@@ -37,7 +80,7 @@ class API_Model_ORM extends API_Model {
 			$resp = array();
 			foreach ($result as $row)
 			{
-				$resp[] = $row->as_array();
+				$resp[] = $this->remove_model_fields($row->as_array());
 			}
 			$response->set_response('200-000', $resp);
 		}
@@ -82,7 +125,7 @@ class API_Model_ORM extends API_Model {
 			$obj = ORM::factory($this->model, $request->request_resource_id);
 			if ($obj->loaded())
 			{
-				$response->set_response('200-000', $obj->as_array());
+				$response->set_response('200-000', $this->remove_model_fields($obj->as_array()));
 			}
 			else
 			{
