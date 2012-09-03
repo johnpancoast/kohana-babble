@@ -60,6 +60,9 @@ abstract class API_Request {
 		$api_method = strtolower($api_method ? $api_method : Kohana::$config->load('api.driver.request'));
 		switch (strtolower($api_method))
 		{
+			case 'xml':
+				$driver = 'POST_XML';
+				break;
 			case 'post':
 			default:
 				$driver = 'POST_Standard';

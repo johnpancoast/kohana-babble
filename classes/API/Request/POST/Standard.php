@@ -1,7 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * load API request from $_POST of resource_data
+ * load API request from POST of resource_data
  */
 class API_Request_POST_Standard extends API_Request {
 	/**
