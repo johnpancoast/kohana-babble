@@ -58,11 +58,11 @@ abstract class API_Request {
 		// determine which request driver to load
 		$api_method = Request::current()->param('api_method');
 		$api_method = strtolower($api_method ? $api_method : Kohana::$config->load('api.driver.request'));
-		switch ($api_method)
+		switch (strtolower($api_method))
 		{
 			case 'post':
 			default:
-				$driver = 'Post';
+				$driver = 'POST_Standard';
 				break;
 		}
 

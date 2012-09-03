@@ -1,9 +1,9 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * load API request from $_REQUEST data
+ * load API request from $_POST of resource_data
  */
-class API_Request_Post extends API_Request {
+class API_Request_POST_Standard extends API_Request {
 	/**
 	 * @see parent::load_request()
 	 */
