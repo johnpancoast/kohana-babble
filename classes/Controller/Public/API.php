@@ -18,7 +18,7 @@ class Controller_Public_API extends Controller {
 		// get the requested version from the Accept header
 		// e.g., vnd.company.app-v12+xml
 		// ^ looking for "12"
-		$accept = API_Request::factory()->request_header['Accept'];
+		$accept = API_Request::factory()->kohana_request()->headers('accept');
 		if (preg_match('/^vnd\..*-v(.*)\+.*/', $accept, $match)) {
 			$version = $match[1];
 		} else {

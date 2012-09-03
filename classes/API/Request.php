@@ -11,15 +11,10 @@ abstract class API_Request {
 	private static $instances = array();
 
 	/**
-	 * @var array Request header
-	 * @access public
+	 * @var Kohana_Request an instance of kohana request at the time this api request instance was created
+	 * @access private
 	 */
-	public $request_header = array();
-
-	/**
-	 * @var int The requested resource id
-	 */
-	public $request_resource_id = null;
+	private $kohana_request = NULL;
 
 	/**
 	 * @var array The passed resource data
@@ -27,14 +22,13 @@ abstract class API_Request {
 	public $request_resource_data = array();
 
 	/**
-	 * constructor, loads request
+	 * constructor. sets kohana request and loads request data.
 	 * @access protected
 	 * @final
 	 */
 	protected final function __construct()
 	{
-		$this->request_resource_id = Request::current()->param('resource_id');
-		$this->request_header = apache_request_headers();
+		$this->set_kohana_request(Request::current());
 		$this->load_request();
 	}
 
@@ -63,6 +57,42 @@ abstract class API_Request {
 			self::$instances[$driver] = new $class();
 		}
 		return self::$instances[$driver];
+	}
+
+	/**
+	 * set the kohana request object
+	 * @access public
+	 * @param Kohana_Request $request the kohana request instance
+	 */
+	public function set_kohana_request(Kohana_Request $request)
+	{
+		$this->kohana_request = $request;
+	}
+
+	/**
+	 * et the kohana request object
+	 * @access public
+	 * @return Kohana_Request
+	 */
+	public function get_kohana_request()
+	{
+		return $this->kohana_request;
+	}
+
+	/**
+	 * set or get the kohana request object
+	 * @access public
+	 * @param Kohana_Request $request the kohana request instance
+	 * @return Kohana_Request (if request not passed)
+	 */
+	public function kohana_request(Kohana_Request $request = NULL)
+	{
+		if ($request)
+		{
+			return $this->set_kohana_request($request);
+		}
+
+		return $this->get_kohana_request();
 	}
 
 	/**

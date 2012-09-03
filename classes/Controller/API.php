@@ -32,14 +32,16 @@ class Controller_API extends Controller {
 		if ( ! Auth::instance()->logged_in())
 		{
 			// get the user/key from auth header
-			if ( ! isset($this->api_request->request_header['Authorization']))
+			if ( ! $this->api_request->kohana_request()->headers('authorization'))
 			{
 				throw new API_Response_Exception('unauthorized user', '401-000');
 			}
-			list($user, $key) = explode(':', $this->api_request->request_header['Authorization']);
+			list($user, $key) = explode(':', $this->api_request->kohana_request()->headers('authorization'));
 
 			// get the api user from db.
 			// make sure it's an API user, not normal user.
+			// FIXME this should be abstract API_Auth->getUser() & API_Auth->getPass()
+			// so the code client can override how this works.
 			$user = ORM::factory('user')
 				->where('username', '=', $user)
 				->where('api_user', '=', 1)
@@ -55,6 +57,7 @@ class Controller_API extends Controller {
 			$check_key = API_Request::get_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('resource_data' => $this->api_request->request_resource_data));
 			if ( ! empty($key) && $key == $check_key)
 			{
+				// FIXME this should be abstract so the code client can override this functionality
 				Auth::instance()->force_login($user->username);
 			}
 			else
