@@ -11,7 +11,7 @@
  * you pass to it.
  *
  * Note that this controller is not an API nor intended to be. It just takes your parameters, creates an actual
- * API call (via cURL), and gives you returned data with helpful details.
+ * API call (via cURL), and gives you returned data with helpful details. It's like a proxy to the API.
  *
  * Example use:
  * http://example.com/testapi/[resource_controller]/[request_method]/[resource_id]?querystring

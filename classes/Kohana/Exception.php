@@ -95,17 +95,40 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 			// response for API requests
 			if (Request::initial()->is_api_request)
 			{
-				$api_response = API_Response::factory();
-
-				// add headers
-				foreach ($api_response->get_header() as $key => $value)
+				try
 				{
-					$response->headers($key, $value);
-				}
+					$api_response = API_Response::factory();
 
-				// Set the response body
-				$code = ($e instanceof API_Response_Exception) ? $e->get_response_code() : $http_status.'-000';
-				$response->body($api_response::factory()->set_response($code)->get_encoded_response());
+					// add headers
+					foreach ($api_response->get_header() as $key => $value)
+					{
+						$response->headers($key, $value);
+					}
+
+					// Set the response body
+					$code = ($e instanceof API_Response_Exception) ? $e->get_response_code() : $http_status.'-000';
+					$api_response->set_response($code);
+					$response->body($api_response->get_encoded_response());
+				}
+				// if we get an exception back while attempting to set a response we must just pass the header and respond
+				// with generic body. This generally occurs for unimplemented request or response methods (i.e., client requested xml
+				// when we don't have that available) but other cases may be possible as well.
+				catch (Exception $e)
+				{
+					// determine http code to pass
+					if ($e instanceof API_Response_Exception)
+					{
+						$ecode = $e->get_response_http_code();
+						$http_code = $ecode ? $ecode : '500';
+					}
+					else
+					{
+						$http_code = '500';
+					}
+					$response->status($http_code);
+					$response->headers('Content-Type', 'text/plain');
+					$response->body(Kohana::message('api', 'responses.'.$e->get_response_code().'.public'));
+				}
 			}
 			// standard response
 			else
@@ -127,28 +150,9 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 			 * generating a simpler response object.
 			 */
 			$response = Response::factory();
-
-			// Added case for API access
-			if (Request::initial()->is_api_request)
-			{
-				$api_response = API_Response::factory();
-
-				$response->status(500);
-
-				// add headers
-				foreach ($api_response->get_header() as $key => $value)
-				{
-					$response->headers($key, $value);
-				}
-
-				$response->body($api_response->set_response('500-000')->get_encoded_response());
-			}
-			else
-			{
-				$response->status(500);
-				$response->headers('Content-Type', 'text/plain');
-				$response->body(Kohana_Exception::text($e));
-			}
+			$response->status(500);
+			$response->headers('Content-Type', 'text/plain');
+			$response->body(Kohana_Exception::text($e));
 		}
 
 		return $response;

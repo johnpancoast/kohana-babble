@@ -77,9 +77,15 @@ return array
 		// not found
 		'404-000'		=> array('public' => 'The requested URL was not found', 'private' => 'The requested URL was not found'),
 
-		// others
+		// request method not allowed
 		'405-000'		=> array('public' => 'Method Not Allowed'),
+
+		// not acceptable. cannot respond with content in format of 'Accept' header. 
 		'406-000'		=> array('public' => 'Not Acceptable'),
+		'406-001'		=> array('public' => 'Not Acceptable', 'private' => 'No request functionality to load data in this format'),
+		'406-002'		=> array('public' => 'Not Acceptable', 'private' => 'No response functionality to respond with data in this format'),
+
+		// others
 		'407-000'		=> array('public' => 'Proxy Authentication Required'),
 		'409-000'		=> array('public' => 'Conflict'),
 		'410-000'		=> array('public' => 'Gone'),

@@ -9,7 +9,7 @@ class API_Request_POST_XML extends API_Request {
 	 */
 	public function load_request()
 	{
-		echo 'unimplemented';
-		exit;
+		// currently unimplemented
+		throw new API_Response_Exception('XML request loader unimplemented', '406-001');
 	}
 }
