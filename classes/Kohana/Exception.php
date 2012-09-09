@@ -120,14 +120,16 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 					{
 						$ecode = $e->get_response_http_code();
 						$http_code = $ecode ? $ecode : '500';
+						$message = Kohana::message('api', 'responses.'.$e->get_response_code().'.public');
 					}
 					else
 					{
 						$http_code = '500';
+						$message = $e->getMessage();
 					}
 					$response->status($http_code);
 					$response->headers('Content-Type', 'text/plain');
-					$response->body(Kohana::message('api', 'responses.'.$e->get_response_code().'.public'));
+					$response->body($message);
 				}
 			}
 			// standard response
