@@ -26,17 +26,20 @@ class Controller_API extends Controller {
 	{
 		$this->api_request = API_Request::factory();
 		$this->api_response = API_Response::factory();
+		$api_kohana_request = $this->api_request->kohana_request();
 
 		// if user not authentic, see if we've been passed an Authorization
 		// header and attempt to log em in with that.
+		// FIXME this should be an abstract method call
+		// so the code client can override how this works.
 		if ( ! Auth::instance()->logged_in())
 		{
 			// get the user/key from auth header
-			if ( ! $this->api_request->kohana_request()->headers('authorization'))
+			if ( ! $api_kohana_request->headers('authorization'))
 			{
 				throw new API_Response_Exception('unauthorized user', '401-000');
 			}
-			list($user, $key) = explode(':', $this->api_request->kohana_request()->headers('authorization'));
+			list($user, $key) = explode(':', $api_kohana_request->headers('authorization'));
 
 			// get the api user from db.
 			// make sure it's an API user, not normal user.
@@ -53,7 +56,7 @@ class Controller_API extends Controller {
 
 			// gen a new hash from passed data and private key and check against passed hash.
 			// if hashes match then the user has authenticated and we can log them in.
-			$url = URL::base(Request::initial()).Request::initial()->uri().'?'.http_build_query(Request::initial()->query());
+			$url = URL::base($api_kohana_request).$api_kohana_request->uri().'?'.http_build_query($api_kohana_requet->query());
 			$check_key = API_Request::get_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('resource_data' => $this->api_request->get_resource_data()));
 			if ( ! empty($key) && $key == $check_key)
 			{
