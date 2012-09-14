@@ -23,7 +23,8 @@
  *
  * Query string data is passed onto the actual API call as-is w/ the exception of data intended to be POSTed
  * to the API call. Normal API clients POST resource data in an array called "resource_data". You can POST
- * resource_data to the API call by passing your test data in a query string array called "rd".
+ * resource_data to the API call by passing your test data in a query string array called "rd". All data in
+ * this query string param will be POSTed to the API in a variable called resource_data.
  *
  * This example would POST a name and email to the "user" resource controller.
  * http://example.com/testapi/user/post?rd[name]=username&rd[email]=email
