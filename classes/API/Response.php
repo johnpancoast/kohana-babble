@@ -17,6 +17,12 @@ abstract class API_Response {
 	private $response = array();
 
 	/**
+	 * @var array Response header
+	 * @access private
+	 */
+	private $header = array();
+
+	/**
 	 * @var array A list of links that get inserted into the response.
 	 * We separate this var so code clients can set this separately from the
 	 * normal response that may be set (from sometimes differing places).
