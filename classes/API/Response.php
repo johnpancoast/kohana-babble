@@ -72,7 +72,8 @@ abstract class API_Response {
 			self::$instances[$instance_key] = new $class();
 
 			// always default the charset to utf8
-			self::$instances[$instance_key]->add_header('Content-Type', $response_content_type.'; charset=utf8');
+			// FIXME see above fix me. is this needed?
+			#self::$instances[$instance_key]->add_header('Content-Type', $response_content_type.'; charset=utf8');
 		}
 
 		return self::$instances[$instance_key];
