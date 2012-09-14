@@ -41,7 +41,7 @@ abstract class API_Response {
 	{
 		if ( ! isset(self::$instances[$instance_key]))
 		{
-			$koh_request = Kohana_Request::initial();
+			$koh_request = API_Request::factory()->kohana_request();
 			$request_content_type = NULL;
 			$accept = $koh_request->headers('accept');
 			if (preg_match('/vnd.*\+(.*)$/', $accept, $match))
