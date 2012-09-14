@@ -12,64 +12,90 @@ abstract class API_Response {
 
 	/**
 	 * @var array Our response array
-	 * @access protected
+	 * @access private
 	 */
-	protected $response = array();
+	private $response = array();
 
 	/**
-	 * @var array header
+	 * @var array A list of links that get inserted into the response.
+	 * We separate this var so code clients can set this separately from the
+	 * normal response that may be set (from sometimes differing places).
 	 * @access protected
 	 */
-	private $header = array();
+	private $links = array();
 
 	/**
 	 * factory method to return a driver object
 	 * @access public
 	 * @static
-	 * @param string $driver The driver object to return
+	 * @param string $instance_key The keyed instance to return
 	 * @return API_Request A child of this class (a driver)
 	 */
-	public static function factory()
+	public static function factory($instance_key = 'initial')
 	{
-		$accept = Request::current()->headers('accept');
-		if (preg_match('/vnd.*\+(.*)$/', $accept, $match))
+		if ( ! isset(self::$instances[$instance_key]))
 		{
-			$request_content_type = $match[1];
-		}
+			$koh_request = Kohana_Request::initial();
+			$request_content_type = NULL;
+			$accept = $koh_request->headers('accept');
+			if (preg_match('/vnd.*\+(.*)$/', $accept, $match))
+			{
+				$request_content_type = $match[1];
+			}
 
-		// determine which driver to load
-		$request_content_type = strtolower($request_content_type ? $request_content_type : Kohana::$config->load('api.driver.response'));
+			// determine which driver to load
+			$request_content_type = strtolower($request_content_type ? $request_content_type : Kohana::$config->load('api.driver.response'));
 
-		// for now just set content type from Accept header
-		$response_content_type = $accept;
+			// for now just set content type from Accept header
+			// FIXME this needed?
+			#$response_content_type = $request_content_type;;
 
-		switch ($request_content_type)
-		{
-			case 'xml':
-				$driver = 'XML';
-				$response_content_type = $response_content_type ? $response_content_type : 'application/xml';
-				break;
-			case 'namevalue':
-			case 'nv':
-				$response_content_type = $response_content_type ? $response_content_type : 'text/html';
-				$driver = 'NameValue';
-				break;
-			case 'json':
-			default:
-				$response_content_type = $response_content_type ? $response_content_type : 'application/json';
-				$driver = 'JSON';
-				break;
-		}
+			switch ($request_content_type)
+			{
+				case 'xml':
+					$driver = 'XML';
+					$response_content_type = isset($response_content_type) ? $response_content_type : 'application/xml';
+					break;
+				case 'namevalue':
+				case 'nv':
+					$response_content_type = isset($response_content_type) ? $response_content_type : 'text/html';
+					$driver = 'NameValue';
+					break;
+				case 'json':
+				default:
+					$response_content_type = isset($response_content_type) ? $response_content_type : 'application/json';
+					$driver = 'JSON';
+					break;
+			}
 
-		if ( ! isset(self::$instances[$driver]))
-		{
 			$class = 'API_Response_Driver_'.preg_replace('/[^\w]/', '', $driver);
-			self::$instances[$driver] = new $class();
+			self::$instances[$instance_key] = new $class();
 
 			// always default the charset to utf8
-			self::$instances[$driver]->add_header('Content-Type', $response_content_type.'; charset=utf8');
+			self::$instances[$instance_key]->add_header('Content-Type', $response_content_type.'; charset=utf8');
 		}
-		return self::$instances[$driver];
+
+		return self::$instances[$instance_key];
+	}
+
+	/**
+	 * add a link
+	 * @param string $link The link
+	 * @param string $rel The link relation
+	 * @param string $title The link title
+	 */
+	public function add_link($link, $rel = NULL, $title = NULL)
+	{
+		$this->links[] = array('link' => $link, 'rel' => $rel, 'title' => $title);
+	}
+
+	/**
+	 * get links
+	 * @return array Links
+	 */
+	public function get_links()
+	{
+		return $this->links;
 	}
 
 	/**
