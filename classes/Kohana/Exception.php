@@ -93,7 +93,7 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 			$response->status($http_status);
 
 			// response for API requests
-			if (Request::initial()->is_api_request)
+			if (API_Request::factory()->kohana_request()->is_api_request)
 			{
 				try
 				{
