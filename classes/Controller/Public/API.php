@@ -63,6 +63,6 @@ class Controller_Public_API extends Controller {
 			$this->response->headers($key, $value);
 		}
 		$this->response->status($response->get_response_http_code());
-		$this->response->body($response->get_encoded_response());
+		$this->response->body($response->get_response_encoded());
 	}
 }

@@ -131,7 +131,7 @@ class Controller_API extends Controller {
 			$this->response->status($this->api_response->get_response_http_code());
 
 			// send out main response from encoded api response
-			$this->response->body($this->api_response->get_encoded_response());
+			$this->response->body($this->api_response->get_response_encoded());
 			return $this->response;
 		}
 		catch (API_Response_Exception $e)

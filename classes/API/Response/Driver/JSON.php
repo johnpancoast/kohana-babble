@@ -5,9 +5,9 @@
  */
 class API_Response_Driver_JSON extends API_Response {
 	/**
-	 * @see parent::get_encoded_response()
+	 * @see parent::get_response_encoded()
 	 */
-	public function get_encoded_response()
+	public function get_response_encoded()
 	{
 		return json_encode($this->get_response());
 	}

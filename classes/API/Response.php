@@ -31,6 +31,12 @@ abstract class API_Response {
 	private $links = array();
 
 	/**
+	 * get an encoded response messsage
+	 * @param string $response The message to encode and return
+	 */
+	abstract public function get_response_encoded();
+
+	/**
 	 * factory method to return a driver object
 	 * @access public
 	 * @static
@@ -212,10 +218,4 @@ abstract class API_Response {
 		// allow chaining
 		return $this;
 	}
-
-	/**
-	 * get an encoded response messsage
-	 * @param string $response The message to encode and return
-	 */
-	abstract public function get_encoded_response();
 }
