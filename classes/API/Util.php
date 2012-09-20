@@ -15,7 +15,7 @@ class API_Util {
 	{
 		$search = array('_', '+', '-v', '/', '.');
 		$replace = array('+', '_', '_', '_', '_');
-		return str_replace($search, $replace, $media_string);
+		return 'API_Response_Driver_'.str_replace($search, $replace, $media_string);
 	}
 
 	/**
