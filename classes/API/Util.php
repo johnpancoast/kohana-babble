@@ -54,6 +54,7 @@ class API_Util {
 			// vendor_type	= application/[vnd.appname.behavior]-v1.0+json
 			// version		= application/vnd.appname.behavior-v[1.0]+json
 			// class		= application_vnd_appname_behavior_1_0_json
+			// default_class= set in config
 			//
 			// passed = what the client gave us
 			// real = what we determined
@@ -130,6 +131,8 @@ class API_Util {
 			{
 				return FALSE;
 			}
+
+			$content_type['real']['version'] = isset($content_type['real']['version']) ? $content_type['real']['version'] : Kohana::$config->load('api.current_version');
 
 			// detemine the class name based on all we've gotten
 			$class = NULL;
