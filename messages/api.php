@@ -104,6 +104,7 @@ return array
 		'500-000'		=> array('public' => 'Internal error', 'private' => 'A terrible error occured'),
 		'500-001'		=> array('public' => 'Internal error', 'private' => 'Unknown API response code'),
 		'500-002'		=> array('public' => 'Internal error', 'private' => 'No API response'),
+		'500-003'		=> array('public' => 'Internal error', 'private' => 'Developer set a non-existent default api response driver.'),
 
 		// internal error - database
 		'500-100'		=> array('public' => 'Internal error', 'private' => 'A generic database exception. Perhaps more should be caught or examined.'),

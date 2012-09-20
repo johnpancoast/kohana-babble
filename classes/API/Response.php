@@ -71,12 +71,23 @@ abstract class API_Response {
 					$media_drtver_class = $type['real']['default_class'];
 					break;
 				}
+
+				$default_type_found = ( ! is_null($type['real']['default_class']));
 			}
 
-			// if we found no class, then we have nothing to respond with
+			// if we found no class, then we have nothing to respond with.
+			// if this was client error, we'll 406, otherwise we'll 500.
 			if ( ! $media_drtver_class)
 			{
-				throw new API_Response_Exception('no response driver found, assuming 406', '406-000');
+				// dev set a default type that doesn't exist
+				if (isset($default_type_found))
+				{
+					throw new API_Response_Exception('developer set a non-existent default response driver class', '500-000');
+				}
+				else
+				{
+					throw new API_Response_Exception('no response driver found, assuming 406', '406-000');
+				}
 			}
 
 			self::$instances[$instance_key] = new $media_drtver_class();
