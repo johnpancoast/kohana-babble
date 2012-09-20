@@ -86,9 +86,9 @@ class Controller_Public_API_Testing extends Controller {
 			curl_setopt($ch, CURLOPT_STDERR, fopen($config['curl_debug_file'], 'w+'));
 		}
 
-		$curlResp = curl_exec($ch);
+		$curl_resp = curl_exec($ch);
 		$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		return array('status' => $http_status, 'response' => $curlResp);
+		return array('status' => $http_status, 'response' => $curl_resp);
 	}
 
 	public function action_index()

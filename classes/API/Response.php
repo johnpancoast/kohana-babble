@@ -29,7 +29,6 @@ abstract class API_Response {
 	 * @access protected
 	 */
 	private $links = array();
-
 	/**
 	 * get an encoded response messsage
 	 * @param string $response The message to encode and return
@@ -47,45 +46,40 @@ abstract class API_Response {
 	{
 		if ( ! isset(self::$instances[$instance_key]))
 		{
+			// the class we're looking for that will handle response.
+			$media_drtver_class = NULL;
+
+			// kohana request that initialized us
 			$koh_request = API_Request::factory()->kohana_request();
-			$request_content_type = NULL;
+
+			// accept header
 			$accept = $koh_request->headers('accept');
-			if (preg_match('/vnd.*\+(.*)$/', $accept, $match))
+
+			// content types from accept header
+			$content_types = API_Util::get_content_type_set($accept);
+
+			// loop content types and find a class
+			foreach ($content_types as $type)
 			{
-				$request_content_type = $match[1];
+				if (class_exists($type['real']['class']))
+				{
+					$media_drtver_class = $type['real']['class'];
+					break;
+				}
+				elseif (class_exists($type['real']['default_class']))
+				{
+					$media_drtver_class = $type['real']['default_class'];
+					break;
+				}
 			}
 
-			// determine which driver to load
-			$request_content_type = strtolower($request_content_type ? $request_content_type : Kohana::$config->load('api.driver.response'));
-
-			// for now just set content type from Accept header
-			// FIXME this needed?
-			#$response_content_type = $request_content_type;;
-
-			switch ($request_content_type)
+			// if we found no class, then we have nothing to respond with
+			if ( ! $media_drtver_class)
 			{
-				case 'xml':
-					$driver = 'XML';
-					$response_content_type = isset($response_content_type) ? $response_content_type : 'application/xml';
-					break;
-				case 'namevalue':
-				case 'nv':
-					$response_content_type = isset($response_content_type) ? $response_content_type : 'text/html';
-					$driver = 'NameValue';
-					break;
-				case 'json':
-				default:
-					$response_content_type = isset($response_content_type) ? $response_content_type : 'application/json';
-					$driver = 'JSON';
-					break;
+				throw new API_Response_Exception('no response driver found, assuming 406', '406-000');
 			}
 
-			$class = 'API_Response_Driver_'.preg_replace('/[^\w]/', '', $driver);
-			self::$instances[$instance_key] = new $class();
-
-			// always default the charset to utf8
-			// FIXME see above fix me. is this needed?
-			#self::$instances[$instance_key]->add_header('Content-Type', $response_content_type.'; charset=utf8');
+			self::$instances[$instance_key] = new $media_drtver_class();
 		}
 
 		return self::$instances[$instance_key];
