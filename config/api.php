@@ -5,7 +5,7 @@
  */
 return array
 (
-	'default_version' => '0.0.1',
+	'current_version' => '0.0.1',
 
 	// TODO add comment
 	'default_content_types' => array(

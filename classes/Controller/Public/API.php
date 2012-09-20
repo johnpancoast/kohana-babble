@@ -22,7 +22,7 @@ class Controller_Public_API extends Controller {
 		if (preg_match('/^vnd\..*(\-v.*)?\+.*/', $accept, $match)) {
 			$version = str_replace('-v', '', $match[1]);
 		} else {
-			$version = Kohana::$config->load('api.default_version');
+			$version = Kohana::$config->load('api.current_version');
 		}
 		$version = str_replace('.', '_', $version);
 
