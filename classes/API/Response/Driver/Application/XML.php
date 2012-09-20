@@ -3,7 +3,7 @@
 /**
  * xml api response
  */
-class API_Response_Driver_XML extends API_Response {
+class API_Response_Driver_Application_XML extends API_Response {
 	/**
 	 * @see parent::get_response_encoded()
 	 */
