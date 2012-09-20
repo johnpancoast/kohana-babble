@@ -12,6 +12,8 @@ class API_Response_Exception extends Kohana_Exception {
 	/**
 	 * constructor sets response code
 	 * @TODO add error logging of passed message and the response_code and associated private response message in config
+	 * @TODO make response code just normal exception code, break passed codes into normal http code, then internal code as new param
+	 * and change clients that use get_response_http_cdoe to just use standard getCode().
 	 */
 	public function __construct($message, $response_code)
 	{
