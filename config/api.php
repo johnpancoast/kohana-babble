@@ -9,7 +9,7 @@ return array
 
 	// TODO add comment
 	'default_content_types' => array(
-		//'application/vnd.companyname.appname+json' => 'application/json',
+		'*/*' => 'application/json',
 	),
 
 	// api testing parameters. {@see Controller_Public_API_Testing}.
