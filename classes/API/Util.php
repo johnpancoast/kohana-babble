@@ -24,7 +24,7 @@ class API_Util {
 	 * @static
 	 * @param string $header_string A header string
 	 * @return mixed Array of relevant broken up header info or false upon failure.
-	 * TODO I feel like this method could work better/faster.
+	 * TODO I know this method can work better/faster.
 	 */
 	public static function get_media_type_set($media_string = '')
 	{
@@ -175,7 +175,9 @@ class API_Util {
 			{
 				if (isset($default_types[$v]))
 				{
-					$content_type['real']['default_class'] = self::get_class_by_media_type($default_types[$v]);
+					// if they're default types, we hack in a 'default' prefix so the right class gets loaded.
+					$class = 'Default/'.$default_types[$v];
+					$content_type['real']['default_class'] = self::get_class_by_media_type($class);
 				}
 			}
 

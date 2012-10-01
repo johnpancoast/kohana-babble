@@ -3,7 +3,7 @@
 /**
  * text response
  */
-class API_Response_Driver_Text_Plain extends API_Response {
+class API_Response_Driver_Default_Text_Plain extends API_Response {
 	/**
 	 * @see parent::get_response_encoded()
 	 */

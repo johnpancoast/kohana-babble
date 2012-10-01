@@ -80,9 +80,9 @@ abstract class API_Response {
 			if ( ! $media_drtver_class)
 			{
 				// dev set a default type that doesn't exist
-				if (isset($default_type_found))
+				if (isset($default_type_found) && $default_type_found)
 				{
-					throw new API_Response_Exception('developer set a non-existent default response driver class', '500-000');
+					throw new API_Response_Exception('developer set a non-existent default response driver class', '500-003');
 				}
 				else
 				{
