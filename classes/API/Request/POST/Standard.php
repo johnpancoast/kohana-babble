@@ -9,6 +9,7 @@ class API_Request_POST_Standard extends API_Request {
 	 */
 	public function load_request()
 	{
-		$this->request_resource_data = Request::current()->post('resource_data');
+		parse_str(Request::current()->body(), $input);
+		$this->resource_data = $input['resource_data'];
 	}
 }
