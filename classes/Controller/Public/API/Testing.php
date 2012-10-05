@@ -55,13 +55,14 @@ class Controller_Public_API_Testing extends Controller {
 			throw new Exception('invalid request method passed');
 		}
 
-		// setup POST data
+		// setup passed content
 		$resource_post = array();
 		if ($method == 'POST' || $method == 'PUT')
 		{
 			ksort($post);
 			$resource_post = array('resource_data' => $post);
 		}
+		$content = http_build_query($resource_post);
 
 		// setup header
 		$header = array_merge($config['header'], $header);
@@ -71,15 +72,14 @@ class Controller_Public_API_Testing extends Controller {
 		$header[] = 'Authorization: '.$config['user'].':'.API_Request::get_auth_key($config['user'], $config['pass'], $url, $method, $resource_post);
 
 		// call api
-		$ch = curl_init();
+		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 		curl_setopt($ch, CURLOPT_VERBOSE, TRUE);
-		if ( ! empty($resource_post))
+		if ($method == 'POST' || $method == 'PUT')
 		{
-			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($resource_post));
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
 		}
 		if ($config['curl_debug_file'])
 		{
@@ -130,7 +130,6 @@ class Controller_Public_API_Testing extends Controller {
 		}
 
 		$resp = $this->callApi($url, $method, $post);
-		echo $resp['status'].'<br/><br/>';
 		echo $resp['response'];
 	}
 }
