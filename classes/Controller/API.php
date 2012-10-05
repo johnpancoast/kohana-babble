@@ -58,7 +58,7 @@ class Controller_API extends Controller {
 			// if hashes match then the user has authenticated and we can log them in.
 			$query = http_build_query($api_kohana_request->query());
 			$url = URL::base($api_kohana_request).$api_kohana_request->uri().( ! empty($query) ? '?'.$query : '');
-			$check_key = API_Request::get_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('resource_data' => $this->api_request->get_resource_data()));
+			$check_key = API_Util::generate_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('resource_data' => $this->api_request->get_resource_data()));
 			if ( ! empty($key) && $key == $check_key)
 			{
 				// FIXME this should be abstract so the code client can override this functionality

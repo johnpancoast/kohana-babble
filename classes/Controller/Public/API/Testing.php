@@ -68,8 +68,8 @@ class Controller_Public_API_Testing extends Controller {
 		$header = array_merge($config['header'], $header);
 
 		// add auth header.
-		// this header and {@see API_Request::get_auth_key()} is a good hint into how the API handles authentication.
-		$header[] = 'Authorization: '.$config['user'].':'.API_Request::get_auth_key($config['user'], $config['pass'], $url, $method, $resource_post);
+		// this header and {@see API_Util::generate_auth_key()} is a good hint into how the API handles authentication.
+		$header[] = 'Authorization: '.$config['user'].':'.API_Util::generate_auth_key($config['user'], $config['pass'], $url, $method, $resource_post);
 
 		// call api
 		$ch = curl_init($url);

@@ -120,22 +120,4 @@ abstract class API_Request {
 	{
 		return $this->resource_data;
 	}
-
-	/**
-	 * get/generate a request authentication hash key
-	 * @access public
-	 * @static
-	 * @param string $user Public username
-	 * @param string $private_key Private key
-	 * @param string $url Request url
-	 * @param string $method Request method
-	 * @param array $post Post data
-	 * @return string A hash
-	 */
-	public static function get_auth_key($user, $private_key, $url, $method, $post = array()) {
-		ksort($post);
-		$hash_data = $user.'-'.$private_key.'-'.$method.'-'.http_build_query($post);
-		return hash_hmac('sha1', $hash_data, $private_key);
-	}
-
 }
