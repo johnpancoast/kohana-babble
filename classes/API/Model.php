@@ -61,8 +61,9 @@ abstract class API_Model {
 	 * @uses API_Response
 	 * @access public
 	 * @abstract
+	 * @TODO doc params
 	 */
-	abstract public function get_list();
+	abstract public function get_list($page = 1, $limit = NULL, $sort = NULL, $search = NULL);
 
 	/**
 	 * get a spefic model
@@ -71,7 +72,7 @@ abstract class API_Model {
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function get();
+	abstract public function get($object_id);
 
 	/**
 	 * edit a model
@@ -80,7 +81,7 @@ abstract class API_Model {
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function edit();
+	abstract public function edit($object_id, array $object_data = array());
 
 	/**
 	 * create a model
@@ -89,7 +90,7 @@ abstract class API_Model {
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function add();
+	abstract public function add(array $object_data = array());
 
 	/**
 	 * delete a model
@@ -98,5 +99,5 @@ abstract class API_Model {
 	 * @access public
 	 * @abstract
 	 */
-	abstract public function delete();
+	abstract public function delete($object_id);
 }

@@ -57,7 +57,7 @@ class API_Model_ORM extends API_Model {
 	 * @see parent::get_list();
 	 * TODO - this method is incomplete. needs support for limit, sorting, and searching
 	 */
-	public function get_list()
+	public function get_list($page = 1, $limit = NULL, $sort = NULL, $search = NULL)
 	{
 		// Be sure to only profile if it's enabled
 		/*
@@ -68,12 +68,8 @@ class API_Model_ORM extends API_Model {
 		}
 		*/
 
-		$request = API_Request::factory();
-		$response = API_Response::factory();
-		$passed_limit = Request::current()->query('limit');
-		$passed_page = Request::current()->query('page');
-		$limit = $passed_limit ? $passed_limit : 100;
-		$offset = $passed_page ? $passed_page * $limit : 0;
+		$limit = $limit ? $limit : 100;
+		$offset = $page ? ($page-1) * $limit : 0;
 
 		// catch all exceptions
 		try
@@ -87,23 +83,24 @@ class API_Model_ORM extends API_Model {
 			{
 				$resp[] = $this->remove_model_fields($row->as_array());
 			}
-			$response->set_response('200-000', $resp);
+
+			return $resp;
 		}
 		catch (ORM_Validation_Exception $e)
 		{
-			throw new API_Response_Exception($e->getMessage(), '400-100');
+			throw new API_Model_Exception($e->getMessage(), '400-100');
 		}
 		catch (Database_Exception $e)
 		{
 			$message = $e->getMessage();
-			throw new API_Response_Exception($message, '500-100');
+			throw new API_Model_Exception($message, '500-100');
 		}
 		catch (Exception $e)
 		{
 			// for some reason, kohana decided to throw a general exception if you set a non-existent field.
 			// wish they threw validation exception but whatever.
 			$message = $e->getMessage();
-			throw new API_Response_Exception($message, '500-200');
+			throw new API_Model_Exception($message, '500-200');
 		}
 
 		/*
@@ -119,27 +116,24 @@ class API_Model_ORM extends API_Model {
 	/**
 	 * @see parent::get();
 	 */
-	public function get()
+	public function get($object_id)
 	{
-		$request = API_Request::factory();
-		$response = API_Response::factory();
-
 		// catch all exceptions
 		try
 		{
-			$obj = ORM::factory($this->model, $request->kohana_request()->param('resource_id'));
+			$obj = ORM::factory($this->model, $object_id);
 			if ($obj->loaded())
 			{
-				$response->set_response('200-000', $this->remove_model_fields($obj->as_array()));
+				return $this->remove_model_fields($obj->as_array());
 			}
 			else
 			{
-				$response->set_response('404-000');
+				throw new API_Model_Exception('not found', '404-000');
 			}
 		}
 		catch (ORM_Validation_Exception $e)
 		{
-			throw new API_Response_Exception($e->getMessage(), '400-100');
+			throw new API_Model_Exception($e->getMessage(), '400-100');
 		}
 		catch (Database_Exception $e)
 		{
@@ -147,9 +141,9 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '400-000');
+				throw new API_Model_Exception($message, '400-000');
 			}
-			throw new API_Response_Exception($message, '500-100');
+			throw new API_Model_Exception($message, '500-100');
 		}
 		catch (Exception $e)
 		{
@@ -159,47 +153,44 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/The (.*) property does not exist in the (.*) class/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '400-101');
+				throw new API_Model_Exception($message, '400-101');
 			}
-			throw new API_Response_Exception($message, '500-200');
+			throw new API_Model_Exception($message, '500-200');
 		}
 	}
 
 	/**
 	 * @see parent::edit();
 	 */
-	public function edit()
+	public function edit($object_id, array $object_data = array())
 	{
-		$request = API_Request::factory();
-		$response = API_Response::factory();
-
 		// catch all exceptions
 		try
 		{
-			$obj = ORM::factory($this->model, $request->kohana_request()->param('resource_id'));
+			$obj = ORM::factory($this->model, $object_id);
 			if ($obj->loaded())
 			{
-				foreach ($request->get_resource_data() as $k => $v)
+				foreach ($object_data AS $k => $v)
 				{
 					$obj->{$k} = $v;
 				}
 				if ($obj->save())
 				{
-					$response->set_response('200-000');
+					return TRUE;
 				}
 				else
 				{
-					throw new API_Response_Exception('failed to save', '500-201');
+					throw new API_Model_Exception('failed to save', '500-201');
 				}
 			}
 			else
 			{
-				$response->set_response('404-000');
+				throw new API_Model_Exception('not found', '404-000');
 			}
 		}
 		catch (ORM_Validation_Exception $e)
 		{
-			throw new API_Response_Exception($e->getMessage(), '400-100');
+			throw new API_Model_Exception($e->getMessage(), '400-100');
 		}
 		catch (Database_Exception $e)
 		{
@@ -207,9 +198,9 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '400-000');
+				throw new API_Model_Exception($message, '400-000');
 			}
-			throw new API_Response_Exception($message, '500-100');
+			throw new API_Model_Exception($message, '500-100');
 		}
 		catch (Exception $e)
 		{
@@ -219,40 +210,37 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/The (.*) property does not exist in the (.*) class/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '400-101');
+				throw new API_Model_Exception($message, '400-101');
 			}
-			throw new API_Response_Exception($message, '500-200');
+			throw new API_Model_Exception($message, '500-200');
 		}
 	}
 
 	/**
 	 * @see parent::add();
 	 */
-	public function add()
+	public function add(array $object_data = array())
 	{
-		$request = API_Request::factory();
-		$response = API_Response::factory();
-
 		// catch all exceptions
 		try
 		{
 			$obj = ORM::factory($this->model);
-			foreach ($request->get_resource_data() as $k => $v)
+			foreach ($object_data as $k => $v)
 			{
 				$obj->{$k} = $v;
 			}
 			if ($obj->save())
 			{
-				$response->set_response('200-000', $obj->id);
+				return $obj->id;
 			}
 			else
 			{
-				throw new API_Response_Exception('failed to save', '500-201');
+				throw new API_Model_Exception('failed to save', '500-201');
 			}
 		}
 		catch (ORM_Validation_Exception $e)
 		{
-			throw new API_Response_Exception($e->getMessage(), '400-100');
+			throw new API_Model_Exception($e->getMessage(), '400-100');
 		}
 		catch (Database_Exception $e)
 		{
@@ -260,9 +248,9 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '400-000');
+				throw new API_Model_Exception($message, '400-000');
 			}
-			throw new API_Response_Exception($message, '500-100');
+			throw new API_Model_Exception($message, '500-100');
 		}
 		catch (Exception $e)
 		{
@@ -272,37 +260,34 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/The (.*) property does not exist in the (.*) class/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '400-101');
+				throw new API_Model_Exception($message, '400-101');
 			}
-			throw new API_Response_Exception($message, '500-200');
+			throw new API_Model_Exception($message, '500-200');
 		}
 	}
 
 	/**
 	 * @see parent::delete();
 	 */
-	public function delete()
+	public function delete($object_id)
 	{
-		$request = API_Request::factory();
-		$response = API_Response::factory();
-
 		// catch all exceptions
 		try
 		{
-			$obj = ORM::factory($this->model, $request->kohana_request()->param('resource_id'));
+			$obj = ORM::factory($this->model, $object_id);
 			if ($obj->loaded())
 			{
 				$obj->delete();
-				$response->set_response('200-000');
+				return TRUE;
 			}
 			else
 			{
-				$response->set_response('0');
+				throw new API_Model_Exception('not found', '404-000');
 			}
 		}
 		catch (ORM_Validation_Exception $e)
 		{
-			throw new API_Response_Exception($e->getMessage(), '400-100');
+			throw new API_Model_Exception($e->getMessage(), '400-100');
 		}
 		catch (Database_Exception $e)
 		{
@@ -310,9 +295,9 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/Duplicate entry '(.*)' for key.*/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '400-000');
+				throw new API_Model_Exception($message, '400-000');
 			}
-			throw new API_Response_Exception($message, '500-100');
+			throw new API_Model_Exception($message, '500-100');
 		}
 		catch (Exception $e)
 		{
@@ -322,9 +307,9 @@ class API_Model_ORM extends API_Model {
 			if (preg_match("/The (.*) property does not exist in the (.*) class/", $message, $match))
 			{
 				// TODO add substitution ability for api config values
-				throw new API_Response_Exception($message, '400-101');
+				throw new API_Model_Exception($message, '400-101');
 			}
-			throw new API_Response_Exception($message, '500-200');
+			throw new API_Model_Exception($message, '500-200');
 		}
 	}
 }

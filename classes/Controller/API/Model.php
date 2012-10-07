@@ -60,15 +60,27 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_get()
 	{
-		// a get request with an id means the resource is one object
-		if ($this->api_request->kohana_request()->param('resource_id'))
+		try
 		{
-			$this->api_model->get();
+			$req = $this->api_request;
+
+			// a get request with an id means the resource is one object
+			if ($req->kohana_request()->param('resource_id'))
+			{
+				$resp = $this->api_model->get($req->kohana_request()->param('resource_id'));
+			}
+			// without an id means the resource is a list of objects
+			else
+			{
+				// TODO pass params
+				$resp = $this->api_model->get_list();
+			}
+
+			$this->api_response->set_response('200-000', $resp);
 		}
-		// without an id means the resource is a list of objects
-		else
+		catch (API_Model_Exception $e)
 		{
-			$this->api_model->get_list();
+			throw new API_Response_Exception($e->getMessage(), $e->get_response_code());
 		}
 	}
 
@@ -77,15 +89,31 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_put()
 	{
-		// if we have an id, we're editing an existing id otherwise, it's an add
-		// TODO this should actually check to see if the object exists, then add/edit accordingly.
-		if ($this->api_request->kohana_request()->param('resource_id'))
+		try
 		{
-			$this->api_model->edit();
+			$req = $this->api_request;
+
+			// if we have an id, we're editing an existing id otherwise, it's an add
+			// TODO this should actually check to see if the object exists, then add/edit accordingly.
+			if ($req->kohana_request()->param('resource_id'))
+			{
+				if ($this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_resource_data()))
+				{
+					$this->api_response->set_response('200-000');
+				}
+			}
+			else
+			{
+				$resource_id = $this->api_model->add($req->get_resource_data());
+				if ($resource_id)
+				{
+					$this->api_response->set_response('200-000', $resource_id);
+				}
+			}
 		}
-		else
+		catch (API_Model_Exception $e)
 		{
-			$this->api_model->add();
+			throw new API_Response_Exception($e->getMessage(), $e->get_response_code());
 		}
 	}
 
@@ -94,7 +122,19 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_post()
 	{
-		$this->api_model->add();
+		try
+		{
+			$req = $this->api_request;
+			$resource_id = $this->api_model->add($req->get_resource_data());
+			if ($resource_id)
+			{
+				$this->api_response->set_response('200-000', $resource_id);
+			}
+		}
+		catch (API_Model_Exception $e)
+		{
+			throw new API_Response_Exception($e->getMessage(), $e->get_response_code());
+		}
 	}
 
 	/**
@@ -102,6 +142,16 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_delete()
 	{
-		$this->api_model->delete();
+		try
+		{
+			if ($this->api_model->delete())
+			{
+				$this->api_response->set_response('200-000');
+			}
+		}
+		catch (API_Model_Exception $e)
+		{
+			throw new API_Response_Exception($e->getMessage(), $e->get_response_code());
+		}
 	}
 }
