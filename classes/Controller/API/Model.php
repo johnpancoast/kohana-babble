@@ -77,7 +77,15 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_put()
 	{
-		$this->api_model->add();
+		// if we have an id, we're editing an existing id otherwise, it's an add
+		if ($this->api_request->kohana_request()->param('resource_id'))
+		{
+			$this->api_model->edit();
+		}
+		else
+		{
+			$this->api_model->add();
+		}
 	}
 
 	/**
@@ -85,7 +93,7 @@ class Controller_API_Model extends Controller_API {
 	 */
 	public function action_post()
 	{
-		$this->api_model->edit();
+		$this->api_model->add();
 	}
 
 	/**
