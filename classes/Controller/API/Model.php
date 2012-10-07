@@ -78,6 +78,7 @@ class Controller_API_Model extends Controller_API {
 	public function action_put()
 	{
 		// if we have an id, we're editing an existing id otherwise, it's an add
+		// TODO this should actually check to see if the object exists, then add/edit accordingly.
 		if ($this->api_request->kohana_request()->param('resource_id'))
 		{
 			$this->api_model->edit();
