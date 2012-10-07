@@ -198,7 +198,7 @@ abstract class API_Response {
 		{
 			try 
 			{
-				throw new API_Response_Exception('unknown api response code', '500-001');
+				throw new API_Response_Exception('unknown api response code ('.$code.')', '500-001');
 			}
 			catch (Exception $e)
 			{

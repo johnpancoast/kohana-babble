@@ -194,7 +194,7 @@ class API_Model_ORM extends API_Model {
 			}
 			else
 			{
-				$response->set_response('0');
+				$response->set_response('404-000');
 			}
 		}
 		catch (ORM_Validation_Exception $e)
