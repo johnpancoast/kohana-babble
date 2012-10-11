@@ -5,13 +5,13 @@
  */
 class Controller_API extends Controller {
 	/**
-	 * @var API_Request An instance of an API_Request driver
+	 * @var API_Request An instance of API_Request
 	 * @access protected
 	 */
 	protected $api_request = null;
 
 	/**
-	 * @var API_Response An instance of an API_Response driver
+	 * @var API_Response An instance of API_Response
 	 * @access protected
 	 */
 	protected $api_response = null;
@@ -24,9 +24,12 @@ class Controller_API extends Controller {
 	 */
 	public function before()
 	{
+		// request and response instances
 		$this->api_request = API_Request::factory();
 		$this->api_response = API_Response::factory();
-		$api_kohana_request = $this->api_request->kohana_request();
+
+		// kohana request
+		$koh_request = $this->api_request->kohana_request();
 
 		// if user not authentic, see if we've been passed an Authorization
 		// header and attempt to log em in with that.
@@ -35,11 +38,11 @@ class Controller_API extends Controller {
 		if ( ! Auth::instance()->logged_in())
 		{
 			// get the user/key from auth header
-			if ( ! $api_kohana_request->headers('authorization'))
+			if ( ! $koh_request->headers('authorization'))
 			{
 				throw new API_Response_Exception('unauthorized user', '401-000');
 			}
-			list($user, $key) = explode(':', $api_kohana_request->headers('authorization'));
+			list($user, $key) = explode(':', $koh_request->headers('authorization'));
 
 			// get the api user from db.
 			// make sure it's an API user, not normal user.
@@ -56,8 +59,8 @@ class Controller_API extends Controller {
 
 			// gen a new hash from passed data and private key and check against passed hash.
 			// if hashes match then the user has authenticated and we can log them in.
-			$query = http_build_query($api_kohana_request->query());
-			$url = URL::base($api_kohana_request).$api_kohana_request->uri().( ! empty($query) ? '?'.$query : '');
+			$query = http_build_query($koh_request->query());
+			$url = URL::base($koh_request).$koh_request->uri().( ! empty($query) ? '?'.$query : '');
 			$check_key = API_Util::generate_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('resource_data' => $this->api_request->get_decoded_data()));
 			if ( ! empty($key) && $key == $check_key)
 			{
