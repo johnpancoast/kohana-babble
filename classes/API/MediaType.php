@@ -38,6 +38,11 @@ abstract class API_MediaType {
 		// media types from header
 		$media_types = API_Util::get_media_type_set($header);
 
+		if (empty($header) && empty($media_types))
+		{
+			return array();
+		}
+
 		foreach ($media_types as $type)
 		{
 			if (class_exists('API_MediaType_'.$type['real']['class']))

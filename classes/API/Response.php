@@ -11,6 +11,12 @@ class API_Response {
 	private static $instances = array();
 
 	/**
+	 * @var API_MediaType Media type instance
+	 * @access private
+	 */
+	private $media_type = NULL;
+
+	/**
 	 * @var array Our response array
 	 * @access private
 	 */

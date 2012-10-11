@@ -97,14 +97,14 @@ class Controller_API_Model extends Controller_API {
 			// TODO this should actually check to see if the object exists, then add/edit accordingly.
 			if ($req->kohana_request()->param('resource_id'))
 			{
-				if ($this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_decoded_data()))
+				if ($this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_request_decoded()))
 				{
 					$this->api_response->set_response('200-000');
 				}
 			}
 			else
 			{
-				$resource_id = $this->api_model->add($req->get_decoded_data());
+				$resource_id = $this->api_model->add($req->get_request_decoded());
 				if ($resource_id)
 				{
 					$this->api_response->set_response('200-000', $resource_id);
@@ -130,14 +130,14 @@ class Controller_API_Model extends Controller_API {
 			// for partial updates of an existing resource
 			if ($req->kohana_request()->param('resource_id'))
 			{
-				if ($this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_decoded_data()))
+				if ($this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_request_decoded()))
 				{
 					$resource_id = $req->kohana_request()->param('resource_id');
 				}
 			}
 			else
 			{
-				$resource_id = $this->api_model->add($req->get_decoded_data());
+				$resource_id = $this->api_model->add($req->get_request_decoded());
 			}
 
 			if ($resource_id)

@@ -17,6 +17,12 @@ class API_Request {
 	private $kohana_request = NULL;
 
 	/**
+	 * @var API_MediaType Media type instance
+	 * @access private
+	 */
+	private $media_type = NULL;
+
+	/**
 	 * Loads data
 	 * @access protected
 	 * @final
@@ -31,7 +37,11 @@ class API_Request {
 		try
 		{
 			$header = $this->kohana_request()->headers('content-type');
-			$this->media_type(API_MediaType::factory($header));
+			$media_type = API_MediaType::factory($header);
+			if ($media_type)
+			{
+				$this->media_type($media_type);
+			}
 		}
 		catch (API_MediaType_Exception_NoConfigClass $e)
 		{
@@ -141,8 +151,8 @@ class API_Request {
 	 * @access public
 	 * @return resource data
 	 */
-	public function get_decoded_data()
+	public function get_request_decoded()
 	{
-		return $this->media_type->get_data_decoded($this->kohana_request()->body());
+		return $this->media_type ? $this->media_type->get_data_decoded($this->kohana_request()->body()) : array();
 	}
 }
