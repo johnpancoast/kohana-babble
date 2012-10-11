@@ -97,14 +97,14 @@ class Controller_API_Model extends Controller_API {
 			// TODO this should actually check to see if the object exists, then add/edit accordingly.
 			if ($req->kohana_request()->param('resource_id'))
 			{
-				if ($this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_resource_data()))
+				if ($this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_decoded_data()))
 				{
 					$this->api_response->set_response('200-000');
 				}
 			}
 			else
 			{
-				$resource_id = $this->api_model->add($req->get_resource_data());
+				$resource_id = $this->api_model->add($req->get_decoded_data());
 				if ($resource_id)
 				{
 					$this->api_response->set_response('200-000', $resource_id);
@@ -125,7 +125,21 @@ class Controller_API_Model extends Controller_API {
 		try
 		{
 			$req = $this->api_request;
-			$resource_id = $this->api_model->add($req->get_resource_data());
+
+			// until the HTTP PATCH method becomes available, we should use POST
+			// for partial updates of an existing resource
+			if ($req->kohana_request()->param('resource_id'))
+			{
+				if ($this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_decoded_data()))
+				{
+					$resource_id = $req->kohana_request()->param('resource_id');
+				}
+			}
+			else
+			{
+				$resource_id = $this->api_model->add($req->get_decoded_data());
+			}
+
 			if ($resource_id)
 			{
 				$this->api_response->set_response('200-000', $resource_id);

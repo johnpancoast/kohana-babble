@@ -3,7 +3,7 @@
 /**
  * text response
  */
-class API_Response_Driver_Default_Text_Plain extends API_Response {
+class API_MediaType_Default_Text_Plain extends API_MediaType {
 	/**
 	 * @see parent::get_response_encoded()
 	 */

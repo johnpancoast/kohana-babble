@@ -81,9 +81,9 @@ return array
 		'405-000'		=> array('public' => 'Method Not Allowed'),
 
 		// not acceptable. cannot respond with content in format of 'Accept' header. 
-		'406-000'		=> array('public' => 'Not Acceptable'),
-		'406-001'		=> array('public' => 'Not Acceptable', 'private' => 'No request functionality to load data in this format'),
-		'406-002'		=> array('public' => 'Not Acceptable', 'private' => 'No response functionality to respond with data in this format'),
+		'406-000'		=> array('public' => 'Not Acceptable', 'private' => 'Generic 406'),
+		'406-001'		=> array('public' => 'Not Acceptable', 'private' => 'No media type class functionality.'),
+		'406-002'		=> array('public' => 'Not Acceptable', 'private' => 'Developer set non-existent config media type class.'),
 
 		// others
 		'407-000'		=> array('public' => 'Proxy Authentication Required'),
@@ -93,7 +93,13 @@ return array
 		'412-000'		=> array('public' => 'Precondition Failed'),
 		'413-000'		=> array('public' => 'Request Entity Too Large'),
 		'414-000'		=> array('public' => 'Request-URI Too Long'),
+
+		// unsupported media type
 		'415-000'		=> array('public' => 'Unsupported Media Type'),
+		'415-001'		=> array('public' => 'Unsupported Media Type', 'private' => 'No media type class functionality.'),
+		'415-002'		=> array('public' => 'Unsupported Media Type', 'private' => 'Developer set non-existent config media type class'),
+
+		// others
 		'416-000'		=> array('public' => 'Requested Range Not Satisfiable'),
 		'417-000'		=> array('public' => 'Expectation Failed'),
 

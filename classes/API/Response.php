@@ -3,9 +3,9 @@
 /**
  * api response handling
  */
-abstract class API_Response {
+class API_Response {
 	/**
-	 * @var array Instances of {@see API_Response} drivers
+	 * @var array Keyed instances
 	 * @access private
 	 */
 	private static $instances = array();
@@ -29,11 +29,33 @@ abstract class API_Response {
 	 * @access protected
 	 */
 	private $links = array();
+
 	/**
-	 * get an encoded response messsage
-	 * @param string $response The message to encode and return
+	 * Loads data
+	 * @access protected
+	 * @final
 	 */
-	abstract public function get_response_encoded();
+	protected final function __construct()
+	{
+		// load media type via the requests Accept header
+		try
+		{
+			$header = API_Request::factory()->kohana_request()->headers('accept');
+			$this->media_type(API_MediaType::factory($header));
+		}
+		catch (API_MediaType_Exception_NoConfigClass $e)
+		{
+			throw new API_Response_Exception('developer set a non-existent config media type class', '406-002');
+		}
+		catch (API_MediaType_Exception_NoClass $e)
+		{
+			throw new API_Response_Exception('no media type driver found, assuming 406', '406-001');
+		}
+		catch (API_MediaType_Exception_Inheritance $e)
+		{
+			throw new API_Response_Exception('media type class must inherit from API_MediaType', '406-000');
+		}
+	}
 
 	/**
 	 * factory method to return a driver object
@@ -46,54 +68,19 @@ abstract class API_Response {
 	{
 		if ( ! isset(self::$instances[$instance_key]))
 		{
-			// the class we're looking for that will handle response.
-			$media_drtver_class = NULL;
-
-			// kohana request that initialized us
-			$koh_request = API_Request::factory()->kohana_request();
-
-			// accept header
-			$accept = $koh_request->headers('accept');
-
-			// content types from accept header
-			$content_types = API_Util::get_content_type_set($accept);
-
-			// loop content types and find a class
-			foreach ($content_types as $type)
-			{
-				if (class_exists($type['real']['class']))
-				{
-					$media_drtver_class = $type['real']['class'];
-					break;
-				}
-				elseif (class_exists($type['real']['default_class']))
-				{
-					$media_drtver_class = $type['real']['default_class'];
-					break;
-				}
-
-				$default_type_found = ( ! is_null($type['real']['default_class']));
-			}
-
-			// if we found no class, then we have nothing to respond with.
-			// if this was client error, we'll 406, otherwise we'll 500.
-			if ( ! $media_drtver_class)
-			{
-				// dev set a default type that doesn't exist
-				if (isset($default_type_found) && $default_type_found)
-				{
-					throw new API_Response_Exception('developer set a non-existent default response driver class', '500-003');
-				}
-				else
-				{
-					throw new API_Response_Exception('no response driver found, assuming 406', '406-000');
-				}
-			}
-
-			self::$instances[$instance_key] = new $media_drtver_class();
+			self::$instances[$instance_key] = new self;
 		}
 
 		return self::$instances[$instance_key];
+	}
+
+	/**
+	 * get an encoded response messsage
+	 * @return string
+	 */
+	public function get_response_encoded()
+	{
+		return $this->media_type->get_data_encoded($this->get_response());
 	}
 
 	/**
@@ -222,5 +209,41 @@ abstract class API_Response {
 
 		// allow chaining
 		return $this;
+	}
+
+	/**
+	 * set the media type object
+	 * @access public
+	 * @param API_MediaType $media_type The media type instance
+	 */
+	public function set_media_type(API_MediaType $media_type)
+	{
+		$this->media_type = $media_type;
+	}
+
+	/**
+	 * get the media type object
+	 * @access public
+	 * @return API_MediaType
+	 */
+	public function get_media_type()
+	{
+		return $this->media_type;
+	}
+
+	/**
+	 * set or get the media type object
+	 * @access public
+	 * @param API_MediaType $media_type The media type instance
+	 * @return API_MediaType (if request not passed)
+	 */
+	public function media_type(API_MediaType $media_type = NULL)
+	{
+		if ($media_type)
+		{
+			return $this->set_media_type($media_type);
+		}
+
+		return $this->get_media_type();
 	}
 }

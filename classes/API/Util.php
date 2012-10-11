@@ -13,9 +13,9 @@ class API_Util {
 
 	public static function get_class_by_media_type($media_string = '')
 	{
-		$search = array('_', '+', '-v', '/', '.');
-		$replace = array('+', '_', '_', '_', '_');
-		return 'API_Response_Driver_'.str_replace($search, $replace, $media_string);
+		$search = array('_', '+', '-v', '-', '/', '.');
+		$replace = array('+', '_', '_', '_', '_', '_');
+		return str_replace($search, $replace, $media_string);
 	}
 
 	/**
@@ -26,19 +26,16 @@ class API_Util {
 	 * @return mixed Array of relevant broken up header info or false upon failure.
 	 * TODO I know this method can work better/faster.
 	 */
-	public static function get_media_type_set($media_string = '')
+	public static function get_media_type($media_string = '')
 	{
-		if (strpos(',', $media_string))
+		if (empty($media_string) || strpos(',', $media_string))
 		{
 			return FALSE;
 		}
 
 		if ( ! isset(self::$header_sets[$media_string]))
 		{
-			$header = strtolower($media_string);
-
-			// 'Accept: ' part irrelevant.
-			$media_string = trim(preg_replace('/^accept:/', '', $media_string));
+			$media_string = trim($media_string);
 
 			// Break up accept header for relevant parts.
 			// e.g., accept headers can be application/json, application/hal+json, application/vnd.appname+json,
@@ -54,7 +51,8 @@ class API_Util {
 			// vendor_type	= application/[vnd.appname.behavior]-v1.0+json
 			// version		= application/vnd.appname.behavior-v[1.0]+json
 			// class		= application_vnd_appname_behavior_1_0_json
-			// default_class= set in config
+			// config_class = set in config
+			// default_class= default class w/o version
 			//
 			// passed = what the client gave us
 			// real = what we determined
@@ -75,6 +73,7 @@ class API_Util {
 					'vendor_type' => NULL,
 					'version' => NULL,
 					'class' => NULL,
+					'config_class' => NULL,
 					'default_class' => NULL,
 				)
 			);
@@ -136,7 +135,7 @@ class API_Util {
 
 			// detemine the class name based on all we've gotten
 			$class = NULL;
-			foreach (array('type', 'vendor_type', 'version', 'media_type') as $key)
+			foreach (array('version', 'type', 'vendor_type', 'media_type') as $key)
 			{
 				if (isset($content_type['real'][$key]))
 				{
@@ -144,7 +143,13 @@ class API_Util {
 				}
 			}
 
-			$content_type['real']['class'] = self::get_class_by_media_type($media_string);
+			#switch (strtolower($media_string)
+			// set our actual class. note that we add the version to the class name in an incorrect syntax knowing
+			// that it will be fixed.
+			$content_type['real']['class'] = self::get_class_by_media_type(implode('_', $class));
+
+			// set our default class
+			$content_type['real']['default_class'] = 'Default_'.self::get_class_by_media_type($media_string);
 
 			// determine if we have a default class to load for this type.
 			// we check config to see if it matches our exact header string and also
@@ -169,15 +174,13 @@ class API_Util {
 				$check_type
 			);
 
-			$default_types = Kohana::$config->load('api.default_content_types');
+			$config_types = Kohana::$config->load('api.default_content_types');
 
 			foreach ($check_set as $v)
 			{
-				if (isset($default_types[$v]))
+				if (isset($config_types[$v]))
 				{
-					// if they're default types, we hack in a 'default' prefix so the right class gets loaded.
-					$class = 'Default/'.$default_types[$v];
-					$content_type['real']['default_class'] = self::get_class_by_media_type($class);
+					$content_type['real']['config_class'] = 'Default_'.self::get_class_by_media_type($config_types[$v]);
 				}
 			}
 
@@ -188,12 +191,12 @@ class API_Util {
 	}
 
 	/**
-	 * return a list of accept header content types sorted by priority.
-	 * @param string $header An accept header string
-	 * @return array A sorted array of content types based on their priorities.
+	 * return a list of accept or content-type header media types sorted by priority (where applicable)
+	 * @param string $header An accept or content-type header string
+	 * @return array A sorted array of media types based on their priorities (where applicable)
 	 * {@see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html}
 	 */
-	public static function get_content_type_set($header) {
+	public static function get_media_type_set($header, $class_prefix = NULL) {
 		// will eventually contain sorted array of media types
 		$sorted = array();
 
@@ -201,7 +204,16 @@ class API_Util {
 		$return = array();
 
 		// multiple types are separated by ,
-		$types = explode(',', $header);
+		$types = array();
+		if ( ! empty($header))
+		{
+			$types = explode(',', $header);
+		}
+
+		if (empty($types))
+		{
+			return $types;
+		}
 
 		for ($i = 0, $x = 9999999, $c = count($types); $i < $c; ++$i, --$x)
 		{
@@ -229,9 +241,16 @@ class API_Util {
 
 		// sort media types, break into data sets, return
 		krsort($sorted);
+		$bt = debug_backtrace();
+		#echo $bt[1]['file'].':'.$bt[1]['line']."<br/>";
+		foreach ($bt as $x)
+		{
+			#echo $x['file'].":".$x['line'];
+		}
+		#echo "<hr/>";
 		foreach ($sorted as $k => $v)
 		{
-			$return[$v] = self::get_media_type_set($v);
+			$return[$v] = self::get_media_type($v);
 		}
 		return $return;
 	}
