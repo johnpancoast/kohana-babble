@@ -31,11 +31,17 @@ class Controller_API extends Controller {
 		// kohana request
 		$koh_request = $this->api_request->kohana_request();
 
+		// bypass security and user test user if allowed
+		$test_user = Kohana::$config->load('api.test_user');
+		if (Kohana::$environment == Kohana::DEVELOPMENT && ! empty($test_user))
+		{
+			Auth::instance()->force_login($test_user);
+		}
 		// if user not authentic, see if we've been passed an Authorization
 		// header and attempt to log em in with that.
 		// FIXME this should be an abstract method call
 		// so the code client can override how this works.
-		if ( ! Auth::instance()->logged_in())
+		elseif ( ! Auth::instance()->logged_in())
 		{
 			// get the user/key from auth header
 			if ( ! $koh_request->headers('authorization'))
