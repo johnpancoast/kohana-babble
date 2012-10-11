@@ -18,6 +18,6 @@ class API_MediaType_Default_Application_X_WWW_Form_Urlencoded extends API_MediaT
 	public function get_data_decoded($data = NULL)
 	{
 		parse_str($data, $input);
-		return isset($input['resource_data']) ? $input['resource_data'] : array();
+		return isset($input) ? (array)$input : array();
 	}
 }

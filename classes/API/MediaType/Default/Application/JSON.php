@@ -17,6 +17,6 @@ class API_MediaType_Default_Application_JSON extends API_MediaType {
 	 */
 	public function get_data_decoded($data = NULL)
 	{
-		return json_decode($data);
+		return json_decode($data, TRUE);
 	}
 }

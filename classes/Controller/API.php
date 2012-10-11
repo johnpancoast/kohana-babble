@@ -61,7 +61,7 @@ class Controller_API extends Controller {
 			// if hashes match then the user has authenticated and we can log them in.
 			$query = http_build_query($koh_request->query());
 			$url = URL::base($koh_request).$koh_request->uri().( ! empty($query) ? '?'.$query : '');
-			$check_key = API_Util::generate_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], array('resource_data' => $this->api_request->get_request_decoded()));
+			$check_key = API_Util::generate_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], $this->api_request->get_request_decoded());
 			if ( ! empty($key) && $key == $check_key)
 			{
 				// FIXME this should be abstract so the code client can override this functionality
