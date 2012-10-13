@@ -174,7 +174,7 @@ class API_Util {
 				$check_type
 			);
 
-			$config_types = Kohana::$config->load('api.default_content_types');
+			$config_types = Kohana::$config->load('api.default_media_types');
 
 			foreach ($check_set as $v)
 			{
