@@ -86,6 +86,7 @@ class Controller_API_Model extends Controller_API {
 
 	/**
 	 * http put controller method
+	 * TODO set location header, review PUT docs. review how we set response body.
 	 */
 	public function action_put()
 	{
@@ -107,6 +108,7 @@ class Controller_API_Model extends Controller_API {
 				$resource_id = $this->api_model->add($req->get_request_decoded());
 				if ($resource_id)
 				{
+					// TODO if a new resource was created then a 201 is appropriate.
 					$this->api_response->set_response('200-000', $resource_id);
 				}
 			}
