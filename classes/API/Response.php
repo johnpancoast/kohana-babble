@@ -183,6 +183,15 @@ class API_Response {
 	}
 
 	/**
+	 * get message
+	 * @return string self::message
+	 */
+	public function get_message()
+	{
+		return $this->message;
+	}
+
+	/**
 	 * set response
 	 * @access public
 	 * @param string $code Response code. Should match our codes in config/base/api.php.
@@ -209,8 +218,16 @@ class API_Response {
 			}
 		}
 
+		// set code and message
 		$this->code = $code;
 		$this->message = $message;
+
+		// set response header if we have title set in config
+		$resp_header = Kohana::$config->load('api.header.response_header_title');
+		if ( ! empty($resp_header))
+		{
+			$this->add_header($resp_header, $this->code.'; '.$this->message);
+		}
 
 		// set the api result if we have one and the http status codes are in 200's
 		$http_code = $this->get_http_code($code);
@@ -232,7 +249,7 @@ class API_Response {
 	{
 		$this->media_type = $media_type;
 
-		// if we have a valid content type, set Content-Type header
+		// if we have a valid media type value, set Content-Type header
 		$type = $this->media_type->get_media_type();
 		if ($type && ! empty($type))
 		{
@@ -254,7 +271,7 @@ class API_Response {
 	 * set or get the media type object
 	 * @access public
 	 * @param API_MediaType $media_type The media type instance
-	 * @return API_MediaType (if request not passed)
+	 * @return API_MediaType (if $media_type not passed)
 	 */
 	public function media_type(API_MediaType $media_type = NULL)
 	{
