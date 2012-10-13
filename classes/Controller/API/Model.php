@@ -158,7 +158,7 @@ class Controller_API_Model extends Controller_API {
 	{
 		try
 		{
-			if ($this->api_model->delete())
+			if ($this->api_model->delete($this->api_request->kohana_request()->param('resource_id')))
 			{
 				$this->api_response->set_response('200-000');
 			}
