@@ -96,6 +96,76 @@ class API_Response {
 	}
 
 	/**
+	 * set body
+	 * @access public
+	 * @param mixed $body Response body
+	 */
+	public function set_body($body)
+	{
+		$this->body = $body;
+	}
+
+	/**
+	 * get body
+	 * @access public
+	 * @return {@see self::$body}
+	 */
+	public function get_body()
+	{
+		return $this->body;
+	}
+
+	/**
+	 * set/get body
+	 * @access public
+	 * @param mixed $body The body
+	 * @return mixed body If $body not passed.
+	 */
+	public function body($body = NULL)
+	{
+		if ($body)
+		{
+			return $this->set_body($body);
+		}
+		return $this->get_body();
+	}
+
+	/**
+	 * set code
+	 * @access public
+	 * @param mixed $code Response code
+	 */
+	public function set_code($code)
+	{
+		$this->code = $code;
+	}
+
+	/**
+	 * get response code
+	 * @access public
+	 * @return string response code
+	 */
+	public function get_code()
+	{
+		return $this->code;
+	}
+
+	/**
+	 * set/get code
+	 * @access public
+	 * @param mixed $code The code
+	 * @return mixed Code If $code not passed.
+	 */
+	public function code($code = NULL)
+	{
+		if ($code)
+		{
+			return $this->set_code($code);
+		}
+		return $this->get_code();
+	}
+
+	/**
 	 * get encoded response
 	 * @return string
 	 */
@@ -125,16 +195,6 @@ class API_Response {
 	}
 
 	/**
-	 * get body
-	 * @access public
-	 * @return {@see self::$body}
-	 */
-	public function get_body()
-	{
-		return $this->body;
-	}
-
-	/**
 	 * add a header line
 	 * @param string $key header key
 	 * @param string $key header value
@@ -146,7 +206,8 @@ class API_Response {
 	}
 
 	/**
-	 * get header
+	 * get header. note that generally you should call this after set_response() has been called
+	 * since that method may set headers.
 	 * @param string $key header key to return
 	 * @return array all headers or just one line if $key provided
 	 */
@@ -163,16 +224,6 @@ class API_Response {
 	}
 
 	/**
-	 * get response code
-	 * @access public
-	 * @return string response code
-	 */
-	public function get_code()
-	{
-		return $this->code;
-	}
-
-	/**
 	 * get response http code
 	 * @access public
 	 * @return int response http code
@@ -182,14 +233,6 @@ class API_Response {
 		return substr($this->get_code(), 0, 3);
 	}
 
-	/**
-	 * get message
-	 * @return string self::message
-	 */
-	public function get_message()
-	{
-		return $this->message;
-	}
 
 	/**
 	 * set response
@@ -199,13 +242,14 @@ class API_Response {
 	 * @throws API_Response_Exception Upon error
 	 */
 	public function set_response($code, $body = null) {
-		$message = Kohana::message('api', 'responses.'.$code.'.public');
+		$msg_public = Kohana::message('api', 'responses.'.$code.'.public');
+		$msg_hint = Kohana::message('api', 'responses.'.$code.'.public_hint');
 
 		// if we were sent an invalid code, we must throw a new
 		// API_Response_Exception so the error gets logged. however, we must
 		// catch it as well in case the code originated from an
 		// API_Response_Exception in the first place.
-		if ( ! $message)
+		if ( ! $msg_public)
 		{
 			try 
 			{
@@ -214,26 +258,36 @@ class API_Response {
 			catch (Exception $e)
 			{
 				$code = '500-001';
-				$message = Kohana::message('api', 'responses.'.$code.'.public');
+				$msg_public = Kohana::message('api', 'responses.'.$code.'.public');
 			}
 		}
 
-		// set code and message
-		$this->code = $code;
-		$this->message = $message;
+		// set code
+		$this->code($code);
+
+		// set body.
+		// 100's & 200's we just set the body.
+		// 300's and greater we set our own body.
+		if (substr($code, 0, 1) <= 2)
+		{
+			$resp_body = $body;
+		}
+		else
+		{
+			$resp_body = array(
+				'http_code' => $this->get_http_code(),
+				'http_message' => $msg_public,
+				'code' => $this->get_code(),
+				'message' => ($msg_hint ? $msg_hint : $msg_public),
+			);
+		}
+		$this->body($resp_body);
 
 		// set response header if we have title set in config
 		$resp_header = Kohana::$config->load('api.header.response_header_title');
 		if ( ! empty($resp_header))
 		{
-			$this->add_header($resp_header, $this->code.'; '.$this->message);
-		}
-
-		// set the api result if we have one and the http status codes are in 200's
-		$http_code = $this->get_http_code($code);
-		if ($body && $http_code >= 200 && $http_code < 300)
-		{
-			$this->body = $body;
+			$this->add_header($resp_header, $this->code.'; '.( ! empty($msg_hint) ? $msg_hint : $msg_public));
 		}
 
 		// allow chaining
