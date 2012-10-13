@@ -9,8 +9,9 @@ return array
 	 * API response messages.
 	 *
 	 * a response message has a code as it's key and an assoc array of public and optional
-	 * private messages. public are what the client will be shown. private are mostly for our
-	 * reading and perhaps logging in the future.
+	 * public_hint and/or private messages. public are what the client will be shown. public_hint
+	 * are unimplemented but may be used soon and private are mostly for our reading and perhaps
+	 * logging in the future.
 	 *
 	 * keys are http status codes followed by a "-" followed by an internal identifier.
 	 * The internal identifiers should be broken into logical application sections where applicable.
@@ -58,24 +59,24 @@ return array
 		## USER ERRORS (http codes in 400's)
 		#########################################
 		// bad request - database
-		'400-000'		=> array('public' => 'Duplicate field', 'private' => 'Duplicate DB Key'),
+		'400-000'		=> array('public' => 'Bad Request', 'public_hint' => 'Duplicate field', 'private' => 'Duplicate DB Key'),
 
 		// bad request - orm
-		'400-100'		=> array('public' => 'Failed saving: invalid data', 'private' => 'ORM validation failed'),
-		'400-101'		=> array('public' => 'Non-existent field passed', 'private' => 'The client attempted to set a value of a non-existen model field'),
+		'400-100'		=> array('public' => 'Bad Request', 'public_hint' => 'Failed saving: invalid data', 'private' => 'ORM validation failed'),
+		'400-101'		=> array('public' => 'Bad Request', 'public_hint' => 'Non-existent field passed', 'private' => 'The client attempted to set a value of a non-existen model field'),
 
 		// unauthorized
-		'401-000'		=> array('public' => 'Access denied', 'private' => 'Access denied due to failed authentication'),
-		'401-001'		=> array('public' => 'Access denied', 'private' => 'Access denied due to failed access'),
+		'401-000'		=> array('public' => 'Unauthorized', 'private' => 'Access denied due to failed authentication'),
+		'401-001'		=> array('public' => 'Unauthorized', 'private' => 'Access denied due to failed access'),
 
 		// payment required
-		'402-000'		=> array('public' => 'Payment required'),
+		'402-000'		=> array('public' => 'Payment Required'),
 
 		// forbidden
 		'403-000'		=> array('public' => 'Forbidden'),
 
 		// not found
-		'404-000'		=> array('public' => 'The requested URL was not found', 'private' => 'The requested URL was not found'),
+		'404-000'		=> array('public' => 'Not Found', 'private' => 'The requested URL was not found'),
 
 		// request method not allowed
 		'405-000'		=> array('public' => 'Method Not Allowed'),
@@ -107,17 +108,17 @@ return array
 		## SYSTEM ERRORS (http codes in 500's)
 		#########################################
 		// internal error - generic
-		'500-000'		=> array('public' => 'Internal error', 'private' => 'A terrible error occured'),
-		'500-001'		=> array('public' => 'Internal error', 'private' => 'Unknown API response code'),
-		'500-002'		=> array('public' => 'Internal error', 'private' => 'No API response'),
-		'500-003'		=> array('public' => 'Internal error', 'private' => 'Developer set a non-existent default api response driver.'),
+		'500-000'		=> array('public' => 'Internal Server Error', 'private' => 'A terrible error occured'),
+		'500-001'		=> array('public' => 'Internal Server Error', 'private' => 'Unknown API response code'),
+		'500-002'		=> array('public' => 'Internal Server Error', 'private' => 'No API response'),
+		'500-003'		=> array('public' => 'Internal Server Error', 'private' => 'Developer set a non-existent default api response driver.'),
 
 		// internal error - database
-		'500-100'		=> array('public' => 'Internal error', 'private' => 'A generic database exception. Perhaps more should be caught or examined.'),
+		'500-100'		=> array('public' => 'Internal Server Error', 'private' => 'A generic database exception. Perhaps more should be caught or examined.'),
 
 		// internal error - kohana orm
-		'500-200'		=> array('public' => 'Internal error', 'private' => 'Generic exception during ORM interaction'),
-		'500-201'		=> array('public' => 'Internal error', 'private' => 'Failed to save the ORM model'),
+		'500-200'		=> array('public' => 'Internal Server Error', 'private' => 'Generic exception during ORM interaction'),
+		'500-201'		=> array('public' => 'Internal Server Error', 'private' => 'Failed to save the ORM model'),
 
 		// others
 		'501-000'		=> array('public' => 'Not Implemented'),
