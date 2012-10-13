@@ -10,17 +10,17 @@ class API_MediaType_Default_Application_JSON extends API_MediaType {
 	protected $media_type = 'application/json';
 
 	/**
-	 * @see parent::get_data_encoded()
+	 * @see parent::_get_data_encoded()
 	 */
-	public function get_data_encoded(array $data = array())
+	protected function _get_data_encoded($data = array())
 	{
 		return json_encode($data);
 	}
 
 	/**
-	 * @see parent::get_data_decoded()
+	 * @see parent::_get_data_decoded()
 	 */
-	public function get_data_decoded($data = NULL)
+	protected function _get_data_decoded($data = NULL)
 	{
 		return json_decode($data, TRUE);
 	}

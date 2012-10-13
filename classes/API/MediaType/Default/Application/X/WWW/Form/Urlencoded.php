@@ -10,17 +10,17 @@ class API_MediaType_Default_Application_X_WWW_Form_Urlencoded extends API_MediaT
 	protected $media_type = 'application/x-www-form-urlencoded';
 
 	/**
-	 * @see parent::get_data_encoded()
+	 * @see parent::_get_data_encoded()
 	 */
-	public function get_data_encoded(array $data = array())
+	protected function _get_data_encoded($data = array())
 	{
 		return http_build_query($data);
 	}
 
 	/**
-	 * @see parent::get_data_decoded()
+	 * @see parent::_get_data_decoded()
 	 */
-	public function get_data_decoded($data = NULL)
+	protected function _get_data_decoded($data = NULL)
 	{
 		parse_str($data, $input);
 		return isset($input) ? (array)$input : array();
