@@ -16,5 +16,5 @@ class API_MediaType_Default_Text_Html extends API_MediaType_Default_Text_Plain {
 	 * @var string Set separator
 	 * @access protected
 	 */
-	protected $set_sep = "<br/>";
+	protected $set_sep = "<br/>\n";
 }
