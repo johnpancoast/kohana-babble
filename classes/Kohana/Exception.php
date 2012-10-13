@@ -99,15 +99,16 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 				{
 					$api_response = API_Response::factory();
 
+					// set the main response from the API response that gets set internally.
+					$code = ($e instanceof API_Response_Exception) ? $e->get_response_code() : $http_status.'-000';
+					$api_response->set_response($code);
+
 					// set headers
 					foreach ($api_response->get_header() as $k => $v)
 					{
 						$response->headers($k, $v);
 					}
 
-					// set the main response from the API response that gets set internally.
-					$code = ($e instanceof API_Response_Exception) ? $e->get_response_code() : $http_status.'-000';
-					$api_response->set_response($code);
 					$response->body($api_response->get_body_encoded());
 				}
 				// if we get an exception back while attempting to set a response we must just pass the header and respond
