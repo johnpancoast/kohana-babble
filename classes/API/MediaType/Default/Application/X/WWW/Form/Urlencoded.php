@@ -5,6 +5,11 @@
  */
 class API_MediaType_Default_Application_X_WWW_Form_Urlencoded extends API_MediaType {
 	/**
+	 * @see API_MediaType::media_type
+	 */
+	protected $media_type = 'application/x-www-form-urlencoded';
+
+	/**
 	 * @see parent::get_data_encoded()
 	 */
 	public function get_data_encoded(array $data = array())

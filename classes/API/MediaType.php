@@ -6,6 +6,14 @@
  */
 abstract class API_MediaType {
 	/**
+	 * @var string The media type. This should be a valid media type as described in
+	 * {@link http://www.iana.org/assignments/media-types/index.html}. Of course vendor
+	 * types are allowed as well.
+	 * @access protected
+	 */
+	protected $media_type = NULL;
+
+	/**
 	 * get encoded data from an array
 	 * @abstract
 	 * @access protected
@@ -24,7 +32,7 @@ abstract class API_MediaType {
 	abstract protected function get_data_decoded($data = NULL);
 
 	/**
-	 * __constructor. children cannot be instantiated directly.
+	 * constructor. children cannot be instantiated directly.
 	 */
 	final protected function __construct() {}
 
@@ -85,5 +93,14 @@ abstract class API_MediaType {
 		}
 
 		return $class;
+	}
+
+	/**
+	 * get media type
+	 * @return string
+	 */
+	public function get_media_type()
+	{
+		return $this->media_type;
 	}
 }

@@ -232,7 +232,12 @@ class API_Response {
 	{
 		$this->media_type = $media_type;
 
-		// TODO set Content-Type header via media type here
+		// if we have a valid content type, set Content-Type header
+		$type = $this->media_type->get_media_type();
+		if ($type && ! empty($type))
+		{
+			$this->add_header('Content-Type', $type);
+		}
 	}
 
 	/**

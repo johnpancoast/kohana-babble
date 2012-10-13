@@ -5,6 +5,11 @@
  */
 class API_MediaType_Default_Application_JSON extends API_MediaType {
 	/**
+	 * @see API_MediaType::media_type
+	 */
+	protected $media_type = 'application/json';
+
+	/**
 	 * @see parent::get_data_encoded()
 	 */
 	public function get_data_encoded(array $data = array())
