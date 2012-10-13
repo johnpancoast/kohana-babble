@@ -16,20 +16,20 @@ abstract class API_MediaType {
 	/**
 	 * get encoded data from an array
 	 * @abstract
-	 * @access protected
+	 * @access public
 	 * @param array $data The data to encode
 	 * @return string Expected to return an encoded string
 	 */
-	abstract protected function get_data_encoded(array $data = array());
+	abstract public function get_data_encoded(array $data = array());
 
 	/**
 	 * get decoded array from an encoded string.
 	 * @abstract
-	 * @access protected
+	 * @access public
 	 * @param string $data The data to decode
 	 * @return array Expected to return a decoded array
 	 */
-	abstract protected function get_data_decoded($data = NULL);
+	abstract public function get_data_decoded($data = NULL);
 
 	/**
 	 * constructor. children cannot be instantiated directly.
