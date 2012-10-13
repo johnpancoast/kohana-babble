@@ -5,10 +5,13 @@
  */
 return array
 (
+	// the current version of the API. when clients do not pass a version,
+	// this is the version that will be loaded.
 	'current_version' => '0.0.1',
 
-	// TODO add comment
-	'default_content_types' => array(
+	// default media types. You can map a media type to the requested media type
+	// you wish to be loaded.
+	'default_media_types' => array(
 		'*/*' => 'application/json',
 	),
 
