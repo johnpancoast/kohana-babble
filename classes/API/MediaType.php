@@ -101,8 +101,12 @@ abstract class API_MediaType {
 	 * @param mixed $data The data to encode
 	 * @return string Expected to return an encoded string
 	 */
-	public function get_data_encoded($data = array())
+	public function get_data_encoded($data = NULL)
 	{
+		if ( ! $data)
+		{
+			return '';
+		}
 		return $this->_get_data_encoded($data);
 	}
 
@@ -114,6 +118,10 @@ abstract class API_MediaType {
 	 */
 	public function get_data_decoded($data = NULL)
 	{
+		if ( ! $data)
+		{
+			return '';
+		}
 		return $this->_get_data_decoded($data);
 	}
 
