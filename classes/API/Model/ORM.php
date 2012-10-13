@@ -86,6 +86,11 @@ class API_Model_ORM extends API_Model {
 
 			return $resp;
 		}
+		catch (API_Model_Exception $e)
+		{
+			// just rethrow API_Model_Exception's
+			throw $e;
+		}
 		catch (ORM_Validation_Exception $e)
 		{
 			throw new API_Model_Exception($e->getMessage(), '400-100');
@@ -130,6 +135,11 @@ class API_Model_ORM extends API_Model {
 			{
 				throw new API_Model_Exception('not found', '404-000');
 			}
+		}
+		catch (API_Model_Exception $e)
+		{
+			// just rethrow API_Model_Exception's
+			throw $e;
 		}
 		catch (ORM_Validation_Exception $e)
 		{
@@ -188,6 +198,11 @@ class API_Model_ORM extends API_Model {
 				throw new API_Model_Exception('not found', '404-000');
 			}
 		}
+		catch (API_Model_Exception $e)
+		{
+			// just rethrow API_Model_Exception's
+			throw $e;
+		}
 		catch (ORM_Validation_Exception $e)
 		{
 			throw new API_Model_Exception($e->getMessage(), '400-100');
@@ -237,6 +252,11 @@ class API_Model_ORM extends API_Model {
 			{
 				throw new API_Model_Exception('failed to save', '500-201');
 			}
+		}
+		catch (API_Model_Exception $e)
+		{
+			// just rethrow API_Model_Exception's
+			throw $e;
 		}
 		catch (ORM_Validation_Exception $e)
 		{
