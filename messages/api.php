@@ -62,7 +62,7 @@ return array
 		'400-000'		=> array('public' => 'Bad Request', 'public_hint' => 'Duplicate field', 'private' => 'Duplicate DB Key'),
 
 		// bad request - orm
-		'400-100'		=> array('public' => 'Bad Request', 'public_hint' => 'Failed saving: invalid data', 'private' => 'ORM validation failed'),
+		'400-100'		=> array('public' => 'Bad Request', 'public_hint' => 'Invalid data', 'private' => 'ORM validation failed'),
 		'400-101'		=> array('public' => 'Bad Request', 'public_hint' => 'Non-existent field passed', 'private' => 'The client attempted to set a value of a non-existen model field'),
 
 		// unauthorized
