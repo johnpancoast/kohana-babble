@@ -106,9 +106,9 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 					}
 
 					// Set the response body
-					$code = ($e instanceof API_Response_Exception) ? $e->get_response_code() : $http_status.'-000';
+					$code = ($e instanceof API_Response_Exception) ? $e->get_code() : $http_status.'-000';
 					$api_response->set_response($code);
-					$response->body($api_response->get_response_encoded());
+					$response->body($api_response->get_body_encoded());
 				}
 				// if we get an exception back while attempting to set a response we must just pass the header and respond
 				// with generic body. This generally occurs for unimplemented request or response methods (i.e., client requested xml
@@ -118,9 +118,9 @@ class Kohana_Exception extends Kohana_Kohana_Exception {
 					// determine http code to pass
 					if ($e instanceof API_Response_Exception)
 					{
-						$ecode = $e->get_response_http_code();
+						$ecode = $e->get_http_code();
 						$http_code = $ecode ? $ecode : '500';
-						$message = Kohana::message('api', 'responses.'.$e->get_response_code().'.public');
+						$message = Kohana::message('api', 'responses.'.$e->get_code().'.public');
 					}
 					else
 					{

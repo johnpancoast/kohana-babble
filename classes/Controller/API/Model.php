@@ -80,7 +80,7 @@ class Controller_API_Model extends Controller_API {
 		}
 		catch (API_Model_Exception $e)
 		{
-			throw new API_Response_Exception($e->getMessage(), $e->get_response_code());
+			throw new API_Response_Exception($e->getMessage(), $e->get_code());
 		}
 	}
 
@@ -113,7 +113,7 @@ class Controller_API_Model extends Controller_API {
 		}
 		catch (API_Model_Exception $e)
 		{
-			throw new API_Response_Exception($e->getMessage(), $e->get_response_code());
+			throw new API_Response_Exception($e->getMessage(), $e->get_code());
 		}
 	}
 
@@ -147,7 +147,7 @@ class Controller_API_Model extends Controller_API {
 		}
 		catch (API_Model_Exception $e)
 		{
-			throw new API_Response_Exception($e->getMessage(), $e->get_response_code());
+			throw new API_Response_Exception($e->getMessage(), $e->get_code());
 		}
 	}
 
@@ -165,7 +165,7 @@ class Controller_API_Model extends Controller_API {
 		}
 		catch (API_Model_Exception $e)
 		{
-			throw new API_Response_Exception($e->getMessage(), $e->get_response_code());
+			throw new API_Response_Exception($e->getMessage(), $e->get_code());
 		}
 	}
 }

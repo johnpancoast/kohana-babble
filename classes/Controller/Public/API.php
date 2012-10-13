@@ -51,18 +51,19 @@ class Controller_Public_API extends Controller {
 		);
 
 		// make internal hmvc call to controller.
-		// set the main response from the API response that gets set internally.
 		Request::factory($route_url, $request->param(), FALSE, $internal_routes)
 			->headers($request->headers())
 			->post($request->post())
 			->query($request->query())
 			->execute();
-		$response = API_Response::factory();
-		foreach ($response->get_header() as $key => $value)
+
+		// set the main response from the API response that gets set internally.
+		$api_response = API_Response::factory();
+		foreach ($api_response->get_header() as $key => $value)
 		{
 			$this->response->headers($key, $value);
 		}
-		$this->response->status($response->get_response_http_code());
-		$this->response->body($response->get_response_encoded());
+		$this->response->status($api_response->get_http_code());
+		$this->response->body($api_response->get_body_encoded());
 	}
 }

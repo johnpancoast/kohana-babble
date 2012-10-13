@@ -30,7 +30,7 @@ class API_Model_Exception extends Exception {
 	 * @access public
 	 * @return self::$response_code
 	 */
-	public function get_response_code()
+	public function get_code()
 	{
 		return $this->proposed_response_code;
 	}

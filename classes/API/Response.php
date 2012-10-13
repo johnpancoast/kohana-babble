@@ -20,13 +20,28 @@ class API_Response {
 	 * @var array Our response array
 	 * @access private
 	 */
-	private $response = array();
+	#private $response = array();
 
 	/**
 	 * @var array Response header
 	 * @access private
 	 */
 	private $header = array();
+
+	/**
+	 * @var int Response code
+	 */
+	private $code = NULL;
+
+	/**
+	 * @var string Response message
+	 */
+	private $message = NULL;
+
+	/**
+	 * @var mixed Response body
+	 */
+	private $body = NULL;
 
 	/**
 	 * @var array A list of links that get inserted into the response.
@@ -81,12 +96,12 @@ class API_Response {
 	}
 
 	/**
-	 * get an encoded response messsage
+	 * get encoded response
 	 * @return string
 	 */
-	public function get_response_encoded()
+	public function get_body_encoded()
 	{
-		return $this->media_type->get_data_encoded($this->get_response());
+		return $this->media_type->get_data_encoded($this->get_body());
 	}
 
 	/**
@@ -110,13 +125,13 @@ class API_Response {
 	}
 
 	/**
-	 * get response
+	 * get body
 	 * @access public
-	 * @return {@see self::$response}
+	 * @return {@see self::$body}
 	 */
-	public function get_response()
+	public function get_body()
 	{
-		return $this->response;
+		return $this->body;
 	}
 
 	/**
@@ -152,15 +167,9 @@ class API_Response {
 	 * @access public
 	 * @return string response code
 	 */
-	public function get_response_code()
+	public function get_code()
 	{
-		$code = NULL;
-		$response = $this->get_response();
-		if ( ! empty($response))
-		{
-			$code = $this->response['code'];
-		}
-		return $code;
+		return $this->code;
 	}
 
 	/**
@@ -168,19 +177,19 @@ class API_Response {
 	 * @access public
 	 * @return int response http code
 	 */
-	public function get_response_http_code()
+	public function get_http_code()
 	{
-		return substr($this->get_response_code(), 0, 3);
+		return substr($this->get_code(), 0, 3);
 	}
 
 	/**
 	 * set response
 	 * @access public
 	 * @param string $code Response code. Should match our codes in config/base/api.php.
-	 * @param mixed $result Option result message. Typically an array.
+	 * @param mixed $body Optional body. Typically an array.
 	 * @throws API_Response_Exception Upon error
 	 */
-	public function set_response($code, $result = null) {
+	public function set_response($code, $body = null) {
 		$message = Kohana::message('api', 'responses.'.$code.'.public');
 
 		// if we were sent an invalid code, we must throw a new
@@ -200,17 +209,14 @@ class API_Response {
 			}
 		}
 
-		$this->response = array(
-			'code' => $code,
-			'message' => $message,
-		);
-
-		$http_code = substr($code, 0, 3);
+		$this->code = $code;
+		$this->message = $message;
 
 		// set the api result if we have one and the http status codes are in 200's
-		if ($result && $http_code >= 200 && $http_code < 300)
+		$http_code = $this->get_http_code($code);
+		if ($body && $http_code >= 200 && $http_code < 300)
 		{
-			$this->response['result'] = $result;
+			$this->body = $body;
 		}
 
 		// allow chaining
@@ -225,6 +231,8 @@ class API_Response {
 	public function set_media_type(API_MediaType $media_type)
 	{
 		$this->media_type = $media_type;
+
+		// TODO set Content-Type header via media type here
 	}
 
 	/**
