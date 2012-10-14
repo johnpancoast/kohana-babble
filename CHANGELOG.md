@@ -1,6 +1,6 @@
 ## 0.1.0 - 10/14/12
 * Authentication.
-* Versioning for controllers.
+* Versioning for controllers (see plans for 0.2).
 * Media type handling & content negotiation.
 * Model abstraction.
 * ORM CRUD functionality.
