@@ -14,4 +14,4 @@ To see recent developments of this project, check out the latest /develop
 branch on [github](https://github.com/shideon/kohana-babble).
 
 ## Installation
-1. Not quite there yet.
+1. Not quite ready yet.
