@@ -12,8 +12,16 @@ abstract class Babble_API_User {
 	private static $instances = array();
 
 	/**
+	 * get currently authenticated user
+	 * @access public
+	 * @abstract
+	 */
+	abstract public function get_authenticated_user();
+
+	/**
 	 * get user
 	 * @access public
+	 * @abstract
 	 * @param string $username Username of user to get
 	 * @return mixed False on failure or user record
 	 * At the very least this should contain:
@@ -24,6 +32,7 @@ abstract class Babble_API_User {
 	/**
 	 * perform a login
 	 * @access public
+	 * @abstract
 	 * @param string $username Username to login
 	 * @return bool
 	 */
@@ -32,6 +41,7 @@ abstract class Babble_API_User {
 	/**
 	 * check if username logged in
 	 * @access public
+	 * @abstract
 	 * @param string $username Username to check if logged in
 	 * @return bool
 	 */

@@ -4,6 +4,11 @@
  * api user implementation - kohana
  */
 class Babble_API_User_Kohana extends API_User {
+	public function get_authenticated_user()
+	{
+		return Auth::instance()->get_user();
+	}
+
 	public function get_user($username = NULL)
 	{
 		$user = ORM::factory('user')
