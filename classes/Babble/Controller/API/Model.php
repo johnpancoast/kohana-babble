@@ -26,19 +26,6 @@ class Babble_Controller_API_Model extends Controller_API {
 	protected $api_model = null;
 
 	/**
-	 * ACL
-	 */
-	protected $access = array(
-		// put, post, delete require write
-		'action_put' => array('user-write'),
-		'action_post' => array('user-write'),
-		'action_delete' => array('user-write'),
-
-		// all other methods require at least read
-		'*' => array('user-read'),
-	);
-
-	/**
 	 * called before anything else
 	 * @access public
 	 */
