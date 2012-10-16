@@ -120,7 +120,7 @@ abstract class Babble_API_MediaType {
 	{
 		if ( ! $data)
 		{
-			return '';
+			return array();
 		}
 		return $this->_get_data_decoded($data);
 	}

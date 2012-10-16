@@ -31,17 +31,17 @@ class Babble_Controller_API extends Controller {
 		// kohana request
 		$koh_request = $this->api_request->kohana_request();
 
-		// bypass security and user test user if allowed
+		// bypass security and use test user if allowed
 		$test_user = Kohana::$config->load('api.test_user');
 		if (Kohana::$environment == Kohana::DEVELOPMENT && ! empty($test_user))
 		{
-			Auth::instance()->force_login($test_user);
+			API_User::factory()->login($test_user);
 		}
 		// if user not authentic, see if we've been passed an Authorization
 		// header and attempt to log em in with that.
 		// FIXME this should be an abstract method call
 		// so the code client can override how this works.
-		elseif ( ! Auth::instance()->logged_in())
+		elseif ( ! API_User::factory()->logged_in())
 		{
 			// get the user/key from auth header
 			if ( ! $koh_request->headers('authorization'))
@@ -52,13 +52,8 @@ class Babble_Controller_API extends Controller {
 
 			// get the api user from db.
 			// make sure it's an API user, not normal user.
-			// FIXME this should be abstract API_Auth->getUser() & API_Auth->getPass()
-			// so the code client can override how this works.
-			$user = ORM::factory('user')
-				->where('username', '=', $user)
-				->where('api_user', '=', 1)
-				->find();
-			if ( ! $user->loaded())
+			$user = API_User::factory()->get_user($user);
+			if ( ! $user)
 			{
 				throw new API_Response_Exception('unauthorized user', '401-000');
 			}
@@ -67,11 +62,10 @@ class Babble_Controller_API extends Controller {
 			// if hashes match then the user has authenticated and we can log them in.
 			$query = http_build_query($koh_request->query());
 			$url = URL::base($koh_request).$koh_request->uri().( ! empty($query) ? '?'.$query : '');
-			$check_key = API_Util::generate_auth_key($user->username, $user->password, $url, $_SERVER['REQUEST_METHOD'], $this->api_request->get_request_decoded());
+			$check_key = API_Util::generate_auth_key($user['username'], $user['password'], $url, $_SERVER['REQUEST_METHOD'], (array)$this->api_request->get_request_decoded());
 			if ( ! empty($key) && $key == $check_key)
 			{
-				// FIXME this should be abstract so the code client can override this functionality
-				Auth::instance()->force_login($user->username);
+				API_User::factory()->login($user['username']);
 			}
 			else
 			{
