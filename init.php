@@ -3,10 +3,10 @@
 // public rest api. routes to api frontend.
 // e.g.,
 //     /api/user/get/1
-Route::set('api', 'api/<resource_controller>(/<resource_id>)')
+Route::set('api', 'api/<controller>(/<resource_id>)')
 	->defaults(array(
-		'directory' => 'Public',
-		'controller' => 'API',
+		'directory' => 'Public/API',
+		'controller' => 'Index',
 		'action'     => 'index',
 	));
 

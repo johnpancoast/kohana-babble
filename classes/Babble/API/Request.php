@@ -75,6 +75,17 @@ class Babble_API_Request {
 	}
 
 	/**
+	 * is this key instantiated
+	 * @access public
+	 * @param string $instance_key An instance key
+	 * @return bool
+	 */
+	public static function instantiated($instance_key = 'initial')
+	{
+		return isset(self::$instances[$instance_key]);
+	}
+
+	/**
 	 * set the kohana request object
 	 * @access public
 	 * @param Kohana_Request $request the kohana request instance
