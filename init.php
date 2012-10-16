@@ -6,7 +6,7 @@
 Route::set('api', 'api/<resource_controller>(/<resource_id>)')
 	->defaults(array(
 		'directory' => 'Public',
-		'controller' => 'API',
+		'controller' => 'APIFrontend',
 		'action'     => 'index',
 	));
 
@@ -20,4 +20,3 @@ if (Kohana::$environment == Kohana::DEVELOPMENT)
 			'action'     => 'index',
 		));
 }
-
