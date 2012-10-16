@@ -12,20 +12,6 @@ class Babble_Controller_Public_API extends Controller {
 		// current request
 		$request = Request::current();
 
-		// we set a param to let everything know this originated as an API request
-		$request->is_api_request = TRUE;
-
-		// get the requested version from the Accept header
-		// e.g., vnd.company.app-v12+xml
-		// ^ looking for "12"
-		$accept = API_Request::factory()->kohana_request()->headers('accept');
-		if (preg_match('/^vnd\..*(\-v.*)?\+.*/', $accept, $match)) {
-			$version = str_replace('-v', '', $match[1]);
-		} else {
-			$version = Kohana::$config->load('api.current_version');
-		}
-		$version = str_replace('.', '_', $version);
-
 		// get the api controller we're calling
 		$controller = $request->param('resource_controller');
 
@@ -41,9 +27,9 @@ class Babble_Controller_Public_API extends Controller {
 		// We do this here as opposed to creating a kohana route in the normal place
 		// because this is only available internally. This is not a publicly accessible
 		// route. In essence all API routes go through this frontend then to internal route.
-		$route = new Route('api-internal/<controller>(/<api_id>)');
+		$route = new Route('api-internal/<controller>(/<resource_id>)');
 		$route->defaults(array(
-			'directory' => 'Public/API/'.$version,
+			'directory' => 'Public/API/',
 			'action'     => 'list',
 		));
 		$internal_routes = array(
