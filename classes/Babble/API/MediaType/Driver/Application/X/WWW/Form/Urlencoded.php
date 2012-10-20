@@ -3,7 +3,7 @@
 /**
  * media type - application/x-www-form-urlencoded
  */
-class Babble_API_MediaType_Default_Application_X_WWW_Form_Urlencoded extends API_MediaType {
+class Babble_API_MediaType_Driver_Application_X_WWW_Form_Urlencoded extends API_MediaType {
 	/**
 	 * @see API_MediaType::media_type
 	 */

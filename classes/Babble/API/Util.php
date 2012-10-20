@@ -50,9 +50,8 @@ class Babble_API_Util {
 			// media_type	= application/vnd.appname.behavior-v1.0+[json] (e.g., application/[json], text/[html)
 			// vendor_type	= application/[vnd.appname.behavior]-v1.0+json
 			// version		= application/vnd.appname.behavior-v[1.0]+json
-			// class		= application_vnd_appname_behavior_1_0_json
+			// class		= application_vnd_appname_behavior_json
 			// config_class = set in config
-			// default_class= default class w/o version
 			//
 			// passed = what the client gave us
 			// real = what we determined
@@ -74,7 +73,6 @@ class Babble_API_Util {
 					'version' => NULL,
 					'class' => NULL,
 					'config_class' => NULL,
-					'default_class' => NULL,
 				)
 			);
 
@@ -135,7 +133,7 @@ class Babble_API_Util {
 
 			// detemine the class name based on all we've gotten
 			$class = NULL;
-			foreach (array('version', 'type', 'vendor_type', 'media_type') as $key)
+			foreach (array('type', 'vendor_type', 'media_type') as $key)
 			{
 				if (isset($content_type['real'][$key]))
 				{
@@ -147,9 +145,6 @@ class Babble_API_Util {
 			// set our actual class. note that we add the version to the class name in an incorrect syntax knowing
 			// that it will be fixed.
 			$content_type['real']['class'] = self::get_class_by_media_type(implode('_', $class));
-
-			// set our default class
-			$content_type['real']['default_class'] = 'Default_'.self::get_class_by_media_type($media_string);
 
 			// determine if we have a default class to load for this type.
 			// we check config to see if it matches our exact header string and also
@@ -231,10 +226,13 @@ class Babble_API_Util {
 			// loop through the params and pull out q (priority), rest are irrelevant for now
 			foreach ($params as $p)
 			{
-				list($k, $v) = explode('=', $p);
-				if ($k == 'q')
+				if (strpos('=', $p))
 				{
-					$sorted[$v * $x] = $type;
+					list($k, $v) = explode('=', $p);
+					if ($k == 'q')
+					{
+						$sorted[$v * $x] = $type;
+					}
 				}
 			}
 		}

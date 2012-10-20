@@ -3,7 +3,7 @@
 /**
  * media type - text/plain
  */
-class Babble_API_MediaType_Default_Text_Plain extends API_MediaType {
+class Babble_API_MediaType_Driver_Text_Plain extends API_MediaType {
 	/**
 	 * @see API_MediaType::media_type
 	 */

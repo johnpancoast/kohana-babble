@@ -53,19 +53,14 @@ abstract class Babble_API_MediaType {
 
 		foreach ($media_types as $type)
 		{
-			if (class_exists('API_MediaType_'.$type['real']['class']))
+			if (class_exists('API_MediaType_Driver_'.$type['real']['class']))
 			{
-				$class_name = 'API_MediaType_'.$type['real']['class'];
+				$class_name = 'API_MediaType_Driver_'.$type['real']['class'];
 				break;
 			}
-			elseif (class_exists('API_MediaType_'.$type['real']['config_class']))
+			elseif (class_exists('API_MediaType_Driver_'.$type['real']['config_class']))
 			{
-				$class_name = 'API_MediaType_'.$type['real']['config_class'];
-				break;
-			}
-			elseif (class_exists('API_MediaType_'.$type['real']['default_class']))
-			{
-				$class_name = 'API_MediaType_'.$type['real']['default_class'];
+				$class_name = 'API_MediaType_Driver_'.$type['real']['config_class'];
 				break;
 			}
 

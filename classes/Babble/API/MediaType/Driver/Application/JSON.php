@@ -3,7 +3,7 @@
 /**
  * media type - application/json
  */
-class Babble_API_MediaType_Default_Application_JSON extends API_MediaType {
+class Babble_API_MediaType_Driver_Application_JSON extends API_MediaType {
 	/**
 	 * @see API_MediaType::media_type
 	 */

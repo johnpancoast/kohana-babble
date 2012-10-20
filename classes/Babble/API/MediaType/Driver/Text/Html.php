@@ -5,7 +5,7 @@
  *
  * similar handling to text/plain, so extend it
  */
-class Babble_API_MediaType_Default_Text_Html extends API_MediaType_Default_Text_Plain {
+class Babble_API_MediaType_Driver_Text_Html extends API_MediaType_Driver_Text_Plain {
 	/**
 	 * @see API_MediaType::media_type
 	 * @access protected
