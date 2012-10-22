@@ -52,28 +52,15 @@ class Babble_API_Util {
 			// version		= application/vnd.appname.behavior-v[1.0]+json
 			// class		= application_vnd_appname_behavior_json
 			// config_class = set in config
-			//
-			// passed = what the client gave us
-			// real = what we determined
 			$content_type = array(
-				'passed' => array(
-					'header' => $media_string,
-					'type' => NULL,
-					'sub_type' => NULL,
-					'media_type' => NULL,
-					'vendor_type' => NULL,
-					'version' => NULL,
-				),
-				'real' => array(
-					'header' => $media_string,
-					'type' => NULL,
-					'sub_type' => NULL,
-					'media_type' => NULL,
-					'vendor_type' => NULL,
-					'version' => NULL,
-					'class' => NULL,
-					'config_class' => NULL,
-				)
+				'header' => $media_string,
+				'type' => NULL,
+				'sub_type' => NULL,
+				'media_type' => NULL,
+				'vendor_type' => NULL,
+				'version' => NULL,
+				'class' => NULL,
+				'config_class' => NULL,
 			);
 
 			// examine passed accept header.
@@ -85,13 +72,11 @@ class Babble_API_Util {
 			if (count($split_type) == 2)
 			{
 				// set our type and media type
-				$content_type['passed']['type'] = $split_type[0];
-				$content_type['passed']['sub_type'] = $split_type[1];
-				$content_type['real']['type'] = $split_type[0];
-				$content_type['real']['sub_type'] = $split_type[1];
+				$content_type['type'] = $split_type[0];
+				$content_type['sub_type'] = $split_type[1];
 
 				// split at the +
-				$split_media_type = explode('+', $content_type['real']['sub_type']);
+				$split_media_type = explode('+', $content_type['sub_type']);
 
 				// if we have a two count, then this must be a vendor media type.
 				// we'll also search for a version. it automatically implies a vendor media type (for us)
@@ -99,28 +84,24 @@ class Babble_API_Util {
 				if (count($split_media_type) == 2)
 				{
 					// we have a media type
-					$content_type['passed']['media_type'] = $split_media_type[1];
-					$content_type['real']['media_type'] = $split_media_type[1];
+					$content_type['media_type'] = $split_media_type[1];
 
 					// look for version
 					$split_version = explode('-v', $split_media_type[0]);
 					if (count($split_version) == 2)
 					{
-						$content_type['passed']['version'] = $split_version[1];
-						$content_type['real']['version'] = $split_version[1];
+						$content_type['version'] = $split_version[1];
 					}
 
 					// custom type always 0'th element regardless of if version passed
-					$content_type['passed']['vendor_type'] = $split_version[0];
-					$content_type['real']['vendor_type'] = $split_version[0];
+					$content_type['vendor_type'] = $split_version[0];
 				}
 				// we assume if no + passed, then we weren't passed a custom_type and type (and maybe
 				// version), only a type was passed to us. it's an assumption. if it fails, then it just
 				// doesn't match a media type that we can return and a 406 will likely be returned.
 				else
 				{
-					$content_type['passed']['media_type'] = $split_media_type[0];
-					$content_type['real']['media_type'] = $split_media_type[0];
+					$content_type['media_type'] = $split_media_type[0];
 				}
 			}
 			// accept header in wrong format
@@ -129,39 +110,39 @@ class Babble_API_Util {
 				return FALSE;
 			}
 
-			$content_type['real']['version'] = isset($content_type['real']['version']) ? $content_type['real']['version'] : Kohana::$config->load('api.current_version');
+			$content_type['version'] = isset($content_type['version']) ? $content_type['version'] : Kohana::$config->load('api.current_version');
 
 			// detemine the class name based on all we've gotten
 			$class = NULL;
 			foreach (array('type', 'vendor_type', 'media_type') as $key)
 			{
-				if (isset($content_type['real'][$key]))
+				if (isset($content_type[$key]))
 				{
-					$class[] = $content_type['real'][$key];
+					$class[] = $content_type[$key];
 				}
 			}
 
 			#switch (strtolower($media_string)
 			// set our actual class. note that we add the version to the class name in an incorrect syntax knowing
 			// that it will be fixed.
-			$content_type['real']['class'] = self::get_class_by_media_type(implode('_', $class));
+			$content_type['class'] = self::get_class_by_media_type(implode('_', $class));
 
 			// determine if we have a default class to load for this type.
 			// we check config to see if it matches our exact header string and also
 			// a header string w/o the version (that may have been passed here).
 			$check_types = array($media_string);
-			$check_type = $content_type['real']['type'].'/';
-			if ($content_type['real']['vendor_type'])
+			$check_type = $content_type['type'].'/';
+			if ($content_type['vendor_type'])
 			{
-				$check_type .= $content_type['real']['vendor_type'];
-				if ($content_type['real']['media_type'])
+				$check_type .= $content_type['vendor_type'];
+				if ($content_type['media_type'])
 				{
-					$check_type .= '+'.$content_type['real']['media_type'];
+					$check_type .= '+'.$content_type['media_type'];
 				}
 			}
-			elseif ($content_type['real']['media_type'])
+			elseif ($content_type['media_type'])
 			{
-				$check_type .= $content_type['real']['media_type'];
+				$check_type .= $content_type['media_type'];
 			}
 
 			$check_set = array(
@@ -175,7 +156,7 @@ class Babble_API_Util {
 			{
 				if (isset($config_types[$v]))
 				{
-					$content_type['real']['config_class'] = 'Default_'.self::get_class_by_media_type($config_types[$v]);
+					$content_type['config_class'] = 'Default_'.self::get_class_by_media_type($config_types[$v]);
 				}
 			}
 

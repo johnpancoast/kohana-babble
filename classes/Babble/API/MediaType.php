@@ -46,38 +46,44 @@ abstract class Babble_API_MediaType {
 		// media types from header
 		$media_types = API_Util::get_media_type_set($header);
 
+		$type_set = NULL;
+
 		if (empty($header) && empty($media_types))
 		{
-			return array();
+			$class_name = 'API_MediaType_DriverDefault';
 		}
-
-		foreach ($media_types as $type)
+		else
 		{
-			if (class_exists('API_MediaType_Driver_'.$type['real']['class']))
+			foreach ($media_types as $type)
 			{
-				$class_name = 'API_MediaType_Driver_'.$type['real']['class'];
-				break;
-			}
-			elseif (class_exists('API_MediaType_Driver_'.$type['real']['config_class']))
-			{
-				$class_name = 'API_MediaType_Driver_'.$type['real']['config_class'];
-				break;
+				if (class_exists('API_MediaType_Driver_'.$type['class']))
+				{
+					$class_name = 'API_MediaType_Driver_'.$type['class'];
+					$type_set = $type;
+					break;
+				}
+				elseif (class_exists('API_MediaType_Driver_'.$type['config_class']))
+				{
+					$class_name = 'API_MediaType_Driver_'.$type['config_class'];
+					$type_set = $type;
+					break;
+				}
+
+				$config_type_found = (isset($config_type_found) && $config_type_found) ? $config_type_found : ( ! is_null($type['config_class']));
 			}
 
-			$config_type_found = (isset($config_type_found) && $config_type_found) ? $config_type_found : ( ! is_null($type['real']['config_class']));
-		}
-
-		// if we found no class, then we have nothing to respond with.
-		if ( ! isset($class_name))
-		{
-			// dev set a config type that doesn't exist
-			if (isset($config_type_found) && $config_type_found)
+			// if we found no class, then we have nothing to respond with.
+			if ( ! isset($class_name))
 			{
-				throw new API_MediaType_Exception_NoConfigClass;
-			}
-			else
-			{
-				throw new API_MediaType_Exception_NoClass;
+				// dev set a config type that doesn't exist
+				if (isset($config_type_found) && $config_type_found)
+				{
+					throw new API_MediaType_Exception_NoConfigClass;
+				}
+				else
+				{
+					throw new API_MediaType_Exception_NoClass;
+				}
 			}
 		}
 
@@ -86,8 +92,19 @@ abstract class Babble_API_MediaType {
 		{
 			throw new API_MediaType_Exception_Inheritance;
 		}
+		$class->set_media_type_set($type_set);
 
 		return $class;
+	}
+
+	private function set_media_type_set($type_set)
+	{
+		$this->media_type_set = $type_set;
+	}
+
+	public function get_media_type_set()
+	{
+		return $this->media_type_set;
 	}
 
 	/**
