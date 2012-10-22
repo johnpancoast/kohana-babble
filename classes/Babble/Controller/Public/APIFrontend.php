@@ -9,6 +9,8 @@
 class Babble_Controller_Public_APIFrontend extends Controller {
 	public function action_index()
 	{
+		Babble_API::initialize();
+
 		// current request
 		$request = Request::current();
 
