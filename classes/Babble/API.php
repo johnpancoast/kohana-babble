@@ -17,18 +17,18 @@ class Babble_API {
 		$config_versions = Kohana::$config->load('api.versions');
 		if (empty($config_versions))
 		{
-			// no need to do anything since we have no config module
+			// no need to do anything since we have no config'd version modules
 			return;
 		}
-
-		$accept = API_Util::get_media_type_set(Request::current()->headers('accept'));
-		$content_type = API_Util::get_media_type_set(Request::current()->headers('content-type'));
 
 		// decide which passed version to use based off of the request method.
 		$write = in_array($_SERVER['REQUEST_METHOD'], array('POST', 'PUT', 'PATCH'));
 
 		// set type we're workin with
-		$type = $write ? $content_type : $accept;
+		$type = $write
+			? API_Util::get_media_type_set(Request::current()->headers('content-type'))
+			: API_Util::get_media_type_set(Request::current()->headers('accept'));
+
 
 		// manually try to see if we get a matched media type class. if we get a match, then it's a safe module to load.
 		// we _must_ do this check and _cannot_ just load each version as a kohana module until after this check. this is because
