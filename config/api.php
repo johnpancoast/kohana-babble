@@ -19,7 +19,8 @@ return array
 	 * All API versions. The keyed version string should _only_ contain numbers and .'s.
 	 */
 	'versions' => array(
-		'0' => APPPATH.'api/0',
+		// e.g.,
+		// '0' => APPPATH.'api/0',
 	),
 
 	/**
