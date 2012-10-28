@@ -29,7 +29,6 @@ class Babble_API {
 			? API_Util::get_media_type_set(Request::current()->headers('content-type'))
 			: API_Util::get_media_type_set(Request::current()->headers('accept'));
 
-
 		// manually try to see if we get a matched media type class. if we get a match, then it's a safe module to load.
 		// we _must_ do this check and _cannot_ just load each version as a kohana module until after this check. this is because
 		// 1.) it's less files to check once we load worthy modules  -and- 2.) if we load all modules (or even modules for passed versions)
