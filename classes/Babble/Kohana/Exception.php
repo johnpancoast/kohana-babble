@@ -93,7 +93,7 @@ class Babble_Kohana_Exception extends Kohana_Kohana_Exception {
 			$response->status($http_status);
 
 			// response for API requests
-			if (API_Request::instantiated())
+			if (Babble_API::is_initialized())
 			{
 				try
 				{
