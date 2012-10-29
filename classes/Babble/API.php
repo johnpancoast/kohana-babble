@@ -14,6 +14,9 @@ class Babble_API {
 			return;
 		}
 
+		// we set this at the beginning to let everything following this know that we're in an API request.
+		Babble_API::$initialized = TRUE;
+
 		// decide which passed version to use based off of the request method.
 		$write = in_array($_SERVER['REQUEST_METHOD'], array('POST', 'PUT', 'PATCH'));
 
@@ -48,8 +51,6 @@ class Babble_API {
 				break;
 			}
 		}
-
-		Babble_API::$initialized = TRUE;
 	}
 
 	public static function get_version()
