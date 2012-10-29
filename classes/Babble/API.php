@@ -5,19 +5,12 @@
  */
 class Babble_API {
 	private static $initialized = FALSE;
+	private static $version = NULL;
 
 	public static function initialize()
 	{
-		if (self::$initialized)
+		if (Babble_API::$initialized)
 		{
-			return;
-		}
-
-		// if no config versions, then nothing else to load.
-		$config_versions = Kohana::$config->load('api.versions');
-		if (empty($config_versions))
-		{
-			// no need to do anything since we have no config'd version modules
 			return;
 		}
 
@@ -50,11 +43,22 @@ class Babble_API {
 			$found = is_file($file);
 			if (is_file($file))
 			{
-				Kohana::modules(array_merge(array('babble-app-version-'.$v['version'] => $config_versions[$v['version']]), Kohana::modules()));
+				Babble_API::$version = $v['version'];
+				Kohana::modules(array_merge(array('babble-version-'.$v['version'] => $config_versions[$v['version']]), Kohana::modules()));
 				break;
 			}
 		}
 
-		self::$initialized = TRUE;
+		Babble_API::$initialized = TRUE;
+	}
+
+	public static function get_version()
+	{
+		return Babble_API::$version;
+	}
+
+	public static function is_initialized()
+	{
+		return Babble_API::$initialized;
 	}
 }
