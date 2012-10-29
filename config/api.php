@@ -6,22 +6,21 @@
 return array
 (
 	/**
+	 * [versions]
+	 *
+	 * All API versions. The keyed version string should _only_ contain numbers and .'s.
+	 */
+	'versions' => array(
+		'0' => APPPATH.'babble/0',
+	),
+
+	/**
 	 * [current_version]
 	 *
 	 * the current version of the API. When clients do not pass a version,
 	 * this is the version used where applicable..
 	 */
 	'current_version' => '0',
-
-	/**
-	 * [versions]
-	 *
-	 * All API versions. The keyed version string should _only_ contain numbers and .'s.
-	 */
-	'versions' => array(
-		// e.g.,
-		// '0' => APPPATH.'babble-devapi/0',
-	),
 
 	/**
 	 * [default_media_types]
