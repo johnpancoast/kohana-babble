@@ -20,7 +20,7 @@ return array
 	 */
 	'versions' => array(
 		// e.g.,
-		// '0' => APPPATH.'api/0',
+		// '0' => APPPATH.'babble-devapi/0',
 	),
 
 	/**
