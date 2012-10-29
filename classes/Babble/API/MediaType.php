@@ -46,53 +46,83 @@ abstract class Babble_API_MediaType {
 		// media types from header
 		$media_types = API_Util::get_media_type_set($header);
 
-		$type_set = NULL;
+		// possible versions
+		$config_versions = Kohana::$config->load('api.versions');
 
-		if (empty($header) && empty($media_types))
+		// babble version
+		$bab_version = Babble_API::get_version();
+
+		// modules
+		$orig_modules = Kohana::modules();
+
+		// tmp modules
+		$tmp_modules = $orig_modules;
+		unset($tmp_modules['babble-version-'.$bab_version]);
+
+		// attempt to find a matching class
+		$class = NULL;
+		foreach ($media_types as $type)
 		{
-			$class_name = 'API_MediaType_DriverDefault';
+			// whether or not a config value was set to match on this media type
+			$config_type_found = (isset($config_type_found) && $config_type_found) ? $config_type_found : ( ! is_null($type['config_class']));
+
+			// attempt loading class that matches request then attempt config class
+			// if there was one for this media type
+			foreach (array('API_MediaType_Driver_'.$type['class'], 'API_MediaType_Driver_'.$type['config_class']) AS $class_name)
+			{
+				// if we're attemping a version other than the version module we've loaded for the request, load this
+				// attempted version as a tmp module.
+				if ($type['version'] != $bab_version && isset($config_versions[$type['version']]))
+				{
+					// ignore caught exception
+					try
+					{
+						Kohana::modules(array_merge(array('babble-version-tmp-'.$type['version'] => $config_versions[$type['version']]), $tmp_modules));
+					}
+					catch (Kohana_Exception $e)
+					{
+						// ignore if it was invalid dir, rethrow otherwise.
+						if (strpos($e->getMessage(), 'Attempted to load an invalid or missing module') === FALSE)
+						{
+							throw $e;
+						}
+					}
+				}
+
+				if (class_exists($class_name))
+				{
+					$class = new $class_name;
+					break 2;
+				}
+
+				// set original kohana modules
+				if ($type['version'] != $bab_version)
+				{
+					Kohana::modules($orig_modules);
+				}
+			}
 		}
-		else
+
+		// if we found no class, then we have nothing to respond with.
+		if ( ! $class)
 		{
-			foreach ($media_types as $type)
+			// dev set a config type that doesn't exist
+			if (isset($config_type_found) && $config_type_found)
 			{
-				if (class_exists('API_MediaType_Driver_'.$type['class']))
-				{
-					$class_name = 'API_MediaType_Driver_'.$type['class'];
-					$type_set = $type;
-					break;
-				}
-				elseif (class_exists('API_MediaType_Driver_'.$type['config_class']))
-				{
-					$class_name = 'API_MediaType_Driver_'.$type['config_class'];
-					$type_set = $type;
-					break;
-				}
-
-				$config_type_found = (isset($config_type_found) && $config_type_found) ? $config_type_found : ( ! is_null($type['config_class']));
+				throw new API_MediaType_Exception_NoConfigClass;
 			}
-
-			// if we found no class, then we have nothing to respond with.
-			if ( ! isset($class_name))
+			else
 			{
-				// dev set a config type that doesn't exist
-				if (isset($config_type_found) && $config_type_found)
-				{
-					throw new API_MediaType_Exception_NoConfigClass;
-				}
-				else
-				{
-					throw new API_MediaType_Exception_NoClass;
-				}
+				throw new API_MediaType_Exception_NoClass;
 			}
 		}
 
-		$class = new $class_name;
+		// must extend media type
 		if ( ! ($class instanceof API_MediaType))
 		{
 			throw new API_MediaType_Exception_Inheritance;
 		}
-		$class->set_media_type_set($type_set);
+		$class->set_media_type_set($type);
 
 		return $class;
 	}
