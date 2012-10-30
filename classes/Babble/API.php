@@ -45,7 +45,6 @@ class Babble_API {
 			. 'MediaType'.DIRECTORY_SEPARATOR
 			. 'Driver'.DIRECTORY_SEPARATOR;
 			$file = $dir.str_replace('_', '/', $v['class']).EXT;
-			$found = is_file($file);
 			if (is_file($file))
 			{
 				Babble_API::$version = $v['version'];
