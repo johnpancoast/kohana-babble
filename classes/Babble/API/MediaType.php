@@ -52,39 +52,45 @@ abstract class Babble_API_MediaType {
 		// babble version
 		$bab_version = Babble_API::get_version();
 
-		// modules
-		$orig_modules = Kohana::modules();
-
-		// tmp modules
-		$tmp_modules = $orig_modules;
-		unset($tmp_modules['babble-version-'.$bab_version]);
-
 		// attempt to find a matching class
 		$class = NULL;
-		foreach ($media_types as $type)
+		foreach ($media_types as $header => $type)
 		{
 			// whether or not a config value was set to match on this media type
 			$config_type_found = (isset($config_type_found) && $config_type_found) ? $config_type_found : ( ! is_null($type['config_class']));
 
-			// attempt loading class that matches request then attempt config class
-			// if there was one for this media type
-			foreach (array('API_MediaType_Driver_'.$type['class'], 'API_MediaType_Driver_'.$type['config_class']) AS $class_name)
+			// attempt loading class that matches request. if nothing, attempt loading class that matches config media type
+			// if there was a matching config media type set for this header.
+			$arr = array('API_MediaType_Driver_'.$type['class']);
+			if (isset($type['config_class']))
+			{
+				$arr[] = 'API_MediaType_Driver_'.$type['config_class'];
+			}
+			foreach ($arr AS $class_name)
 			{
 				// if we're attemping a version other than the version module we've loaded for the request, load this
-				// attempted version as a tmp module.
-				if ($type['version'] != $bab_version && isset($config_versions[$type['version']]))
+				// attempted version as a tmp module. we'll remove the loaded version module since it may be unrelated
+				// to the version of this media type we're attempting to load.
+				if ($type['version'] != $bab_version)
 				{
-					// ignore caught exception
-					try
+					// we will temporarily remove the loaded version module
+					$bab_version_path = Kohana_Core_Babble::get_module_path('babble-version-'.$bab_version);
+					Kohana_Core_Babble::remove_modules('babble-version-'.$bab_version);
+
+					if (isset($config_versions[$type['version']]))
 					{
-						Kohana::modules(array_merge(array('babble-version-tmp-'.$type['version'] => $config_versions[$type['version']]), $tmp_modules));
-					}
-					catch (Kohana_Exception $e)
-					{
-						// ignore if it was invalid dir, rethrow otherwise.
-						if (strpos($e->getMessage(), 'Attempted to load an invalid or missing module') === FALSE)
+						// ignore caught exception if related to non-existent dir. we just won't load it.
+						try
 						{
-							throw $e;
+							Kohana_Core_Babble::prepend_modules(array('babble-version-tmp-'.$type['version'] => $config_versions[$type['version']]));
+						}
+						catch (Kohana_Exception $e)
+						{
+							// ignore if it was invalid dir, throw exception otherwise.
+							if (strpos($e->getMessage(), 'Attempted to load an invalid or missing module') === FALSE)
+							{
+								throw $e;
+							}
 						}
 					}
 				}
@@ -98,7 +104,21 @@ abstract class Babble_API_MediaType {
 				// set original kohana modules
 				if ($type['version'] != $bab_version)
 				{
-					Kohana::modules($orig_modules);
+					Kohana_Core_Babble::remove_modules('babble-version-tmp-'.$type['version']);
+
+					// ignore caught exception if related to non-existent dir. we just won't load it.
+					try
+					{
+						Kohana_Core_Babble::prepend_modules(array('babble-version-'.$bab_version => $bab_version_path));
+					}
+					catch (Kohana_Exception $e)
+					{
+						// ignore if it was invalid dir, throw exception otherwise.
+						if (strpos($e->getMessage(), 'Attempted to load an invalid or missing module') === FALSE)
+						{
+							throw $e;
+						}
+					}
 				}
 			}
 		}

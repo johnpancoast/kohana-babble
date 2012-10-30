@@ -17,6 +17,8 @@ class Babble_API {
 		// we set this at the beginning to let everything following this know that we're in an API request.
 		Babble_API::$initialized = TRUE;
 
+		$config_versions = Kohana::$config->load('api.versions');
+
 		// decide which passed version to use based off of the request method.
 		$write = in_array($_SERVER['REQUEST_METHOD'], array('POST', 'PUT', 'PATCH'));
 
@@ -47,7 +49,7 @@ class Babble_API {
 			if (is_file($file))
 			{
 				Babble_API::$version = $v['version'];
-				Kohana::modules(array_merge(array('babble-version-'.$v['version'] => $config_versions[$v['version']]), Kohana::modules()));
+				Kohana_Core_Babble::prepend_modules(array('babble-version-'.$v['version'] => $config_versions[$v['version']]));
 				break;
 			}
 		}
