@@ -39,9 +39,10 @@ abstract class Babble_API_MediaType {
 	/**
 	 * factory method to load a media type class
 	 * @param string $header A media type header which can be either Content-type or Accept
+	 * @param bool $is_accept_header If this is accept header. If false, it implies it's content type.
 	 * @return API_MediaType A child of it.
 	 */
-	public static function factory($header)
+	public static function factory($header, $is_accept_header = TRUE)
 	{
 		// media types from header
 		$media_types = API_Util::get_media_type_set($header);
@@ -98,6 +99,19 @@ abstract class Babble_API_MediaType {
 				if (class_exists($class_name))
 				{
 					$class = new $class_name;
+
+					// set meta data since we found something.
+					$module_key = $type['version'] == $bab_version ? 'babble-version-'.$bab_version : 'babble-version-tmp-'.$type['version'];
+
+					if ($is_accept_header)
+					{
+						API_Meta::set_header_accept($header, Kohana_Core_Babble::get_module_path($module_key));
+					}
+					else
+					{
+						API_Meta::set_header_content_type($header, Kohana_Core_Babble::get_module_path($module_key));
+					}
+
 					break 2;
 				}
 

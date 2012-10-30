@@ -53,9 +53,14 @@ class Babble_API {
 			{
 				Babble_API::$version = $v['version'];
 				Kohana_Core_Babble::prepend_modules(array('babble-version-'.$v['version'] => $config_versions[$v['version']]));
+				API_Meta::set_version_module_directory($config_versions[$v['version']]);
 				break;
 			}
 		}
+
+		// now that our version module is loaded properly, set meta data on request.
+		API_Meta::set_request(API_Request::factory());
+		API_Meta::set_response(API_Response::factory());
 	}
 
 	public static function get_version()

@@ -37,7 +37,7 @@ class Babble_API_Request {
 		try
 		{
 			$header = $this->kohana_request()->headers('content-type');
-			$media_type = API_MediaType::factory($header);
+			$media_type = API_MediaType::factory($header, FALSE);
 			if ($media_type)
 			{
 				$this->media_type($media_type);
