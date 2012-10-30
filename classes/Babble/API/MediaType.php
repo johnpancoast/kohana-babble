@@ -133,7 +133,7 @@ abstract class Babble_API_MediaType {
 			}
 			else
 			{
-				throw new API_MediaType_Exception_NoClass;
+				$class = new API_MediaType_DriverDefault;
 			}
 		}
 
@@ -142,7 +142,11 @@ abstract class Babble_API_MediaType {
 		{
 			throw new API_MediaType_Exception_Inheritance;
 		}
-		$class->set_media_type_set($type);
+
+		if (isset($type))
+		{
+			$class->set_media_type_set($type);
+		}
 
 		return $class;
 	}
