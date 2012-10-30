@@ -112,7 +112,7 @@ return array
 		'500-001'		=> array('public' => 'Internal Server Error', 'private' => 'Unknown API response code'),
 		'500-002'		=> array('public' => 'Internal Server Error', 'private' => 'No API response'),
 		'500-003'		=> array('public' => 'Internal Server Error', 'private' => 'Developer set a non-existent default api response driver.'),
-		'500-004'		=> array('public' => 'Internal Server Error', 'private' => 'Problem with media type class(es).');
+		'500-004'		=> array('public' => 'Internal Server Error', 'private' => 'Problem with media type class(es).'),
 
 		// internal error - database
 		'500-100'		=> array('public' => 'Internal Server Error', 'private' => 'A generic database exception. Perhaps more should be caught or examined.'),
