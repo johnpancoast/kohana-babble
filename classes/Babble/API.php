@@ -6,6 +6,7 @@
 class Babble_API {
 	private static $initialized = FALSE;
 	private static $version = NULL;
+	private static $id = NULL;
 
 	public static function initialize()
 	{
@@ -16,6 +17,9 @@ class Babble_API {
 
 		// we set this at the beginning to let everything following this know that we're in an API request.
 		Babble_API::$initialized = TRUE;
+
+		// give this babble instance an id
+		Babble_API::$id = uniqid($_SERVER['SERVER_ADDR'], TRUE);
 
 		$config_versions = Kohana::$config->load('api.versions');
 
@@ -62,5 +66,10 @@ class Babble_API {
 	public static function is_initialized()
 	{
 		return Babble_API::$initialized;
+	}
+
+	public static function get_id()
+	{
+		return Babble_API::$id;
 	}
 }
