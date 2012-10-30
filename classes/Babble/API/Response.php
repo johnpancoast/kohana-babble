@@ -76,6 +76,10 @@ class Babble_API_Response {
 		{
 			throw new API_Response_Exception('media type class must inherit from API_MediaType', '406-000');
 		}
+		catch (Exception $e)
+		{
+			throw new API_Response_Exception('media type class had problems', '500-004');
+		}
 	}
 
 	/**
