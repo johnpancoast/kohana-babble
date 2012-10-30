@@ -7,10 +7,14 @@
  * This controller's job is just to route to a versioned API controller.
  */
 class Babble_Controller_Public_APIFrontend extends Controller {
-	public function action_index()
+	public function before()
 	{
 		Babble_API::initialize();
+		parent::before();
+	}
 
+	public function action_index()
+	{
 		// current request
 		$request = Request::current();
 
