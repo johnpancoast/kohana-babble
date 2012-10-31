@@ -11,7 +11,7 @@ return array
 	 * All API versions. The keyed version string should _only_ contain numbers and .'s.
 	 */
 	'versions' => array(
-		// '1' => APPPATH.'babble-versions/1',
+		'1' => APPPATH.'babble-versions/1',
 	),
 
 	/**
@@ -20,7 +20,7 @@ return array
 	 * the current version of the API. When clients do not pass a version,
 	 * this is the version used where applicable..
 	 */
-	'current_version' => '0',
+	'current_version' => '1',
 
 	/**
 	 * [default_media_types]
