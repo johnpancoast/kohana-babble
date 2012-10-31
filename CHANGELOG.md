@@ -1,3 +1,11 @@
+## 0.3.0 - 10/31/12
+* Better handling of media type versioning (custom autoloader).
+* Logging.
+* Bugfixes.
+* **_plans for 0.4.0_**
+  * More media types (i.e., application/xml).
+  * HATEOAS support.
+
 ## 0.2.0 - 10/27/12
 * Transparent extension (cascading file system support).
 * API versions as kohana modules.
