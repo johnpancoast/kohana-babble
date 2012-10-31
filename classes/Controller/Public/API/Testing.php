@@ -39,7 +39,7 @@
  * http://example.com/testapi/book/delete/18
  */
 
-class Babble_Controller_Public_API_Testing extends Controller {
+class Controller_Public_API_Testing extends Controller {
 	private function callApi($url, $method = 'GET', $post = array(), $header = array())
 	{
 		// pull config values
