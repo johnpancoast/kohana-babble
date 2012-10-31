@@ -130,7 +130,7 @@ class Babble_Kohana_Exception extends Kohana_Kohana_Exception {
 					{
 						$ecode = $e->get_response_http_code();
 						$http_code = $ecode ? $ecode : '500';
-						$message = $http_code.' '.Kohana::message('api', 'responses.'.$e->get_response_code().'.public');
+						$message = $http_code.' '.Kohana::message('babble', 'responses.'.$e->get_response_code().'.public');
 					}
 					else
 					{

@@ -20,7 +20,7 @@ class Babble_API_Response_Exception extends Kohana_Exception {
 		parent::__construct($message);
 
 		// if unknown code was thrown, default to 500
-		$response_code = Kohana::message('api', 'responses.'.$response_code) ? $response_code : '500-001';
+		$response_code = Kohana::message('babble', 'responses.'.$response_code) ? $response_code : '500-001';
 
 		// set our response code
 		$this->response_code = $response_code;

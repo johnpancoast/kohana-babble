@@ -248,8 +248,8 @@ class Babble_API_Response {
 	 * @throws API_Response_Exception Upon error
 	 */
 	public function set_response($code, $body = null) {
-		$msg_public = Kohana::message('api', 'responses.'.$code.'.public');
-		$msg_hint = Kohana::message('api', 'responses.'.$code.'.public_hint');
+		$msg_public = Kohana::message('babble', 'responses.'.$code.'.public');
+		$msg_hint = Kohana::message('babble', 'responses.'.$code.'.public_hint');
 
 		// if we were sent an invalid code, we must throw a new
 		// API_Response_Exception so the error gets logged. however, we must
@@ -264,7 +264,7 @@ class Babble_API_Response {
 			catch (Exception $e)
 			{
 				$code = '500-001';
-				$msg_public = Kohana::message('api', 'responses.'.$code.'.public');
+				$msg_public = Kohana::message('babble', 'responses.'.$code.'.public');
 			}
 		}
 
