@@ -205,14 +205,8 @@ class Babble_API {
 			$response = API_Response::factory();
 			$response_media = $response->media_type();
 
-			$msg = "HEADER:\n";
-			foreach ($request->kohana_request()->headers() AS $k => $v)
-			{
-				$msg .= "  $k = $v\n";
-			}
-			$msg .= "\n";
-
-			$msg .= "BODY:\n".$request->kohana_request()->body()."\n";
+			$msg = "REQUEST:\n";
+			$msg .= $request->kohana_request()."\n";
 			$msg .= "\n";
 
 			$msg .= "MODULE PATH:\n".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, Kohana_Core_Babble::get_module_path('babble-version-'.$this->get_version()))."\n";
