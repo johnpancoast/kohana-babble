@@ -16,7 +16,7 @@ branch on [github](https://github.com/shideon/kohana-babble).
 1. Clone this repository to APPPATH/modules/babble.
 2. Include it in your application/bootstrap.php file.
 3. Make version 1 of the API. There's a template at misc/babble-version/1. I recommend
-putting this in your application directory like so. `cp -R misc/babble-versions <YOUR APP PATH>`
+putting this in your application directory like so. `cp -R misc/babble-versions <YOUR APP PATH>/`
 this way you have a directory for all future versions of your api. An API version will be loaded
 as a Kohana module. Which one is loaded depends on the Accept header, Content-Type header, or the
 babble.current_version value in the config.
