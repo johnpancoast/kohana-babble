@@ -123,6 +123,6 @@ class Babble_Kohana_Core extends Kohana {
 
 	public static function get_module_path($key)
 	{
-		return Kohana::$_modules[$key];
+		return isset(Kohana::$_modules[$key]) ? Kohana::$_modules[$key] : NULL;
 	}
 }
