@@ -156,7 +156,7 @@ class Babble_API_Util {
 			{
 				if (isset($config_types[$v]))
 				{
-					$content_type['config_class'] = 'Default_'.self::get_class_by_media_type($config_types[$v]);
+					$content_type['config_class'] = self::get_class_by_media_type($config_types[$v]);
 				}
 			}
 
