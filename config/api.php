@@ -63,6 +63,13 @@ return array
 	),
 
 	/**
+	 * [debug]
+	 *
+	 * Log debugging info. This _should not_ be done in production environments.
+	 */
+	'debug' => FALSE,
+
+	/**
 	 * [testing]
 	 *
 	 * api testing parameters. {@see Controller_Public_API_Testing}.
