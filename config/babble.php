@@ -11,7 +11,7 @@ return array
 	 * All API versions. The keyed version string should _only_ contain numbers and .'s.
 	 */
 	'versions' => array(
-		'0' => APPPATH.'babble-api/0',
+		// '1' => APPPATH.'babble-versions/1',
 	),
 
 	/**
