@@ -21,6 +21,9 @@ class Babble_API {
 		// give this babble instance an id
 		Babble_API::$id = uniqid($_SERVER['SERVER_ADDR'], TRUE);
 
+		// babble version == config version by default
+		Babble_API::$version = Kohana::$config->load('api.current_version');
+
 		$config_versions = Kohana::$config->load('api.versions');
 
 		// decide which passed version to use based off of the request method.
@@ -35,7 +38,8 @@ class Babble_API {
 		// we _must_ do this check and _cannot_ just load each version as a kohana module until after this check. this is because
 		// 1.) it's less files to check once we load worthy modules  -and- 2.) if we load all modules (or even modules for passed versions)
 		// before knowing that they have the right media class to handle the request/response, then media type classes among different
-		// versions will be loaded and handling requests/responses when they shouldn't be.
+		// versions will be loaded and will handle requests/responses when they shouldn't be.
+		// ...
 		// get all passed versions
 		foreach ($type as $k => $v)
 		{
