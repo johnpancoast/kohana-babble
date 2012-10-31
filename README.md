@@ -21,8 +21,10 @@ this way you have a directory for all future versions of your api. An API versio
 as a Kohana module. Which one is loaded depends on the Accept header, Content-Type header, or the
 babble.current_version value in the config.
 4. Copy the babble config to your app `cp config/babble.php <YOUR APP PATH>/config/`.
-5. Add a line to your config to include version 1 of the api. The config variable is `babble.versions`.
-6. By default, API routes are accessed via /api/<controller>(/<id>). There's a front controller that's hit
+5. Add a line to your config to include version 1 of the api. The config variable is `babble.versions`. The key
+is the version and the value is the path to the version.
+6. By default, API controllers are accessed via /api/<controller>(/<id>). There's a front controller that's hit
 at classes/Controller/Public/APIFrontend.php. It makes an internal HMVC request to the <controller>. All 
 API controllers should be located in classes/Controller/Public/API/.
-7. More docs to come...
+7. An API controller should extend Controller_API or Controller_API_Model which will be documented more in the future.
+8. More docs to come...
