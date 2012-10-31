@@ -13,6 +13,10 @@ abstract class Babble_API_MediaType {
 	 */
 	protected $media_type = NULL;
 
+	/**
+	 * @var string The module path at the time the child class was loaded.
+	 * @access private
+	 */
 	private $module_path = NULL;
 
 	/**
