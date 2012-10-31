@@ -182,12 +182,12 @@ class Babble_API {
 	 */
 	private function create_log()
 	{
-		$msg = '';
+		$msg = "\n";
 
 		// if we have exception, let user know.
 		if ($this->exception)
 		{
-			$msg .= "** EXCEPTION:\n".get_class($this->exception).' - '.$this->exception->getMessage()."\n";
+			$msg .= "!!!EXCEPTION EXCEPTION EXCEPTION!!!\n".get_class($this->exception).' - '.$this->exception->getMessage()."\n";
 			$msg .= "\n";
 		}
 
@@ -205,9 +205,15 @@ class Babble_API {
 			$response = API_Response::factory();
 			$response_media = $response->media_type();
 
-			$msg = "REQUEST:\n";
-			$msg .= $request->kohana_request();;
-			//$msg .= "\n";
+			$msg .= "REQUEST:\n";
+			$msg .= $request->kohana_request();
+
+			// for formatting
+			$body = $request->kohana_request()->body();
+			if ( ! empty($body))
+			{
+				$msg .= "\n\n";
+			}
 
 			$msg .= "RESPONSE\n";
 			$msg .= $response->kohana_response()."\n";
