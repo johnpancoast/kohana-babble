@@ -13,6 +13,8 @@ abstract class Babble_API_MediaType {
 	 */
 	protected $media_type = NULL;
 
+	private $module_path = NULL;
+
 	/**
 	 * get encoded data from an array
 	 * @abstract
@@ -52,6 +54,7 @@ abstract class Babble_API_MediaType {
 
 		// babble version
 		$bab_version = Babble_API::get_version();
+		$bab_version_path = Kohana_Core_Babble::get_module_path('babble-version-'.$bab_version);
 
 		// attempt to find a matching class
 		$class = NULL;
@@ -75,7 +78,6 @@ abstract class Babble_API_MediaType {
 				if ($type['version'] != $bab_version)
 				{
 					// we will temporarily remove the loaded version module
-					$bab_version_path = Kohana_Core_Babble::get_module_path('babble-version-'.$bab_version);
 					Kohana_Core_Babble::remove_modules('babble-version-'.$bab_version);
 
 					if (isset($config_versions[$type['version']]))
@@ -100,17 +102,13 @@ abstract class Babble_API_MediaType {
 				{
 					$class = new $class_name;
 
-					// set meta data since we found something.
-					$module_key = $type['version'] == $bab_version ? 'babble-version-'.$bab_version : 'babble-version-tmp-'.$type['version'];
+					if (isset($type))
+					{
+						$class->set_media_type_set($type);
+					}
 
-					if ($is_accept_header)
-					{
-						API_Meta::set_header_accept($header, Kohana_Core_Babble::get_module_path($module_key));
-					}
-					else
-					{
-						API_Meta::set_header_content_type($header, Kohana_Core_Babble::get_module_path($module_key));
-					}
+					// set meta data since we found something.
+					$class->set_module_path($type['version'] == $bab_version ? $bab_version_path : $config_version[$type['version']]);
 
 					break 2;
 				}
@@ -155,11 +153,6 @@ abstract class Babble_API_MediaType {
 		if ( ! ($class instanceof API_MediaType))
 		{
 			throw new API_MediaType_Exception_Inheritance;
-		}
-
-		if (isset($type))
-		{
-			$class->set_media_type_set($type);
 		}
 
 		return $class;
@@ -212,5 +205,15 @@ abstract class Babble_API_MediaType {
 	public function get_media_type()
 	{
 		return $this->media_type;
+	}
+
+	/**
+	 * set module path at the time this class was loaded.
+	 * @access protected
+	 * @param string $path The module path.
+	 */
+	protected function set_module_path($path)
+	{
+		$this->module_path = $path;
 	}
 }
