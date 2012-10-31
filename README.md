@@ -13,4 +13,11 @@ To see recent developments of this project, check out the latest /develop
 branch on [github](https://github.com/shideon/kohana-babble).
 
 ## Installation
-1. Not quite ready yet.
+1. Clone this repository to APPPATH/modules/babble.
+2. Include it in your application/bootstrap.php file.
+3. Make version 1 of the API. There's a template at misc/babble-version/1. I recommend
+putting this in your application directory like so. `cp -R misc/babble-versions <YOUR APP PATH>`
+this way you have a directory for all future versions of your api.
+4. Copy the babble config to your app `cp config/babble.php <YOUR APP PATH>/config/`.
+4. Add a line to your config to include version 1 of the api. The config variable is `babble.versions`.
+7. More docs to come...
