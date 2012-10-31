@@ -16,8 +16,8 @@ if (Kohana::$environment == Kohana::DEVELOPMENT)
 {
 	Route::set('testapi', '<testapi>', array('testapi' => 'testapi.*'))
 		->defaults(array(
-			'directory' => 'Public/API',
-			'controller' => 'Testing',
+			'directory' => 'Public/API/Test',
+			'controller' => 'Index',
 			'action'     => 'index',
 		));
 }
