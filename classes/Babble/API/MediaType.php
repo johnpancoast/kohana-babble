@@ -57,7 +57,7 @@ abstract class Babble_API_MediaType {
 		$config_versions = Kohana::$config->load('api.versions');
 
 		// babble version
-		$bab_version = Babble_API::get_version();
+		$bab_version = Babble_API::instance()->get_version();
 		$bab_version_path = Kohana_Core_Babble::get_module_path('babble-version-'.$bab_version);
 
 		// attempt to find a matching class
@@ -219,5 +219,10 @@ abstract class Babble_API_MediaType {
 	protected function set_module_path($path)
 	{
 		$this->module_path = $path;
+	}
+
+	public function get_module_path()
+	{
+		return $this->module_path;
 	}
 }
