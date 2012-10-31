@@ -24,7 +24,7 @@ class Babble_Controller_API extends Controller {
 	 */
 	public function before()
 	{
-		Babble_API::initialize();
+		Babble_API::instance();
 
 		// request and response instances.
 		// must force reload since we want the right media type

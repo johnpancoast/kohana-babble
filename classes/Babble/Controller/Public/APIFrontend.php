@@ -9,7 +9,7 @@
 class Babble_Controller_Public_APIFrontend extends Controller {
 	public function before()
 	{
-		Babble_API::initialize();
+		Babble_API::instance();
 		parent::before();
 	}
 
