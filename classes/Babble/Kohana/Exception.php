@@ -102,6 +102,9 @@ class Babble_Kohana_Exception extends Kohana_Kohana_Exception {
 
 					$api_response = API_Response::factory();
 
+					// we must pass this new response object to babble for debugging purposes.
+					$api_response->kohana_response($response);
+
 					// set the main response from the API response that gets set internally.
 					$code = ($e instanceof API_Response_Exception) ? $e->get_response_code() : $http_status.'-000';
 					$api_response->set_response($code);
