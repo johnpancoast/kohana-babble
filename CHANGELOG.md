@@ -1,5 +1,5 @@
 ## 0.3.0 - 10/31/12
-* Better handling of media type versioning (custom autoloader).
+* Better handling of media type versioning using Kohana modules and custom extension to kohana core.
 * Logging.
 * Bugfixes.
 * **_plans for 0.4.0_**
