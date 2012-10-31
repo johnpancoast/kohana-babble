@@ -17,7 +17,12 @@ branch on [github](https://github.com/shideon/kohana-babble).
 2. Include it in your application/bootstrap.php file.
 3. Make version 1 of the API. There's a template at misc/babble-version/1. I recommend
 putting this in your application directory like so. `cp -R misc/babble-versions <YOUR APP PATH>`
-this way you have a directory for all future versions of your api.
+this way you have a directory for all future versions of your api. An API version will be loaded
+as a Kohana module. Which one is loaded depends on the Accept header, Content-Type header, or the
+babble.current_version value in the config.
 4. Copy the babble config to your app `cp config/babble.php <YOUR APP PATH>/config/`.
 5. Add a line to your config to include version 1 of the api. The config variable is `babble.versions`.
-6. More docs to come...
+6. By default, API routes are accessed via /api/<controller>(/<id>). There's a front controller that's hit
+at classes/Controller/Public/APIFrontend.php. It makes an internal HMVC request to the <controller>. All 
+API controllers should be located in classes/Controller/Public/API/.
+7. More docs to come...
