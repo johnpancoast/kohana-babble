@@ -3,6 +3,7 @@
 * Logging.
 * Bugfixes.
 * **_plans for 0.4.0_**
+  * Reorg of babble-api classes.* 
   * More media types (i.e., application/xml).
   * HATEOAS support.
 
