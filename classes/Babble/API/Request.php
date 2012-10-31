@@ -31,7 +31,7 @@ class Babble_API_Request {
 	protected final function __construct(Kohana_Request $kohana_request = NULL)
 	{
 		// load kohana request
-		$this->kohana_request(($kohana_request ? $kohana_request : Request::current()));
+		$this->kohana_request(($kohana_request ? $kohana_request : Request::initial()));
 
 		// load media type via Content-type header
 		try
