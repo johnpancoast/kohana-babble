@@ -19,5 +19,5 @@ branch on [github](https://github.com/shideon/kohana-babble).
 putting this in your application directory like so. `cp -R misc/babble-versions <YOUR APP PATH>`
 this way you have a directory for all future versions of your api.
 4. Copy the babble config to your app `cp config/babble.php <YOUR APP PATH>/config/`.
-4. Add a line to your config to include version 1 of the api. The config variable is `babble.versions`.
-7. More docs to come...
+5. Add a line to your config to include version 1 of the api. The config variable is `babble.versions`.
+6. More docs to come...
