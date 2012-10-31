@@ -4,16 +4,43 @@
  * core API functionality
  */
 class Babble_API {
+	/**
+	 * @var Babble_API Singleton instance
+	 * @access private
+	 * @static
+	 */
 	private static $instance = NULL;
-	private $initialized = FALSE;
+
+	/**
+	 * @var string The version of the request. Will default to config api.current_version value.
+	 * @access private
+	 * @static
+	 */
 	private $version = NULL;
+
+	/**
+	 * @var string Unique ID for this request.
+	 * @access private
+	 * @static
+	 */
 	private $id = NULL;
 
+	/**
+	 * constructor initializes
+	 * @access private
+	 * @final
+	 */
 	private final function __construct()
 	{
 		$this->initialize();
 	}
 
+	/**
+	 * get singleton instance
+	 * @access public
+	 * @static
+	 * @return Babble_API
+	 */
 	public static function instance()
 	{
 		if ( ! isset(Babble_API::$instance))
@@ -24,18 +51,14 @@ class Babble_API {
 		return Babble_API::$instance;
 	}
 
+	/**
+	 * initialize Babble
+	 * @access private
+	 */
 	private function initialize()
 	{
-		if ($this->initialized)
-		{
-			return;
-		}
-
-		// we set this at the beginning to let everything following this know that we're in an API request.
-		$this->initialized = TRUE;
-
 		// give this babble instance an id
-		$this->id = uniqid($_SERVER['SERVER_ADDR'], TRUE);
+		$this->id = sha1(uniqid($_SERVER['SERVER_ADDR'], TRUE));
 
 		// babble version == config version by default
 		$this->version = Kohana::$config->load('api.current_version');
@@ -85,25 +108,87 @@ class Babble_API {
 		*/
 	}
 
+	/**
+	 * get request version
+	 * @access public
+	 * @return string {@see self::$version}
+	 */
 	public function get_version()
 	{
 		return $this->version;
 	}
 
-	public function is_initialized()
+	/**
+	 * has an instance been created.
+	 * @access public
+	 * @static
+	 * @return bbol
+	 */
+	public static function is_instantiated()
 	{
-		return $this->initialized;
+		return isset(Babble_API::$instance);
 	}
 
+	/**
+	 * get ID of request
+	 * @access public
+	 * @return string {@see self::$id}
+	 */
 	public function get_id()
 	{
 		return $this->id;
 	}
 
-	/*
+	/**
+	 * create log entry with pertinent babble info
+	 * @access private
+	 */
+	private function create_log()
+	{
+		$log = Kohana::$log;
+		$request = API_Request::factory();
+		$request_media = $request->media_type();
+		$response = API_Response::factory();
+		$response_media = $response->media_type();
+
+		$msg = "HEADER:\n";
+		foreach ($request->kohana_request()->headers() AS $k => $v)
+		{
+			$msg .= "  $k = $v\n";
+		}
+		$msg .= "\n";
+
+		$msg .= "BODY:\n".$request->kohana_request()->body()."\n";
+		$msg .= "\n";
+
+		$msg .= "MODULE PATH:\n".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, Kohana_Core_Babble::get_module_path('babble-version-'.$this->get_version()))."\n";
+		$msg .= "\n";
+
+		$msg .= "REQUEST MEDIA (Content-Type):\n";
+		$msg .= "  type = ".$request_media->get_media_type()."\n";
+		$msg .= "  class = ".get_class($request_media)."\n";
+		$msg .= "  module path = ".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, $request_media->get_module_path())."\n";
+		$msg .= "\n";
+
+		$msg .= "RESPONSE MEDIA (Accept):\n";
+		$msg .= "  type = ".$response_media->get_media_type()."\n";
+		$msg .= "  class = ".get_class($response_media)."\n";
+		$msg .= "  module path = ".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, $response_media->get_module_path())."\n";
+		$msg .= "\n";
+
+		$log->add(Log::DEBUG, "BABBLE API REQUEST\n".$this->get_id()."\n$msg");
+		$log->write();
+	}
+
+	/**
+	 * destructor. will log when config api.debug set to true.
+	 * @access public
+	 */
 	public function __destruct()
 	{
-		Kohana::$log->add(Log::ERROR, 'testing')->write();
+		if (Kohana::$config->load('api.debug'))
+		{
+			$this->create_log();
+		}
 	}
-	*/
 }
