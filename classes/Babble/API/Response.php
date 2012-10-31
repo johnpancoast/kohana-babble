@@ -290,7 +290,7 @@ class Babble_API_Response {
 		$this->body($resp_body);
 
 		// set response header if we have title set in config
-		$resp_header = Kohana::$config->load('api.header.response_header_title');
+		$resp_header = Kohana::$config->load('babble.header.response_header_title');
 		if ( ! empty($resp_header))
 		{
 			$this->add_header($resp_header, $this->code.'; '.( ! empty($msg_hint) ? $msg_hint : $msg_public));

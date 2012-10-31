@@ -53,7 +53,7 @@ class Babble_API {
 	 */
 	public function __destruct()
 	{
-		if (Kohana::$config->load('api.debug'))
+		if (Kohana::$config->load('babble.debug'))
 		{
 			$this->create_log();
 		}
@@ -85,9 +85,9 @@ class Babble_API {
 		$this->id = sha1(uniqid($_SERVER['SERVER_ADDR'], TRUE));
 
 		// babble version == config version by default
-		$this->version = Kohana::$config->load('api.current_version');
+		$this->version = Kohana::$config->load('babble.current_version');
 
-		$config_versions = Kohana::$config->load('api.versions');
+		$config_versions = Kohana::$config->load('babble.versions');
 
 		// decide which passed version to use based off of the request method.
 		$write = in_array($_SERVER['REQUEST_METHOD'], array('POST', 'PUT', 'PATCH'));

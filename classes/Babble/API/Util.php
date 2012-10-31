@@ -110,7 +110,7 @@ class Babble_API_Util {
 				return FALSE;
 			}
 
-			$content_type['version'] = isset($content_type['version']) ? $content_type['version'] : Kohana::$config->load('api.current_version');
+			$content_type['version'] = isset($content_type['version']) ? $content_type['version'] : Kohana::$config->load('babble.current_version');
 
 			// detemine the class name based on all we've gotten
 			$class = NULL;
@@ -150,7 +150,7 @@ class Babble_API_Util {
 				$check_type
 			);
 
-			$config_types = Kohana::$config->load('api.default_media_types');
+			$config_types = Kohana::$config->load('babble.default_media_types');
 
 			foreach ($check_set as $v)
 			{

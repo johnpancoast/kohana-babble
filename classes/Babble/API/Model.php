@@ -29,7 +29,7 @@ abstract class Babble_API_Model {
 	public static function factory($model, $model_driver = null)
 	{
 		// if no driver passed pull from config or default to 'ORM'
-		$cfg_driver = Kohana::$config->load('api.driver');
+		$cfg_driver = Kohana::$config->load('babble.driver');
 		$default_driver = $cfg_driver ? $cfg_driver : 'ORM';
 		$model_driver = 'API_Model_'.ucfirst(($model_driver ? $model_driver : $default_driver));
 		return new $model_driver($model);

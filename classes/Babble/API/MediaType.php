@@ -54,7 +54,7 @@ abstract class Babble_API_MediaType {
 		$media_types = API_Util::get_media_type_set($header);
 
 		// possible versions
-		$config_versions = Kohana::$config->load('api.versions');
+		$config_versions = Kohana::$config->load('babble.versions');
 
 		// babble version
 		$bab_version = Babble_API::instance()->get_version();

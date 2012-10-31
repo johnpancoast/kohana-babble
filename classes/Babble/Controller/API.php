@@ -36,7 +36,7 @@ class Babble_Controller_API extends Controller {
 		$koh_request = $this->api_request->kohana_request();
 
 		// bypass security and use test user if allowed
-		$test_user = Kohana::$config->load('api.test_user');
+		$test_user = Kohana::$config->load('babble.test_user');
 		if (Kohana::$environment == Kohana::DEVELOPMENT && ! empty($test_user))
 		{
 			API_User::factory()->login($test_user);

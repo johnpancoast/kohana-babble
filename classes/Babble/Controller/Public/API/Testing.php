@@ -43,7 +43,7 @@ class Babble_Controller_Public_API_Testing extends Controller {
 	private function callApi($url, $method = 'GET', $post = array(), $header = array())
 	{
 		// pull config values
-		$config = Kohana::$config->load('api.testing');
+		$config = Kohana::$config->load('babble.testing');
 		if (empty($config['user']) || empty($config['pass']))
 		{
 			throw new Exception('must set test api user and password');
@@ -62,9 +62,9 @@ class Babble_Controller_Public_API_Testing extends Controller {
 			ksort($post);
 			$resource_post = $post;
 		}
-		$header[] = 'Content-type: application/json';
-		$content = json_encode($resource_post);
-		#$content = http_build_query($resource_post);
+		#$header[] = 'Content-type: application/json';
+		#$content = json_encode($resource_post);
+		$content = http_build_query($resource_post);
 
 		// setup header
 		$header = array_merge($config['header'], $header);
