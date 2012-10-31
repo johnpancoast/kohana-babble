@@ -11,16 +11,16 @@ class Babble_API_Response {
 	private static $instances = array();
 
 	/**
+	 * @var Kohana_Response an instance of kohana response at the time this api response instance was created
+	 * @access private
+	 */
+	private $kohana_response = NULL;
+
+	/**
 	 * @var API_MediaType Media type instance
 	 * @access private
 	 */
 	private $media_type = NULL;
-
-	/**
-	 * @var array Our response array
-	 * @access private
-	 */
-	#private $response = array();
 
 	/**
 	 * @var array Response header
@@ -56,8 +56,10 @@ class Babble_API_Response {
 	 * @access protected
 	 * @final
 	 */
-	protected final function __construct()
+	protected final function __construct(Kohana_Response $kohana_response = NULL)
 	{
+		$this->kohana_response($kohana_response);
+
 		// load media type via the requests Accept header
 		try
 		{
@@ -89,11 +91,11 @@ class Babble_API_Response {
 	 * @param string $instance_key The keyed instance to return
 	 * @return API_Request A child of this class (a driver)
 	 */
-	public static function factory($instance_key = 'initial')
+	public static function factory($instance_key = 'initial', Kohana_Response $kohana_response = NULL)
 	{
 		if ( ! isset(self::$instances[$instance_key]))
 		{
-			self::$instances[$instance_key] = new self;
+			self::$instances[$instance_key] = new self($kohana_response);
 		}
 
 		return self::$instances[$instance_key];
@@ -340,4 +342,41 @@ class Babble_API_Response {
 
 		return $this->get_media_type();
 	}
+
+	/**
+	 * set the kohana response object
+	 * @access public
+	 * @param Kohana_Response $response the kohana response instance
+	 */
+	public function set_kohana_response(Kohana_Response $response)
+	{
+		$this->kohana_response = $response;
+	}
+
+	/**
+	 * et the kohana response object
+	 * @access public
+	 * @return Kohana_Response
+	 */
+	public function get_kohana_response()
+	{
+		return $this->kohana_response;
+	}
+
+	/**
+	 * set or get the kohana response object
+	 * @access public
+	 * @param Kohana_Response $response the kohana response instance
+	 * @return Kohana_Response (if response not passed)
+	 */
+	public function kohana_response(Kohana_Response $response = NULL)
+	{
+		if ($response)
+		{
+			return $this->set_kohana_response($response);
+		}
+
+		return $this->get_kohana_response();
+	}
+
 }

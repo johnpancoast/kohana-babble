@@ -28,9 +28,9 @@ class Babble_Controller_API extends Controller {
 		Babble_API::instance();
 
 		// request and response instances.
-		// must force reload since we want the right media type
+		// must force reload since we want the right media type. also pass in existing kohana response (primarily for logging).
 		$this->api_request = API_Request::factory('initial', NULL);
-		$this->api_response = API_Response::factory('initial');
+		$this->api_response = API_Response::factory('initial', $this->response);
 
 		// kohana request
 		$koh_request = $this->api_request->kohana_request();
