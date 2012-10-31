@@ -4,25 +4,41 @@
  * core API functionality
  */
 class Babble_API {
-	private static $initialized = FALSE;
-	private static $version = NULL;
-	private static $id = NULL;
+	private static $instance = NULL;
+	private $initialized = FALSE;
+	private $version = NULL;
+	private $id = NULL;
 
-	public static function initialize()
+	private final function __construct()
 	{
-		if (Babble_API::$initialized)
+		$this->initialize();
+	}
+
+	public static function instance()
+	{
+		if ( ! isset(Babble_API::$instance))
+		{
+			Babble_API::$instance = new Babble_API;
+		}
+
+		return Babble_API::$instance;
+	}
+
+	private function initialize()
+	{
+		if ($this->initialized)
 		{
 			return;
 		}
 
 		// we set this at the beginning to let everything following this know that we're in an API request.
-		Babble_API::$initialized = TRUE;
+		$this->initialized = TRUE;
 
 		// give this babble instance an id
-		Babble_API::$id = uniqid($_SERVER['SERVER_ADDR'], TRUE);
+		$this->id = uniqid($_SERVER['SERVER_ADDR'], TRUE);
 
 		// babble version == config version by default
-		Babble_API::$version = Kohana::$config->load('api.current_version');
+		$this->version = Kohana::$config->load('api.current_version');
 
 		$config_versions = Kohana::$config->load('api.versions');
 
@@ -55,7 +71,7 @@ class Babble_API {
 			$file = $dir.str_replace('_', '/', $v['class']).EXT;
 			if (is_file($file))
 			{
-				Babble_API::$version = $v['version'];
+				$this->version = $v['version'];
 				Kohana_Core_Babble::prepend_modules(array('babble-version-'.$v['version'] => $config_versions[$v['version']]));
 				API_Meta::set_version_module_directory($config_versions[$v['version']]);
 				break;
@@ -63,22 +79,31 @@ class Babble_API {
 		}
 
 		// now that our version module is loaded properly, set meta data on request.
+		/*
 		API_Meta::set_request(API_Request::factory());
 		API_Meta::set_response(API_Response::factory());
+		*/
 	}
 
-	public static function get_version()
+	public function get_version()
 	{
-		return Babble_API::$version;
+		return $this->version;
 	}
 
-	public static function is_initialized()
+	public function is_initialized()
 	{
-		return Babble_API::$initialized;
+		return $this->initialized;
 	}
 
-	public static function get_id()
+	public function get_id()
 	{
-		return Babble_API::$id;
+		return $this->id;
 	}
+
+	/*
+	public function __destruct()
+	{
+		Kohana::$log->add(Log::ERROR, 'testing')->write();
+	}
+	*/
 }
