@@ -97,6 +97,9 @@ class Babble_Kohana_Exception extends Kohana_Kohana_Exception {
 			{
 				try
 				{
+					// save this exception
+					Babble_API::instance()->set_exception($e);
+
 					$api_response = API_Response::factory();
 
 					// set the main response from the API response that gets set internally.
@@ -115,6 +118,10 @@ class Babble_Kohana_Exception extends Kohana_Kohana_Exception {
 				// with generic body.
 				catch (Exception $e)
 				{
+					// save the fact that this is a major exception. meaning normal
+					// functionality of Babble is throwing exception somewhere.
+					Babble_API::instance()->is_major_exception(TRUE);
+
 					// determine http code to pass
 					if ($e instanceof API_Response_Exception)
 					{

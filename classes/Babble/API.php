@@ -26,6 +26,18 @@ class Babble_API {
 	private $id = NULL;
 
 	/**
+	 * @var Exception A caught exception if any.
+	 * @access private
+	 */
+	private $exception = NULL;
+
+	/**
+	 * @var bool Was this a major exception. Typically implies that Babble cannot create an API response using normal functionality.
+	 * @access private
+	 */
+	private $is_major_exception = FALSE;
+
+	/**
 	 * constructor initializes
 	 * @access private
 	 * @final
@@ -33,6 +45,18 @@ class Babble_API {
 	private final function __construct()
 	{
 		$this->initialize();
+	}
+
+	/**
+	 * destructor. will log when config api.debug set to true.
+	 * @access public
+	 */
+	public function __destruct()
+	{
+		if (Kohana::$config->load('api.debug'))
+		{
+			$this->create_log();
+		}
 	}
 
 	/**
@@ -133,55 +157,82 @@ class Babble_API {
 	}
 
 	/**
+	 * Store exception that was caught during normal Babble flow.
+	 * @access public
+	 * @param Exception $exception The exception
+	 */
+	public function set_exception(Exception $exception)
+	{
+		$this->exception = $exception;
+	}
+
+	/**
+	 * Is the exception serious. Typically implies that Babble cannot create an API response using normal functionality.
+	 * @access public
+	 * @param bool $is Is it serious.
+	 */
+	public function is_major_exception($is = FALSE)
+	{
+		$this->is_major_exception = (bool)$is;
+	}
+
+	/**
 	 * create log entry with pertinent babble info
 	 * @access private
 	 */
 	private function create_log()
 	{
-		$log = Kohana::$log;
-		$request = API_Request::factory();
-		$request_media = $request->media_type();
-		$response = API_Response::factory();
-		$response_media = $response->media_type();
+		$msg = '';
 
-		$msg = "HEADER:\n";
-		foreach ($request->kohana_request()->headers() AS $k => $v)
+		// if we have exception, let user know.
+		if ($this->exception)
 		{
-			$msg .= "  $k = $v\n";
+			$msg .= "** EXCEPTION:\n".get_class($this->exception).' - '.$this->exception->getMessage()."\n";
+			$msg .= "\n";
 		}
-		$msg .= "\n";
 
-		$msg .= "BODY:\n".$request->kohana_request()->body()."\n";
-		$msg .= "\n";
-
-		$msg .= "MODULE PATH:\n".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, Kohana_Core_Babble::get_module_path('babble-version-'.$this->get_version()))."\n";
-		$msg .= "\n";
-
-		$msg .= "REQUEST MEDIA (Content-Type):\n";
-		$msg .= "  type = ".$request_media->get_media_type()."\n";
-		$msg .= "  class = ".get_class($request_media)."\n";
-		$msg .= "  module path = ".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, $request_media->get_module_path())."\n";
-		$msg .= "\n";
-
-		$msg .= "RESPONSE MEDIA (Accept):\n";
-		$msg .= "  type = ".$response_media->get_media_type()."\n";
-		$msg .= "  class = ".get_class($response_media)."\n";
-		$msg .= "  module path = ".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, $response_media->get_module_path())."\n";
-		$msg .= "\n";
-
-		$log->add(Log::DEBUG, "BABBLE API REQUEST\n".$this->get_id()."\n$msg");
-		$log->write();
-	}
-
-	/**
-	 * destructor. will log when config api.debug set to true.
-	 * @access public
-	 */
-	public function __destruct()
-	{
-		if (Kohana::$config->load('api.debug'))
+		// if there was a major exception, it means we cannot log more Babble meta data
+		// because we'll likely get an exception if we do (which will break stuff since this method
+		// is likely called from the destructor).
+		if ($this->is_major_exception)
 		{
-			$this->create_log();
+			$msg .= "*** MAJOR EXCEPTION. CANNOT LOG DEBUGGING INFO. ***\n";;
 		}
+		else
+		{
+			$request = API_Request::factory();
+			$request_media = $request->media_type();
+			$response = API_Response::factory();
+			$response_media = $response->media_type();
+
+			$msg = "HEADER:\n";
+			foreach ($request->kohana_request()->headers() AS $k => $v)
+			{
+				$msg .= "  $k = $v\n";
+			}
+			$msg .= "\n";
+
+			$msg .= "BODY:\n".$request->kohana_request()->body()."\n";
+			$msg .= "\n";
+
+			$msg .= "MODULE PATH:\n".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, Kohana_Core_Babble::get_module_path('babble-version-'.$this->get_version()))."\n";
+			$msg .= "\n";
+
+			$msg .= "REQUEST MEDIA (Content-Type):\n";
+			$msg .= "  type = ".$request_media->get_media_type()."\n";
+			$msg .= "  class = ".get_class($request_media)."\n";
+			$msg .= "  module path = ".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, $request_media->get_module_path())."\n";
+			$msg .= "\n";
+
+			$msg .= "RESPONSE MEDIA (Accept):\n";
+			$msg .= "  type = ".$response_media->get_media_type()."\n";
+			$msg .= "  class = ".get_class($response_media)."\n";
+			$msg .= "  module path = ".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, $response_media->get_module_path())."\n";
+			$msg .= "\n";
+
+		}
+
+		// write log. note that if this throw an exception it will can screw things up since this method called from destructor.
+		Kohana::$log->add(Log::DEBUG, "BABBLE API REQUEST\n".$this->get_id()."\n$msg")->write();
 	}
 }
