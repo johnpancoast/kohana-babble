@@ -24,7 +24,7 @@ babble.current_version value in the config.
 5. Add a line to your config to include version 1 of the api. The config variable is `babble.versions`. The key
 is the version and the value is the path to the version.
 6. By default, API controllers are accessed via /api/controller(/id). There's a front controller that's hit
-at classes/Controller/Public/APIFrontend.php. It makes an internal HMVC request to the <controller>. All 
+at classes/Controller/Public/APIFrontend.php. It makes an internal HMVC request to the controller. All 
 API controllers should be located in classes/Controller/Public/API/.
 7. An API controller should extend Controller_API or Controller_API_Model which will be documented more in the future.
 8. More docs to come...
