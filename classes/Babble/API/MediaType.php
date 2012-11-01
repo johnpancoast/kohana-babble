@@ -24,9 +24,10 @@ abstract class Babble_API_MediaType {
 	 * @abstract
 	 * @access protected
 	 * @param mixed $data The data to encode
+	 * @param array $links HATEOAS links.
 	 * @return string Expected to return an encoded string
 	 */
-	abstract protected function _get_data_encoded($data = array());
+	abstract protected function _get_data_encoded($data = array(), array $links = array());
 
 	/**
 	 * get decoded array from an encoded string.

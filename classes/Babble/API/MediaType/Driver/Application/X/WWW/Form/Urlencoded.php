@@ -12,7 +12,7 @@ class Babble_API_MediaType_Driver_Application_X_WWW_Form_Urlencoded extends API_
 	/**
 	 * @see parent::_get_data_encoded()
 	 */
-	protected function _get_data_encoded($data = array())
+	protected function _get_data_encoded($data = array(), array $links = array())
 	{
 		return http_build_query($data);
 	}

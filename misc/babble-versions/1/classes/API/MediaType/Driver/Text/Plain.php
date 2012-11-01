@@ -24,7 +24,7 @@ class API_MediaType_Driver_Text_Plain extends Babble_API_MediaType_Driver_Text_P
 	/**
 	 * @see parent::_get_data_encoded()
 	 */
-	protected function _get_data_encoded($data = array())
+	protected function _get_data_encoded($data = array(), array $links = array())
 	{
 		// just print key=value pairs separated by comma and new line
 		if (is_array($data))

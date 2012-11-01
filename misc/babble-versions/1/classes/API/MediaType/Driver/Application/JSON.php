@@ -12,7 +12,7 @@ class API_MediaType_Driver_Application_JSON extends Babble_API_MediaType_Driver_
 	/**
 	 * @see parent::_get_data_encoded()
 	 */
-	protected function _get_data_encoded($data = array())
+	protected function _get_data_encoded($data = array(), array $links = array())
 	{
 		return json_encode($data);
 	}

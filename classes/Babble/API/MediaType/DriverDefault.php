@@ -12,7 +12,7 @@ class Babble_API_MediaType_DriverDefault extends API_MediaType {
 	/**
 	 * @see parent::_get_data_encoded()
 	 */
-	protected function _get_data_encoded($data = array())
+	protected function _get_data_encoded($data = array(), array $links = array())
 	{
 		return $data;
 	}
