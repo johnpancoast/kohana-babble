@@ -216,6 +216,7 @@ class Babble_API {
 			}
 
 			$msg .= "RESPONSE:\n";
+			$msg .= $response->kohana_response()->headers();
 			$msg .= $response->kohana_response()."\n";
 			$msg .= "\n";
 
