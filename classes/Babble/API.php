@@ -215,10 +215,10 @@ class Babble_API {
 				$msg .= "\n\n";
 			}
 
-			$kok_resp = $response->kohana_response();
+			$koh_resp = $response->kohana_response();
 
 			$msg .= "RESPONSE:\n";
-			if (isset($koh_resp) && $koh_resp)
+			if ($koh_resp)
 			{
 				$msg .= $koh_resp->headers();
 				$msg .= $koh_resp."\n";
