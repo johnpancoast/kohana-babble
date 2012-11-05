@@ -215,9 +215,14 @@ class Babble_API {
 				$msg .= "\n\n";
 			}
 
+			$kok_resp = $response->kohana_response();
+
 			$msg .= "RESPONSE:\n";
-			$msg .= $response->kohana_response()->headers();
-			$msg .= $response->kohana_response()."\n";
+			if (isset($koh_resp) && $koh_resp)
+			{
+				$msg .= $koh_resp->headers();
+				$msg .= $koh_resp."\n";
+			}
 			$msg .= "\n";
 
 			$msg .= "MODULE PATH:\n".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, Kohana_Core_Babble::get_module_path('babble-version-'.$this->get_version()))."\n";
