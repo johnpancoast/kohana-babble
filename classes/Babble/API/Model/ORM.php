@@ -298,8 +298,10 @@ class Babble_API_Model_ORM extends API_Model {
 			$obj = ORM::factory($this->model, $object_id);
 			if ($obj->loaded())
 			{
-				$obj->delete();
-				return 'deleted '.$object_id;
+				if ($obj->delete())
+				{
+					return 'Deleted '.$object_id;
+				}
 			}
 			else
 			{

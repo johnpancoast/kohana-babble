@@ -57,11 +57,11 @@ abstract class Babble_API_Model {
 
 	/**
 	 * get a list of models
-	 * @uses API_Request
-	 * @uses API_Response
 	 * @access public
 	 * @abstract
 	 * @TODO doc params
+	 * @return Babble_API_Resource_Collection List of resources
+	 * @throws API_Model_Exception Error
 	 */
 	abstract public function get_list($page = 1, $limit = NULL, $sort = NULL, $search = NULL);
 
@@ -70,6 +70,8 @@ abstract class Babble_API_Model {
 	 * @access public
 	 * @abstract
 	 * @param int $object_id An object id
+	 * @return Babble_API_Resource A resource
+	 * @throws API_Model_Exception Error
 	 */
 	abstract public function get($object_id);
 
@@ -79,6 +81,8 @@ abstract class Babble_API_Model {
 	 * @abstract
 	 * @param int $object_id An object id
 	 * @param Babble_API_Resource A resource object
+	 * @return string A success message
+	 * @throws API_Model_Exception Error
 	 */
 	abstract public function edit($object_id, Babble_API_Resource $resource);
 
@@ -87,6 +91,8 @@ abstract class Babble_API_Model {
 	 * @access public
 	 * @abstract
 	 * @param Babble_API_Resource A resource object
+	 * @return string A success message
+	 * @throws API_Model_Exception Error
 	 */
 	abstract public function add(Babble_API_Resource $resource);
 
@@ -95,6 +101,8 @@ abstract class Babble_API_Model {
 	 * @access public
 	 * @abstract
 	 * @param int $object_id An object id
+	 * @return string A success message
+	 * @throws API_Model_Exception Error
 	 */
 	abstract public function delete($object_id);
 }
