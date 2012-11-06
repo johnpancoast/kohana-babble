@@ -67,37 +67,34 @@ abstract class Babble_API_Model {
 
 	/**
 	 * get a spefic model
-	 * @uses API_Request
-	 * @uses API_Response
 	 * @access public
 	 * @abstract
+	 * @param int $object_id An object id
 	 */
 	abstract public function get($object_id);
 
 	/**
 	 * edit a model
-	 * @uses API_Request
-	 * @uses API_Response
 	 * @access public
 	 * @abstract
+	 * @param int $object_id An object id
+	 * @param Babble_API_Resource A resource object
 	 */
-	abstract public function edit($object_id, array $object_data = array());
+	abstract public function edit($object_id, Babble_API_Resource $resource);
 
 	/**
 	 * create a model
-	 * @uses API_Request
-	 * @uses API_Response
 	 * @access public
 	 * @abstract
+	 * @param Babble_API_Resource A resource object
 	 */
-	abstract public function add(array $object_data = array());
+	abstract public function add(Babble_API_Resource $resource);
 
 	/**
 	 * delete a model
-	 * @uses API_Request
-	 * @uses API_Response
 	 * @access public
 	 * @abstract
+	 * @param int $object_id An object id
 	 */
 	abstract public function delete($object_id);
 }

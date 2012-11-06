@@ -10,18 +10,39 @@ class API_MediaType_Driver_Application_JSON extends Babble_API_MediaType_Driver_
 	protected $media_type = 'application/json';
 
 	/**
-	 * @see parent::_get_data_encoded()
+	 * @see parent::_get_encoded_resource()
 	 */
-	protected function _get_data_encoded($data = array(), array $links = array())
+	protected function _get_encoded_resource(Babble_API_Resource $resource)
 	{
-		return json_encode($data);
+		return json_encode($resource->as_array());
 	}
 
 	/**
-	 * @see parent::_get_data_decoded()
+	 * @see parent::_get_decoded_resource()
 	 */
-	protected function _get_data_decoded($data = NULL)
+	protected function _get_decoded_resource($data = NULL)
 	{
-		return json_decode($data, TRUE);
+		return new Babble_API_Resource;
+	}
+
+	/**
+	 * @see parent::_get_encoded_resources()
+	 */
+	protected function _get_encoded_resources(Babble_API_Resource_Collection $resources)
+	{
+		$ret = array();
+		foreach ($resources AS $rsc)
+		{
+			$ret[] = $rsc->as_array();
+		}
+		return json_encode($ret);
+	}
+
+	/**
+	 * @see parent::_get_decoded_resources()
+	 */
+	protected function _get_decoded_resources($data = NULL)
+	{
+		return new Babble_API_Resource_Collection;
 	}
 }

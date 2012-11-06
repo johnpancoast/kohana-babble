@@ -78,10 +78,10 @@ class Babble_API_Model_ORM extends API_Model {
 				->limit($limit)
 				->offset($offset);
 			$result = $objs->find_all();
-			$resp = array();
+			$resp = new Babble_API_Resource_Collection;;
 			foreach ($result as $row)
 			{
-				$resp[] = $this->remove_model_fields($row->as_array());
+				$resp[] = $resp->append($this->remove_model_fields($row->as_array()));
 			}
 
 			return $resp;
@@ -129,7 +129,7 @@ class Babble_API_Model_ORM extends API_Model {
 			$obj = ORM::factory($this->model, $object_id);
 			if ($obj->loaded())
 			{
-				return $this->remove_model_fields($obj->as_array());
+				return new Babble_API_Resource($this->remove_model_fields($obj->as_array()));
 			}
 			else
 			{
@@ -172,7 +172,7 @@ class Babble_API_Model_ORM extends API_Model {
 	/**
 	 * @see parent::edit();
 	 */
-	public function edit($object_id, array $object_data = array())
+	public function edit($object_id, Babble_API_Resource $resource)
 	{
 		// catch all exceptions
 		try
@@ -180,13 +180,14 @@ class Babble_API_Model_ORM extends API_Model {
 			$obj = ORM::factory($this->model, $object_id);
 			if ($obj->loaded())
 			{
-				foreach ($object_data AS $k => $v)
+				foreach ($resource->get_data() AS $k => $v)
 				{
 					$obj->{$k} = $v;
 				}
+
 				if ($obj->save())
 				{
-					return TRUE;
+					return 'Modified '.$obj->id;
 				}
 				else
 				{
@@ -234,19 +235,19 @@ class Babble_API_Model_ORM extends API_Model {
 	/**
 	 * @see parent::add();
 	 */
-	public function add(array $object_data = array())
+	public function add(Babble_API_Resource $resource)
 	{
 		// catch all exceptions
 		try
 		{
 			$obj = ORM::factory($this->model);
-			foreach ($object_data as $k => $v)
+			foreach ($resource->get_data() as $k => $v)
 			{
 				$obj->{$k} = $v;
 			}
 			if ($obj->save())
 			{
-				return $obj->id;
+				return 'Created '.$obj->id;
 			}
 			else
 			{
@@ -298,7 +299,7 @@ class Babble_API_Model_ORM extends API_Model {
 			if ($obj->loaded())
 			{
 				$obj->delete();
-				return TRUE;
+				return 'deleted '.$object_id;
 			}
 			else
 			{

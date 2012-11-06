@@ -42,6 +42,7 @@ class Babble_API_Response {
 	 * @var mixed Response body
 	 */
 	private $body = NULL;
+	private $resources = NULL;
 
 	/**
 	 * @var array A list of links that get inserted into the response.
@@ -102,38 +103,43 @@ class Babble_API_Response {
 	}
 
 	/**
-	 * set body
+	 * set resources
 	 * @access public
-	 * @param mixed $body Response body
+	 * @param mixed $resources Response resources. can be object that's instance of Babble_API_Resource or Babble_API_Resource_Collection.
 	 */
-	public function set_body($body)
+	public function set_resources($resources)
 	{
-		$this->body = $body;
-	}
-
-	/**
-	 * get body
-	 * @access public
-	 * @return {@see self::$body}
-	 */
-	public function get_body()
-	{
-		return $this->body;
-	}
-
-	/**
-	 * set/get body
-	 * @access public
-	 * @param mixed $body The body
-	 * @return mixed body If $body not passed.
-	 */
-	public function body($body = NULL)
-	{
-		if ($body)
+		if ( ! ($resources instanceof Babble_API_Resource) && ! ($resources instanceof Babble_API_Resource_Collection))
 		{
-			return $this->set_body($body);
+			throw new API_Response_Exception('Response must be instance of either Babble_API_Resource or Babble_API_Resource_Collection.', '500-000'); 
 		}
-		return $this->get_body();
+
+		$this->resources = $resources;
+	}
+
+	/**
+	 * get resources
+	 * @access public
+	 * @return {@see self::$resources}
+	 */
+	public function get_resources()
+	{
+		return $this->resources;
+	}
+
+	/**
+	 * set/get resources
+	 * @access public
+	 * @param mixed $resources The resources
+	 * @return mixed resources If $resources not passed.
+	 */
+	public function resources($resources = NULL)
+	{
+		if ($resources)
+		{
+			return $this->set_resources($resources);
+		}
+		return $this->get_resources();
 	}
 
 	/**
@@ -177,27 +183,15 @@ class Babble_API_Response {
 	 */
 	public function get_body_encoded()
 	{
-		return $this->media_type->get_data_encoded($this->get_body());
-	}
-
-	/**
-	 * add a link
-	 * @param string $link The link
-	 * @param string $rel The link relation
-	 * @param string $title The link title
-	 */
-	public function add_link($link, $rel = NULL, $title = NULL)
-	{
-		$this->links[] = array('link' => $link, 'rel' => $rel, 'title' => $title);
-	}
-
-	/**
-	 * get links
-	 * @return array Links
-	 */
-	public function get_links()
-	{
-		return $this->links;
+		$rsc = $this->get_resources();
+		if ($rsc instanceof Babble_API_Resource)
+		{
+			return $this->media_type->get_encoded_resource($rsc);
+		}
+		elseif ($rsc instanceof Babble_API_Resource_Collection)
+		{
+			return $this->media_type->get_encoded_resources($rsc);
+		}
 	}
 
 	/**
@@ -244,10 +238,10 @@ class Babble_API_Response {
 	 * set response
 	 * @access public
 	 * @param string $code Response code. Should match our codes in config/base/api.php.
-	 * @param mixed $body Optional body. Typically an array.
+	 * @param mixed $resources Instance of Babble_API_Resource or Babble_API_Resource_Collection or a string message
 	 * @throws API_Response_Exception Upon error
 	 */
-	public function set_response($code, $body = null) {
+	public function set_response($code, $response = NULL) {
 		$msg_public = Kohana::message('babble', 'responses.'.$code.'.public');
 		$msg_hint = Kohana::message('babble', 'responses.'.$code.'.public_hint');
 
@@ -276,18 +270,31 @@ class Babble_API_Response {
 		// 300's and greater we set our own body.
 		if (substr($code, 0, 1) <= 2)
 		{
-			$resp_body = $body;
+			if (is_string($response))
+			{
+				$resp_body = new Babble_API_Resource(array(
+					'http_code' => $this->get_http_code(),
+					'http_message' => $msg_public,
+					'code' => $this->get_code(),
+					'message' => $response,
+				));
+			}
+			// just assume we have already have a resource or resource collection object
+			else
+			{
+				$resp_body = $response;
+			}
 		}
 		else
 		{
-			$resp_body = array(
+			$resp_body = new Babble_API_Resource(array(
 				'http_code' => $this->get_http_code(),
 				'http_message' => $msg_public,
 				'code' => $this->get_code(),
 				'message' => ($msg_hint ? $msg_hint : $msg_public),
-			);
+			));
 		}
-		$this->body($resp_body);
+		$this->resources($resp_body);
 
 		// set response header if we have title set in config
 		$resp_header = Kohana::$config->load('babble.header.response_header_title');

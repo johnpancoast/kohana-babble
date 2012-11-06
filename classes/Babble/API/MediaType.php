@@ -20,28 +20,46 @@ abstract class Babble_API_MediaType {
 	private $module_path = NULL;
 
 	/**
-	 * get encoded data from an array
-	 * @abstract
+	 * get encoded data from a resource object
 	 * @access protected
-	 * @param mixed $data The data to encode
-	 * @param array $links HATEOAS links.
-	 * @return string Expected to return an encoded string
+	 * @abstract
+	 * @param Babble_API_Resource $resource The resource we're going to encode.
+	 * @return string Encoded data
 	 */
-	abstract protected function _get_data_encoded($data = array(), array $links = array());
+	abstract protected function _get_encoded_resource(Babble_API_Resource $resource);
 
 	/**
-	 * get decoded array from an encoded string.
-	 * @abstract
+	 * get resource object by decoding passed encoded data.
 	 * @access protected
-	 * @param string $data The data to decode
-	 * @return array Expected to return a decoded array
+	 * @abstract
+	 * @param string $data The data to decode.
+	 * @return Babble_API_Resource A resource object represenation of the passed data.
 	 */
-	abstract protected function _get_data_decoded($data = NULL);
+	abstract protected function _get_decoded_resource($data = NULL);
 
 	/**
-	 * constructor. children cannot be instantiated directly.
+	 * get encoded data from a list of resource objects
+	 * @access protected
+	 * @abstract
+	 * @param Babble_API_Resource_Collection $resources The list of resources we're going to encode.
+	 * @return string Encoded data
 	 */
-	final protected function __construct() {}
+	abstract protected function _get_encoded_resources(Babble_API_Resource_Collection $resources);
+
+	/**
+	 * get a list of resource objects by decoding passed encoded data.
+	 * @access protected
+	 * @abstract
+	 * @param string $data The data to decode.
+	 * @return Babble_API_Resource_Collection A list of resource object represenations of the passed data.
+	 */
+	abstract protected function _get_decoded_resources($data = NULL);
+
+	/**
+	 * constructor
+	 * @access protected
+	 */
+	protected function __construct() {}
 
 	/**
 	 * factory method to load a media type class
@@ -163,44 +181,82 @@ abstract class Babble_API_MediaType {
 		return $class;
 	}
 
+	/**
+	 * set media type set that was matched for this media type
+	 * @access private
+	 * @param array $type_set The type set matched
+	 */
 	private function set_media_type_set($type_set)
 	{
 		$this->media_type_set = $type_set;
 	}
 
+	/**
+	 * get media type set that was matched for this media type
+	 * @access private
+	 * @return array
+	 */
 	public function get_media_type_set()
 	{
 		return $this->media_type_set;
 	}
 
 	/**
-	 * public interface to get encoded data from an array
+	 * get encoded data from a resource object
 	 * @access public
-	 * @param mixed $data The data to encode
-	 * @return string Expected to return an encoded string
+	 * @abstract
+	 * @param Babble_API_Resource $resource The resource we're going to encode.
+	 * @return string Encoded data
 	 */
-	public function get_data_encoded($data = NULL)
+	public function get_encoded_resource(Babble_API_Resource $resource)
 	{
-		if ( ! $data)
-		{
-			return '';
-		}
-		return $this->_get_data_encoded($data);
+		return $this->_get_encoded_resource($resource);
 	}
 
 	/**
-	 * public interface to get decoded array from an encoded string.
+	 * get resource object by decoding passed encoded data.
 	 * @access public
-	 * @param string $data The data to decode
-	 * @return array Expected to return a decoded array
+	 * @abstract
+	 * @param string $data The data to decode.
+	 * @return Babble_API_Resource A resource object represenation of the passed data.
 	 */
-	public function get_data_decoded($data = NULL)
+	public function get_decoded_resource($data = NULL)
 	{
-		if ( ! $data)
+		$ret = $this->_get_decoded_resource($data);
+		if ( ! ($ret instanceof Babble_API_Resource))
 		{
-			return array();
+			throw new API_MediaType_Exception('_get_decoded_resource() should return an instance of Babble_API_Resource', '500-004');
 		}
-		return $this->_get_data_decoded($data);
+		return $ret;
+	}
+
+	/**
+	 * get encoded data from a list of resource objects
+	 * @access public
+	 * @abstract
+	 * @param Babble_API_Resource_Collection $resources The list of resources we're going to encode.
+	 * @return string Encoded data
+	 */
+	public function get_encoded_resources(Babble_API_Resource_Collection $resources)
+	{
+		return $this->_get_encoded_resources($resources);
+	}
+
+	/**
+	 * get a list of resource objects by decoding passed encoded data.
+	 * @access public
+	 * @abstract
+	 * @param string $data The data to decode.
+	 * @return Babble_API_Resource_Collection A list of resource object represenations of the passed data.
+	 */
+	public function get_decoded_resources($data = NULL)
+	{
+		$ret = $this->_get_decoded_resources($data);
+		if ( ! ($ret instanceof Babble_API_Resource_Collection))
+		{
+			throw new API_MediaType_Exception('_get_decoded_resources() should return an instance of Babble_API_Resource_Collection', '500-004');
+		}
+		return $ret;
 	}
 
 	/**
@@ -222,6 +278,11 @@ abstract class Babble_API_MediaType {
 		$this->module_path = $path;
 	}
 
+	/**
+	 * get module path at the time this class was loaded.
+	 * @access protected
+	 * @return string
+	 */
 	public function get_module_path()
 	{
 		return $this->module_path;

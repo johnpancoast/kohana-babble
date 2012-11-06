@@ -164,10 +164,10 @@ class Babble_API_Request {
 	/**
 	 * get resource data
 	 * @access public
-	 * @return resource data
+	 * @return mixed
 	 */
 	public function get_request_decoded()
 	{
-		return $this->media_type ? $this->media_type->get_data_decoded($this->kohana_request()->body()) : array();
+		return $this->media_type ? $this->media_type->get_decoded_resource($this->kohana_request()->body()) : NULL;
 	}
 }

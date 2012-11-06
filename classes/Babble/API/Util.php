@@ -242,7 +242,7 @@ class Babble_API_Util {
 	 * @param string $private_key Private key
 	 * @param string $url Request url
 	 * @param string $method Request method
-	 * @param array $post Post data
+	 * @param array $body The request body as an array
 	 * @return string A hash
 	 */
 	public static function generate_auth_key($user, $private_key, $url, $method, $post = array()) {

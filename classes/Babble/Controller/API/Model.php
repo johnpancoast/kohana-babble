@@ -85,18 +85,16 @@ class Babble_Controller_API_Model extends Controller_API {
 			// TODO this should actually check to see if the object exists, then add/edit accordingly.
 			if ($req->kohana_request()->param('resource_id'))
 			{
-				if ($this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_request_decoded()))
+				if ($rsc = $this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_request_decoded()))
 				{
-					$this->api_response->set_response('200-000');
+					$this->api_response->set_response('200-000', $rsc);
 				}
 			}
 			else
 			{
-				$resource_id = $this->api_model->add($req->get_request_decoded());
-				if ($resource_id)
+				if ($rsc = $this->api_model->add($req->get_request_decoded()));
 				{
-					// TODO if a new resource was created then a 201 is appropriate.
-					$this->api_response->set_response('200-000', $resource_id);
+					$this->api_response->set_response('201-000', $rsc);
 				}
 			}
 		}
@@ -119,19 +117,16 @@ class Babble_Controller_API_Model extends Controller_API {
 			// for partial updates of an existing resource
 			if ($req->kohana_request()->param('resource_id'))
 			{
-				if ($this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_request_decoded()))
-				{
-					$resource_id = $req->kohana_request()->param('resource_id');
-				}
+				$resp = $this->api_model->edit($req->kohana_request()->param('resource_id'), $req->get_request_decoded());
 			}
 			else
 			{
-				$resource_id = $this->api_model->add($req->get_request_decoded());
+				$resp = $this->api_model->add($req->get_request_decoded());
 			}
 
-			if ($resource_id)
+			if ($resp)
 			{
-				$this->api_response->set_response('200-000', $resource_id);
+				$this->api_response->set_response('200-000', $resp);
 			}
 		}
 		catch (API_Model_Exception $e)

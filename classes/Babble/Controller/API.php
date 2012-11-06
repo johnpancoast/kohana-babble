@@ -43,8 +43,6 @@ class Babble_Controller_API extends Controller {
 		}
 		// if user not authentic, see if we've been passed an Authorization
 		// header and attempt to log em in with that.
-		// FIXME this should be an abstract method call
-		// so the code client can override how this works.
 		elseif ( ! API_User::factory()->logged_in())
 		{
 			// get the user/key from auth header
@@ -66,7 +64,7 @@ class Babble_Controller_API extends Controller {
 			// if hashes match then the user has authenticated and we can log them in.
 			$query = http_build_query($koh_request->query());
 			$url = URL::base($koh_request).$koh_request->uri().( ! empty($query) ? '?'.$query : '');
-			$check_key = API_Util::generate_auth_key($user['username'], $user['password'], $url, $_SERVER['REQUEST_METHOD'], (array)$this->api_request->get_request_decoded());
+			$check_key = API_Util::generate_auth_key($user['username'], $user['password'], $url, $_SERVER['REQUEST_METHOD'], (array)$this->api_request->get_request_decoded()->get_data());
 			if ( ! empty($key) && $key == $check_key)
 			{
 				API_User::factory()->login($user['username']);
@@ -124,7 +122,7 @@ class Babble_Controller_API extends Controller {
 			$this->after();
 
 			// check that a response got set.
-			if ( ! $this->api_response->get_body() || ! $this->api_response->get_code())
+			if ( ! $this->api_response->get_resources() || ! $this->api_response->get_code())
 			{
 				throw new API_Response_Exception('no api response', '500-002');
 			}

@@ -22,28 +22,40 @@ class Babble_API_MediaType_Driver_Text_Plain extends API_MediaType {
 	protected $set_sep = ",\n";
 
 	/**
-	 * @see parent::_get_data_encoded()
+	 * @see parent::_get_encoded_resource()
 	 */
-	protected function _get_data_encoded($data = array(), array $links = array())
+	protected function _get_encoded_resource(Babble_API_Resource $resource)
 	{
 		// just print key=value pairs separated by comma and new line
-		if (is_array($data))
+		$ret = array();
+		foreach ($resource->get_data() AS $k => $v)
 		{
-			$ret = array();
-			foreach ($data as $k => $v)
-			{
-				$ret[] = $k.$this->value_sep.$v;
-			}
-			return implode($this->set_sep, $ret);
+			$ret[] = $k.$this->value_sep.$v;
 		}
-		return $data;
+		return implode($this->set_sep, $ret);
 	}
 
 	/**
-	 * @see parent::_get_data_decoded()
+	 * @see parent::_get_decoded_resource()
 	 */
-	protected function _get_data_decoded($data = NULL)
+	protected function _get_decoded_resource($data = NULL)
 	{
-		return $data;
+		return new Babble_API_Resource;
+	}
+
+	/**
+	 * @see parent::_get_encoded_resources()
+	 */
+	protected function _get_encoded_resources(Babble_API_Resource_Collection $resources)
+	{
+		return NULL;
+	}
+
+	/**
+	 * @see parent::_get_decoded_resources()
+	 */
+	protected function _get_decoded_resources($data = NULL)
+	{
+		return new Babble_API_Resource_Collection;
 	}
 }

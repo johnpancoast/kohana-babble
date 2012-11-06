@@ -1,7 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
- * media type - NULLn
+ * media type - NULL
  */
 class API_MediaType_DriverDefault extends Babble_API_MediaType_DriverDefault {
 	/**
@@ -10,18 +10,34 @@ class API_MediaType_DriverDefault extends Babble_API_MediaType_DriverDefault {
 	protected $media_type = NULL;
 
 	/**
-	 * @see parent::_get_data_encoded()
+	 * @see parent::_get_encoded_resource()
 	 */
-	protected function _get_data_encoded($data = array(), array $links = array())
+	protected function _get_encoded_resource(Babble_API_Resource $resource)
 	{
-		return $data;
+		return NULL;
 	}
 
 	/**
-	 * @see parent::_get_data_decoded()
+	 * @see parent::_get_decoded_resource()
 	 */
-	protected function _get_data_decoded($data = NULL)
+	protected function _get_decoded_resource($data = NULL)
 	{
-		return $data;
+		return new Babble_API_Resource;
+	}
+
+	/**
+	 * @see parent::_get_encoded_resources()
+	 */
+	protected function _get_encoded_resources(Babble_API_Resource_Collection $resources)
+	{
+		return NULL;
+	}
+
+	/**
+	 * @see parent::_get_decoded_resources()
+	 */
+	protected function _get_decoded_resources($data = NULL)
+	{
+		return new Babble_API_Resource_Collection;
 	}
 }
