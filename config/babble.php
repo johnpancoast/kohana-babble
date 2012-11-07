@@ -71,6 +71,15 @@ return array
 	'debug' => FALSE,
 
 	/**
+	 * [route_path]
+	 *
+	 * This is the path in the URI that gets routed to a controller. For example, if
+	 * this is set to 'api', then you'll trigger your route with http://example.com/api.
+	 * {@see init.php}
+	 */
+	'route_path' => 'api',
+
+	/**
 	 * [testing]
 	 *
 	 * api testing parameters. {@see Controller_Public_API_Testing}.
