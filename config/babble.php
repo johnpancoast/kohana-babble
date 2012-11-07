@@ -26,7 +26,7 @@ return array
 	 * [default_media_types]
 	 *
 	 * You can map a requested Accept header media type to the media type
-	 * you wish to be loaded.
+	 * you wish to be loaded for it. We default to responding with json.
 	 */
 	'default_media_types' => array(
 		'*/*' => 'application/json',
@@ -53,7 +53,7 @@ return array
 		 *
 		 * if this value is specified, a response header of this name will be set.
 		 * it will contain the api response code and message. this can
-		 * be useful to clients.
+		 * be useful to clients who are debugging.
 		 *
 		 * Be mindful of what you name this header title. Do not use existing
 		 * response header titles. Do not prepend with "X-".
@@ -65,7 +65,8 @@ return array
 	/**
 	 * [debug]
 	 *
-	 * Log debugging info. This _should not_ be done in production environments.
+	 * Log debugging info. This _should not_ be done in production environments as
+	 * your logs will fill up quickly.
 	 */
 	'debug' => FALSE,
 
