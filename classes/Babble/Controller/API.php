@@ -1,7 +1,7 @@
 <?php
 
 /**
- * base api controller class that all api methods should eventually extend from
+ * base api controller class that all public api controller classes should eventually extend from
  */
 class Babble_Controller_API extends Controller {
 	/**
@@ -18,9 +18,11 @@ class Babble_Controller_API extends Controller {
 
 	/**
 	 * called before actual method call
+	 * !!IMPOTANT AUTHENTICATION HAPPENS IN THIS METHOD!!
 	 * @access public
 	 * @uses API_Request
 	 * @uses API_Response
+	 * @throws API_Response_Exception
 	 */
 	public function before()
 	{
@@ -75,15 +77,6 @@ class Babble_Controller_API extends Controller {
 			}
 		}
 
-		// check access list perms.
-		// note that we have to call check_access() before the parent::before() call.
-		// this is because if parent::before()'s call to check_access() fails it  will go to
-		// 404 page (which doesn't work for API)
-		if ( ! $this->check_access())
-		{
-			throw new API_Response_Exception('unauthorized access', '401-001');
-		}
-
 		// must call parent before()
 		parent::before();
 	}
@@ -99,8 +92,9 @@ class Babble_Controller_API extends Controller {
 	{
 		try
 		{
-			// Execute the "before action" method
-			// !!IMPOTANT AUTHENTICATION HAPPENS IN THIS METHOD!!
+			// Execute the "before action" method.
+			// You MUST call this before method and it must be before the method call
+			// since it's where authentication occurs.
 			$this->before();
 
 			// Determine the action to use
@@ -109,10 +103,7 @@ class Babble_Controller_API extends Controller {
 			// If the action doesn't exist, it's a 404
 			if ( ! method_exists($this, $action))
 			{
-				throw HTTP_Exception::factory(404,
-					'The requested URL :uri was not found on this server.',
-					array(':uri' => $this->request->uri())
-				)->request($this->request);
+				throw new API_Response_Exception('not found', '404-000');
 			}
 
 			// Execute the action itself
