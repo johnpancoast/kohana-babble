@@ -10,8 +10,6 @@
  * manually set the fields to be returned. For most things this _should_
  * be ok but for get_list() you'll get a bit of a performance hit depending
  * on the amount of results you're returning.
- *
- * @TODO !!!!!!! A LOT OF FIXING AND SECURITY HARDENING !!
  */
 class Babble_API_Model_ORM extends API_Model {
 	/**
