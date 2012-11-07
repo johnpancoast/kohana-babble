@@ -76,10 +76,10 @@ class Babble_API_Model_Driver_ORM extends API_Model {
 				->limit($limit)
 				->offset($offset);
 			$result = $objs->find_all();
-			$resp = new Babble_API_Resource_Collection;;
+			$resp = new API_Resource_Collection;
 			foreach ($result as $row)
 			{
-				$resp[] = $resp->append($this->remove_model_fields($row->as_array()));
+				$resp->append(new API_Resource($this->remove_model_fields($row->as_array())));
 			}
 
 			return $resp;
