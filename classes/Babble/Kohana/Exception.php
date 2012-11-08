@@ -92,16 +92,17 @@ class Babble_Kohana_Exception extends Kohana_Kohana_Exception {
 
 			$response->status($http_status);
 
-			// determine if this is a babble api request
+			// determine if this is a babble api request.
+			// if so, we handle exceptions differently.
 			try
 			{
 				$route = Route::get('babble');
 			}
 			catch (Kohana_Exception $e)
 			{
-				// ignore
+				// ignore this exception
 			}
-			if (isset($route))
+			if (isset($route) && $route->matches(API_Request::factory()->kohana_request()) !== FALSE)
 			{
 				try
 				{
