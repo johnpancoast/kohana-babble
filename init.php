@@ -1,9 +1,7 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-// public rest api.
-// e.g.,
-// /api/user/1
-// /api/user
+// public rest api route
+// e.g., /api/user or /api/user/3
 $route_path = Kohana::$config->load('babble.route_path');
 $route_path = ! empty($route_path) ? $route_path : 'api';
 Route::set('babble', $route_path.'/<controller>(/<resource_id>)')
