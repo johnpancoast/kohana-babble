@@ -272,12 +272,13 @@ class Babble_API_Response {
 		{
 			if (is_string($response))
 			{
-				$resp_body = new Babble_API_Resource(array(
+				$data = array(
 					'http_code' => $this->get_http_code(),
 					'http_message' => $msg_public,
 					'code' => $this->get_code(),
 					'message' => $response,
-				));
+				);
+				$resp_body = new API_Resource($data, NULL, NULL, FALSE);
 			}
 			// just assume we have already have a resource or resource collection object
 			else
@@ -287,12 +288,13 @@ class Babble_API_Response {
 		}
 		else
 		{
-			$resp_body = new Babble_API_Resource(array(
+			$data = array(
 				'http_code' => $this->get_http_code(),
 				'http_message' => $msg_public,
 				'code' => $this->get_code(),
 				'message' => ($msg_hint ? $msg_hint : $msg_public),
-			));
+			);
+			$resp_body = new API_Resource($data, NULL, NULL, FALSE);
 		}
 		$this->resources($resp_body);
 

@@ -24,7 +24,7 @@ class Babble_API_MediaType_Driver_Application_X_WWW_Form_Urlencoded extends API_
 	{
 		parse_str($data, $input);
 		$data = isset($input) ? (array)$input : array();
-		return new API_Resource($data);
+		return new API_Resource($data, NULL, NULL, FALSE);
 	}
 
 	/**

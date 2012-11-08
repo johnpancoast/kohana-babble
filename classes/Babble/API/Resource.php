@@ -30,12 +30,18 @@ class Babble_API_Resource {
 	 * @param array $data The resource data.
 	 * @param Babble_API_Resource_Link_Collection A set of links
 	 * @param Babble_API_Resource_Collection A set of embedded resources
+	 * @param bool $create_self_link Whether or not we create a link to the URI of the current request.
 	 */
-	public function __construct(array $data = array(), Babble_API_Resource_Link_Collection $links = NULL, Babble_API_Resource_Collection $embedded_resources = NULL)
+	public function __construct(array $data = array(), Babble_API_Resource_Link_Collection $links = NULL, Babble_API_Resource_Collection $embedded_resources = NULL, $create_self_link = TRUE)
 	{
 		$this->data = $data;
 		$this->links = $links ? $links : new API_Resource_Link_Collection;
 		$this->embedded_resources = $embedded_resources ? $embedded_resources : new API_Resource_Collection;
+
+		if ($create_self_link)
+		{
+			$this->add_link_array('_self', '/'.API_Request::factory()->kohana_request()->uri());
+		}
 	}
 
 	/**
