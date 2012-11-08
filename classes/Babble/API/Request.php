@@ -34,30 +34,34 @@ class Babble_API_Request {
 		$this->kohana_request(($kohana_request ? $kohana_request : Request::initial()));
 
 		// load media type via Content-type header
-		try
+		$body = $this->kohana_request()->body();
+		if ( ! empty($body))
 		{
-			$header = $this->kohana_request()->headers('content-type');
-			$media_type = API_MediaType::factory($header, FALSE);
-			if ($media_type)
+			try
 			{
-				$this->media_type($media_type);
+				$header = $this->kohana_request()->headers('content-type');
+				$media_type = API_MediaType::factory($header, FALSE);
+				if ($media_type)
+				{
+					$this->media_type($media_type);
+				}
 			}
-		}
-		catch (API_MediaType_Exception_NoConfigClass $e)
-		{
-			throw new API_Response_Exception('developer set a non-existent config media type class', '415-002');
-		}
-		catch (API_MediaType_Exception_NoClass $e)
-		{
-			throw new API_Response_Exception('no media type driver found, assuming 406', '415-001');
-		}
-		catch (API_MediaType_Exception_Inheritance $e)
-		{
-			throw new API_Response_Exception('media type class must inherit from API_MediaType', '415-001');
-		}
-		catch (Exception $e)
-		{
-			throw new API_Response_Exception('media type class had problems', '500-004');
+			catch (API_MediaType_Exception_NoConfigClass $e)
+			{
+				throw new API_Response_Exception('developer set a non-existent config media type class', '415-002');
+			}
+			catch (API_MediaType_Exception_NoClass $e)
+			{
+				throw new API_Response_Exception('no media type driver found, assuming 406', '415-001');
+			}
+			catch (API_MediaType_Exception_Inheritance $e)
+			{
+				throw new API_Response_Exception('media type class must inherit from API_MediaType', '415-001');
+			}
+			catch (Exception $e)
+			{
+				throw new API_Response_Exception('media type class had problems', '500-004');
+			}
 		}
 	}
 
@@ -168,6 +172,6 @@ class Babble_API_Request {
 	 */
 	public function get_request_decoded()
 	{
-		return $this->media_type ? $this->media_type->get_decoded_resource($this->kohana_request()->body()) : NULL;
+		return $this->media_type ? $this->media_type->get_decoded_resource($this->kohana_request()->body()) : $this->kohana_request()->body();
 	}
 }

@@ -229,15 +229,29 @@ class Babble_API {
 			$msg .= "\n";
 
 			$msg .= "REQUEST MEDIA (Content-Type):\n";
-			$msg .= "  type = ".$request_media->get_media_type()."\n";
-			$msg .= "  class = ".get_class($request_media)."\n";
-			$msg .= "  module path = ".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, $request_media->get_module_path())."\n";
+			if ($request_media)
+			{
+				$msg .= "  type = ".$request_media->get_media_type()."\n";
+				$msg .= "  class = ".get_class($request_media)."\n";
+				$msg .= "  module path = ".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, $request_media->get_module_path())."\n";
+			}
+			else
+			{
+				$msg .= "  no class\n";
+			}
 			$msg .= "\n";
 
 			$msg .= "RESPONSE MEDIA (Accept):\n";
-			$msg .= "  type = ".$response_media->get_media_type()."\n";
-			$msg .= "  class = ".get_class($response_media)."\n";
-			$msg .= "  module path = ".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, $response_media->get_module_path())."\n";
+			if ($response_media)
+			{
+				$msg .= "  type = ".$response_media->get_media_type()."\n";
+				$msg .= "  class = ".get_class($response_media)."\n";
+				$msg .= "  module path = ".str_replace(APPPATH, 'APPPATH'.DIRECTORY_SEPARATOR, $response_media->get_module_path())."\n";
+			}
+			else
+			{
+				$msg .= "  no class\n";
+			}
 			$msg .= "\n";
 
 		}

@@ -168,7 +168,7 @@ abstract class Babble_API_MediaType {
 			}
 			else
 			{
-				$class = new API_MediaType_DriverDefault;
+				throw new API_MediaType_Exception_NoClass;
 			}
 		}
 
