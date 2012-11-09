@@ -225,7 +225,7 @@ abstract class Babble_API_MediaType {
 		$ret = $this->_get_decoded_resource($data);
 		if ( ! ($ret instanceof Babble_API_Resource))
 		{
-			throw new API_MediaType_Exception('_get_decoded_resource() should return an instance of Babble_API_Resource', '500-004');
+			throw new API_MediaType_Exception_Encoding('_get_decoded_resource() should return an instance of Babble_API_Resource', '500-004');
 		}
 		return $ret;
 	}
