@@ -65,6 +65,9 @@ return array
 		'400-100'		=> array('public' => 'Bad Request', 'public_hint' => 'Invalid data', 'private' => 'ORM validation failed'),
 		'400-101'		=> array('public' => 'Bad Request', 'public_hint' => 'Non-existent field passed', 'private' => 'The client attempted to set a value of a non-existen model field'),
 
+		// bad request - media type & request/response
+		'400-200'		=> array('public' => 'Bad Request', 'public_hint' => 'Invalid data passed', 'private' => 'Media type class could not understand data sent in request.'),
+
 		// unauthorized
 		'401-000'		=> array('public' => 'Unauthorized', 'private' => 'Access denied due to failed authentication'),
 		'401-001'		=> array('public' => 'Unauthorized', 'private' => 'Access denied due to failed access'),
