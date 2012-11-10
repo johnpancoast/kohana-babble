@@ -76,10 +76,12 @@ class Babble_API_Model_Driver_ORM extends API_Model {
 				->limit($limit)
 				->offset($offset);
 			$result = $objs->find_all();
-			$resp = new API_Resource_Collection;
+
+			// all results are embedded objects for a "list"
+			$resp = new API_Resource;
 			foreach ($result as $row)
 			{
-				$resp->append(new API_Resource($this->remove_model_fields($row->as_array()), NULL, NULL, FALSE));
+				$resp->add_embedded_resource('id'.$row->id, new API_Resource($this->remove_model_fields($row->as_array()), NULL, NULL, FALSE));
 			}
 
 			return $resp;
