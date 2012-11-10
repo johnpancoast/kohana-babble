@@ -142,9 +142,9 @@ class Babble_Controller_API_Model extends Controller_API {
 	{
 		try
 		{
-			if ($this->api_model->delete($this->api_request->kohana_request()->param('resource_id')))
+			if ($resp = $this->api_model->delete($this->api_request->kohana_request()->param('resource_id')))
 			{
-				$this->api_response->set_response('200-000');
+				$this->api_response->set_response('200-000', $resp);
 			}
 		}
 		catch (API_Model_Exception $e)

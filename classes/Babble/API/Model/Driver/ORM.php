@@ -306,11 +306,20 @@ class Babble_API_Model_Driver_ORM extends API_Model {
 				{
 					return 'Deleted '.$object_id;
 				}
+				else
+				{
+					throw new API_Model_Exception('failed to delete', '500-201');
+				}
 			}
 			else
 			{
 				throw new API_Model_Exception('not found', '404-000');
 			}
+		}
+		catch (API_Model_Exception $e)
+		{
+			// just rethrow API_Model_Exception's
+			throw $e;
 		}
 		catch (ORM_Validation_Exception $e)
 		{
