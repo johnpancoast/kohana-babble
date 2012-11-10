@@ -82,7 +82,9 @@ class Babble_API_Model_Driver_ORM extends API_Model {
 			$resp->add_self_link();
 			foreach ($result as $row)
 			{
-				$resp->add_embedded_resource('id'.$row->id, new API_Resource($this->remove_model_fields($row->as_array())));
+				$rsc = new API_Resource($this->remove_model_fields($row->as_array()));
+				$rsc->add_link_array('_self', '/api/'.$this->model.'/'.$row->id);
+				$resp->add_embedded_resource('id'.$row->id, $rsc);
 			}
 
 			return $resp;
