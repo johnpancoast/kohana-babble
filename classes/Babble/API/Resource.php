@@ -40,7 +40,7 @@ class Babble_API_Resource {
 
 		if ($create_self_link)
 		{
-			$this->add_link_array('_self', '/'.API_Request::factory()->kohana_request()->uri());
+			$this->add_self_link();
 		}
 	}
 
@@ -133,6 +133,15 @@ class Babble_API_Resource {
 	{
 		$link = new API_Resource_Link($rel, $href, $title, $name, $templated);
 		$this->add_link($rel, $link);
+	}
+
+	/**
+	 * add a 'self' link to current request's uri
+	 * @access public
+	 */
+	public function add_self_link()
+	{
+		$this->add_link_array('_self', '/'.API_Request::factory()->kohana_request()->uri());
 	}
 
 	/**
