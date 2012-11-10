@@ -122,7 +122,7 @@ return array
 
 		// internal error - kohana orm
 		'500-200'		=> array('public' => 'Internal Server Error', 'private' => 'Generic exception during ORM interaction'),
-		'500-201'		=> array('public' => 'Internal Server Error', 'private' => 'Failed to save the ORM model'),
+		'500-201'		=> array('public' => 'Internal Server Error', 'private' => 'Failed to save or delete an ORM model object'),
 
 		// others
 		'501-000'		=> array('public' => 'Not Implemented'),
