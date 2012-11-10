@@ -32,7 +32,7 @@ class Babble_API_Resource {
 	 * @param Babble_API_Resource_Collection A set of embedded resources
 	 * @param bool $create_self_link Whether or not we create a link to the URI of the current request.
 	 */
-	public function __construct(array $data = array(), Babble_API_Resource_Link_Collection $links = NULL, Babble_API_Resource_Collection $embedded_resources = NULL, $create_self_link = TRUE)
+	public function __construct(array $data = array(), Babble_API_Resource_Link_Collection $links = NULL, Babble_API_Resource_Collection $embedded_resources = NULL, $create_self_link = FALSE)
 	{
 		$this->data = $data;
 		$this->links = $links ? $links : new API_Resource_Link_Collection;

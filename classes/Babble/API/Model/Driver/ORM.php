@@ -79,9 +79,10 @@ class Babble_API_Model_Driver_ORM extends API_Model {
 
 			// all results are embedded objects for a "list"
 			$resp = new API_Resource;
+			$resp->add_self_link();
 			foreach ($result as $row)
 			{
-				$resp->add_embedded_resource('id'.$row->id, new API_Resource($this->remove_model_fields($row->as_array()), NULL, NULL, FALSE));
+				$resp->add_embedded_resource('id'.$row->id, new API_Resource($this->remove_model_fields($row->as_array())));
 			}
 
 			return $resp;
@@ -129,7 +130,9 @@ class Babble_API_Model_Driver_ORM extends API_Model {
 			$obj = ORM::factory($this->model, $object_id);
 			if ($obj->loaded())
 			{
-				return new Babble_API_Resource($this->remove_model_fields($obj->as_array()));
+				$rsc = new API_Resource($this->remove_model_fields($obj->as_array()));
+				$rsc->add_self_link();
+				return $rsc;
 			}
 			else
 			{

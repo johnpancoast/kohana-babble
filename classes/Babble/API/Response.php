@@ -260,7 +260,7 @@ class Babble_API_Response {
 					'code' => $this->get_code(),
 					'message' => $response,
 				);
-				$resp_body = new API_Resource($data, NULL, NULL, FALSE);
+				$resp_body = new API_Resource($data);
 			}
 			// just assume we have already have a resource or resource collection object
 			else
@@ -276,7 +276,7 @@ class Babble_API_Response {
 				'code' => $this->get_code(),
 				'message' => ($msg_hint ? $msg_hint : $msg_public),
 			);
-			$resp_body = new API_Resource($data, NULL, NULL, FALSE);
+			$resp_body = new API_Resource($data);
 		}
 		$this->resource($resp_body);
 

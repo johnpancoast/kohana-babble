@@ -91,7 +91,7 @@ class Babble_API_MediaType_Driver_Application_XML extends API_MediaType {
 	private function get_element_resource(DOMElement $elrsc)
 	{
 		// resource object we're building.
-		$rsc = new API_Resource(array(), NULL, NULL, FALSE);
+		$rsc = new API_Resource;
 
 		// make a new dom doc containing this element. we need a document for
 		// searching since we're matching paths with xpath.
