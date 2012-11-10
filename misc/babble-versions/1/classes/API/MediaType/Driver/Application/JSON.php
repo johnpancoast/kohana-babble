@@ -22,6 +22,44 @@ class API_MediaType_Driver_Application_JSON extends Babble_API_MediaType_Driver_
 	 */
 	protected function _get_decoded_resource($data = NULL)
 	{
-		return new Babble_API_Resource;
+		return $this->get_data_resource(json_decode($data));
+	}
+
+	private function get_data_resource($data)
+	{
+		$rsc = new API_Resource;
+		$objdata = array();
+		foreach ($data AS $k => $v)
+		{
+			switch ($k)
+			{
+				// links ignored when receiving data
+				case '_links':
+					break;
+				// recursively add embedded objects
+				case '_embedded':
+					foreach ($v AS $rel => $obj)
+					{
+						if (is_array($obj))
+						{
+							foreach ($obj AS $o)
+							{
+								$rsc->add_embedded_resource($rel, $this->get_data_resource($o));
+							}
+						}
+						else
+						{
+							$rsc->add_embedded_resource($rel, $this->get_data_resource($obj));
+						}
+					}
+					break;
+				// everything else is object data
+				default:
+					$objdata[$k] = $v;
+					break;
+			}
+		}
+		$rsc->set_data($objdata);
+		return $rsc;
 	}
 }
