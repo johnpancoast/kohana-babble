@@ -34,15 +34,10 @@ class Babble_API_Response {
 	private $code = NULL;
 
 	/**
-	 * @var string Response message
+	 * @var Babble_API_Resource A resource for the response
+	 * @access private
 	 */
-	private $message = NULL;
-
-	/**
-	 * @var mixed Response body
-	 */
-	private $body = NULL;
-	private $resources = NULL;
+	private $resource = NULL;
 
 	/**
 	 * @var array A list of links that get inserted into the response.
@@ -103,43 +98,38 @@ class Babble_API_Response {
 	}
 
 	/**
-	 * set resources
+	 * set resource
 	 * @access public
-	 * @param mixed $resources Response resources. can be object that's instance of Babble_API_Resource or Babble_API_Resource_Collection.
+	 * @param Babble_API_Resource A babble resource
 	 */
-	public function set_resources($resources)
+	public function set_resource(Babble_API_Resource $resource)
 	{
-		if ( ! ($resources instanceof Babble_API_Resource) && ! ($resources instanceof Babble_API_Resource_Collection))
-		{
-			throw new API_Response_Exception('Response must be instance of either Babble_API_Resource or Babble_API_Resource_Collection.', '500-000'); 
-		}
-
-		$this->resources = $resources;
+		$this->resource = $resource;
 	}
 
 	/**
-	 * get resources
+	 * get resource
 	 * @access public
-	 * @return {@see self::$resources}
+	 * @return Babble_API_Resource
 	 */
-	public function get_resources()
+	public function get_resource()
 	{
-		return $this->resources;
+		return $this->resource;
 	}
 
 	/**
-	 * set/get resources
+	 * set/get resource
 	 * @access public
-	 * @param mixed $resources The resources
-	 * @return mixed resources If $resources not passed.
+	 * @param Babble_API_Resource $resource Babble api resource
+	 * @return mixed Babble resource if $resource not passed
 	 */
-	public function resources($resources = NULL)
+	public function resource(Babble_API_Resource $resource = NULL)
 	{
-		if ($resources)
+		if ($resource)
 		{
-			return $this->set_resources($resources);
+			return $this->set_resource($resource);
 		}
-		return $this->get_resources();
+		return $this->get_resource();
 	}
 
 	/**
@@ -183,15 +173,7 @@ class Babble_API_Response {
 	 */
 	public function get_body_encoded()
 	{
-		$rsc = $this->get_resources();
-		if ($rsc instanceof Babble_API_Resource)
-		{
-			return $this->media_type->get_encoded_resource($rsc);
-		}
-		elseif ($rsc instanceof Babble_API_Resource_Collection)
-		{
-			return $this->media_type->get_encoded_resources($rsc);
-		}
+		return $this->media_type->get_encoded_resource($this->get_resource());
 	}
 
 	/**
@@ -238,7 +220,7 @@ class Babble_API_Response {
 	 * set response
 	 * @access public
 	 * @param string $code Response code. Should match our codes in config/base/api.php.
-	 * @param mixed $resources Instance of Babble_API_Resource or Babble_API_Resource_Collection or a string message
+	 * @param mixed $response Instance of Babble_API_Resource or a string message
 	 * @throws API_Response_Exception Upon error
 	 */
 	public function set_response($code, $response = NULL) {
@@ -296,7 +278,7 @@ class Babble_API_Response {
 			);
 			$resp_body = new API_Resource($data, NULL, NULL, FALSE);
 		}
-		$this->resources($resp_body);
+		$this->resource($resp_body);
 
 		// set response header if we have title set in config
 		$resp_header = Kohana::$config->load('babble.header.response_header_title');

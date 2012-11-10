@@ -26,20 +26,4 @@ class Babble_API_MediaType_Driver_Application_X_WWW_Form_Urlencoded extends API_
 		$data = isset($input) ? (array)$input : array();
 		return new API_Resource($data, NULL, NULL, FALSE);
 	}
-
-	/**
-	 * @see parent::_get_encoded_resources()
-	 */
-	protected function _get_encoded_resources(Babble_API_Resource_Collection $resources)
-	{
-		return NULL;
-	}
-
-	/**
-	 * @see parent::_get_decoded_resources()
-	 */
-	protected function _get_decoded_resources($data = NULL)
-	{
-		return NULL;
-	}
 }

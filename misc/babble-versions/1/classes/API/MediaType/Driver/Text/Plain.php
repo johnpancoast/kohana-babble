@@ -42,20 +42,4 @@ class API_MediaType_Driver_Text_Plain extends Babble_API_MediaType_Driver_Text_P
 	{
 		return new Babble_API_Resource;
 	}
-
-	/**
-	 * @see parent::_get_encoded_resources()
-	 */
-	protected function _get_encoded_resources(Babble_API_Resource_Collection $resources)
-	{
-		return NULL;
-	}
-
-	/**
-	 * @see parent::_get_decoded_resources()
-	 */
-	protected function _get_decoded_resources($data = NULL)
-	{
-		return new Babble_API_Resource_Collection;
-	}
 }

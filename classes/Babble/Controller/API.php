@@ -113,7 +113,7 @@ class Babble_Controller_API extends Controller {
 			$this->after();
 
 			// check that a response got set.
-			if ( ! $this->api_response->get_resources() || ! $this->api_response->get_code())
+			if ( ! $this->api_response->resource() || ! $this->api_response->get_code())
 			{
 				throw new API_Response_Exception('no api response', '500-002');
 			}

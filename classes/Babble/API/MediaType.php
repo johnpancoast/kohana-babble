@@ -38,24 +38,6 @@ abstract class Babble_API_MediaType {
 	abstract protected function _get_decoded_resource($data = NULL);
 
 	/**
-	 * get encoded data from a list of resource objects
-	 * @access protected
-	 * @abstract
-	 * @param Babble_API_Resource_Collection $resources The list of resources we're going to encode.
-	 * @return string Encoded data
-	 */
-	abstract protected function _get_encoded_resources(Babble_API_Resource_Collection $resources);
-
-	/**
-	 * get a list of resource objects by decoding passed encoded data.
-	 * @access protected
-	 * @abstract
-	 * @param string $data The data to decode.
-	 * @return Babble_API_Resource_Collection A list of resource object represenations of the passed data.
-	 */
-	abstract protected function _get_decoded_resources($data = NULL);
-
-	/**
 	 * constructor
 	 * @access protected
 	 */
@@ -226,35 +208,6 @@ abstract class Babble_API_MediaType {
 		if ( ! ($ret instanceof Babble_API_Resource))
 		{
 			throw new API_MediaType_Exception_Encoding('_get_decoded_resource() should return an instance of Babble_API_Resource', '500-004');
-		}
-		return $ret;
-	}
-
-	/**
-	 * get encoded data from a list of resource objects
-	 * @access public
-	 * @abstract
-	 * @param Babble_API_Resource_Collection $resources The list of resources we're going to encode.
-	 * @return string Encoded data
-	 */
-	public function get_encoded_resources(Babble_API_Resource_Collection $resources)
-	{
-		return $this->_get_encoded_resources($resources);
-	}
-
-	/**
-	 * get a list of resource objects by decoding passed encoded data.
-	 * @access public
-	 * @abstract
-	 * @param string $data The data to decode.
-	 * @return Babble_API_Resource_Collection A list of resource object represenations of the passed data.
-	 */
-	public function get_decoded_resources($data = NULL)
-	{
-		$ret = $this->_get_decoded_resources($data);
-		if ( ! ($ret instanceof Babble_API_Resource_Collection))
-		{
-			throw new API_MediaType_Exception('_get_decoded_resources() should return an instance of Babble_API_Resource_Collection', '500-004');
 		}
 		return $ret;
 	}

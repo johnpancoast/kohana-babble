@@ -24,25 +24,4 @@ class API_MediaType_Driver_Application_JSON extends Babble_API_MediaType_Driver_
 	{
 		return new Babble_API_Resource;
 	}
-
-	/**
-	 * @see parent::_get_encoded_resources()
-	 */
-	protected function _get_encoded_resources(Babble_API_Resource_Collection $resources)
-	{
-		$ret = array();
-		foreach ($resources AS $rsc)
-		{
-			$ret[] = $rsc->as_array();
-		}
-		return json_encode($ret);
-	}
-
-	/**
-	 * @see parent::_get_decoded_resources()
-	 */
-	protected function _get_decoded_resources($data = NULL)
-	{
-		return new Babble_API_Resource_Collection;
-	}
 }
