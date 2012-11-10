@@ -1,9 +1,15 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
 /**
+ * FIXME
+ * !!This class should be changed to Kohana's request class!!
+ *
+ * FIXME
+ * This class is close to being removed completely since there are available
+ * clients to use. I particularly like 
  * This code is for testing the API. It is only accessible by kohana route when in debug environment
  * (i.e., Kohana::DEVELOPMENT).
- *
+ *`
  * You should have an understanding of how the API works before using this.
  *
  * This takes a request and maps it to an actual API request a client would make. Essentially this controller
