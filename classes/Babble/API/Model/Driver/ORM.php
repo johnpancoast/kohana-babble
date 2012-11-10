@@ -178,12 +178,14 @@ class Babble_API_Model_Driver_ORM extends API_Model {
 			$obj = ORM::factory($this->model, $object_id);
 			if ($obj->loaded())
 			{
+				$data_changed = FALSE;
 				foreach ($resource->get_data() AS $k => $v)
 				{
 					$obj->{$k} = $v;
+					$data_changed = TRUE;
 				}
 
-				if ($obj->save())
+				if ($data_changed && $obj->check() && $obj->save())
 				{
 					return 'Modified '.$obj->id;
 				}
@@ -239,11 +241,13 @@ class Babble_API_Model_Driver_ORM extends API_Model {
 		try
 		{
 			$obj = ORM::factory($this->model);
+			$data_changed = FALSE;
 			foreach ($resource->get_data() as $k => $v)
 			{
 				$obj->{$k} = $v;
+				$data_changed = TRUE;
 			}
-			if ($obj->save())
+			if ($data_changed && $obj->check() && $obj->save())
 			{
 				return 'Created '.$obj->id;
 			}
