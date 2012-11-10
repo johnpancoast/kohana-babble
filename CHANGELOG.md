@@ -1,3 +1,9 @@
+## 0.4.0 - 11/10/12
+* HATEOAS support, embedded resources, resource/link/collection classes.
+* Added application/xml.
+* Reorganization of babble-api (version) classes.
+* General bug fixes and enhancements.
+
 ## 0.3.0 - 10/31/12
 * Better handling of media type versioning using Kohana modules and custom extension to kohana core.
 * Logging.
