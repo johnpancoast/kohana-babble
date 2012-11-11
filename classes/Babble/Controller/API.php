@@ -18,11 +18,9 @@ class Babble_Controller_API extends Controller {
 
 	/**
 	 * called before actual method call
-	 * !!IMPOTANT AUTHENTICATION HAPPENS IN THIS METHOD!!
 	 * @access public
 	 * @uses API_Request
 	 * @uses API_Response
-	 * @throws API_Response_Exception
 	 */
 	public function before()
 	{
@@ -34,12 +32,33 @@ class Babble_Controller_API extends Controller {
 		$this->api_request = API_Request::factory('initial', NULL);
 		$this->api_response = API_Response::factory('initial', $this->response);
 
+		// must call parent before()
+		parent::before();
+	}
+
+	/**
+	 * attempt to authenticate user
+	 * @access private
+	 * @return void
+	 * @throws API_Response_Exception if failed authentication
+	 */
+	private function authenticate()
+	{
 		// kohana request
 		$koh_request = $this->api_request->kohana_request();
 
-		// bypass security and use test user if allowed
-		$test_user = Kohana::$config->load('babble.test_user');
-		if (Kohana::$environment == Kohana::DEVELOPMENT && ! empty($test_user))
+		$doauth = Kohana::$config->load('babble.authentication');
+		$test_user = Kohana::$config->load('babble.test_authentication_user');
+
+		// bypass auth
+		// !!ONLY ALLOWED IN Kohana::DEVELOPMENT!!
+		if (Kohana::$environment == Kohana::DEVELOPMENT && ! $doauth)
+		{
+			return;
+		}
+		// bypass normal auth and use test user if allowed
+		// !!ONLY ALLOWED IN Kohana::DEVELOPMENT!!
+		elseif (Kohana::$environment == Kohana::DEVELOPMENT && ! empty($test_user))
 		{
 			API_User::factory()->login($test_user);
 		}
@@ -76,9 +95,6 @@ class Babble_Controller_API extends Controller {
 				throw new API_Response_Exception('unauthorized user', '401-000');
 			}
 		}
-
-		// must call parent before()
-		parent::before();
 	}
 
 
@@ -93,12 +109,14 @@ class Babble_Controller_API extends Controller {
 		try
 		{
 			// Execute the "before action" method.
-			// You MUST call this before method and it must be before the method call
 			// since it's where authentication occurs.
 			$this->before();
 
 			// Determine the action to use
 			$action = 'action_'.strtolower($_SERVER['REQUEST_METHOD']);
+
+			// make sure user authentic
+			$this->authenticate();
 
 			// If the action doesn't exist, it's a 404
 			if ( ! method_exists($this, $action))

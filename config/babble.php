@@ -33,16 +33,24 @@ return array
 	),
 
 	/**
-	 * [test_user]
+	 * [authentication]
 	 *
-	 * !!WARNING!! Be careful with this value.
+	 * Is authentication enabled. This can value will only be in effect
+	 * while environment is in Kohana::DEVELOPMENT. Authentication always
+	 * occurs in other environments unless specific controller methods are
+	 * excluded.
+	 */
+	'authentication' => TRUE,
+
+	/**
+	 * [test_authentication_user]
 	 *
-	 * When test_user is specified and your environment is in Kohana::DEVELOPMENT,
+	 * When test_authentication_user is specified and your environment is in Kohana::DEVELOPMENT,
 	 * this user will be automatically logged in as the api user for the request.
 	 * Bypasses security measures when in Kohana::DEVELOPMENT mode _only_ but you
 	 * should still be careful with this setting and your environments.
 	 */
-	'test_user' => NULL,
+	'test_authentication_user' => NULL,
 
 	/**
 	 * header related values
