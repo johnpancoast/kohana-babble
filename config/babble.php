@@ -90,7 +90,7 @@ return array
 	/**
 	 * [testing]
 	 *
-	 * api testing parameters. {@see Controller_Public_API_Testing}.
+	 * api testing parameters. {@see Controller_Public_API_Test_Index}.
 	 */
 	'testing' => array(
 		'user' => NULL,
