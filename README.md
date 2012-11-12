@@ -1,7 +1,7 @@
 kohana-babble
 =============
-A RESTful API module for the Kohana PHP framework aiming to adhere to all of
-the tenets of the REST architecture This is also a learning experience for me.
+A RESTful API framework module for the Kohana PHP framework aiming to adhere to all of
+the tenets of the REST architectural style. This is also a learning experience for me.
 =)
 
 ## Version 0.4.0

@@ -4,9 +4,11 @@
 // e.g., /api/user or /api/user/3
 $route_path = Kohana::$config->load('babble.route_path');
 $route_path = ! empty($route_path) ? $route_path : 'api';
-Route::set('babble', $route_path.'/<controller>(/<resource_id>)')
+Route::set('babble', $route_path.'/<resource_controller>(/<resource_id>)')
 	->defaults(array(
-		'directory' => 'Public/API',
+		'directory' => 'Public',
+		'controller' => 'APIFrontend',
+		'action'     => 'index',
 	));
 
 // route for testing above API. only create this is in DEV mode.
