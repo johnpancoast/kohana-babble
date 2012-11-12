@@ -98,8 +98,8 @@ class Babble_API_Response {
 	}
 
 	/**
-	 * set resource
-	 * @access public
+	 * Set resource. Note that you should generally use set_response over this method.
+	 * @access protected
 	 * @param Babble_API_Resource A babble resource
 	 */
 	public function set_resource(Babble_API_Resource $resource)
