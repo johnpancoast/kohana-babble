@@ -115,7 +115,8 @@ class Babble_API {
 			. 'API'.DIRECTORY_SEPARATOR
 			. 'MediaType'.DIRECTORY_SEPARATOR
 			. 'Driver'.DIRECTORY_SEPARATOR;
-			$file = $dir.str_replace('_', '/', $v['class']).EXT;
+			$class = isset($v['config_class']) ? $v['config_class'] : $v['class'];
+			$file = $dir.str_replace('_', '/', $class).EXT;
 			if (is_file($file))
 			{
 				$this->version = $v['version'];
