@@ -25,7 +25,7 @@ class Babble_Controller_API extends Controller {
 	public function before()
 	{
 		// isntantiate babble
-		Babble_API::instance();
+		Babble::instance();
 
 		// request and response instances.
 		// must force reload since we want the right media type. also pass in existing kohana response (primarily for logging).

@@ -3,13 +3,13 @@
 /**
  * core API functionality
  */
-class Babble_API {
+class Babble_Core {
 	/**
-	 * @var Babble_API Singleton instance
+	 * @var Babble Singleton instance
 	 * @access private
 	 * @static
 	 */
-	private static $instance = NULL;
+	protected static $instance = NULL;
 
 	/**
 	 * @var string The version of the request. Will default to config api.current_version value.
@@ -63,16 +63,16 @@ class Babble_API {
 	 * get singleton instance
 	 * @access public
 	 * @static
-	 * @return Babble_API
+	 * @return Babble
 	 */
 	public static function instance()
 	{
-		if ( ! isset(Babble_API::$instance))
+		if ( ! isset(Babble::$instance))
 		{
-			Babble_API::$instance = new Babble_API;
+			Babble::$instance = new Babble;
 		}
 
-		return Babble_API::$instance;
+		return Babble::$instance;
 	}
 
 	/**
@@ -144,7 +144,7 @@ class Babble_API {
 	 */
 	public static function is_instantiated()
 	{
-		return isset(Babble_API::$instance);
+		return isset(Babble::$instance);
 	}
 
 	/**

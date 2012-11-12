@@ -58,7 +58,7 @@ abstract class Babble_API_MediaType {
 		$config_versions = Kohana::$config->load('babble.versions');
 
 		// babble version
-		$bab_version = Babble_API::instance()->get_version();
+		$bab_version = Babble::instance()->get_version();
 		$bab_version_path = Kohana_Core_Babble::get_module_path('babble-version-'.$bab_version);
 
 		// attempt to find a matching class
