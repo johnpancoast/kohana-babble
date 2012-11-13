@@ -1,5 +1,6 @@
 # Authentication
 
+## Configuration
 By default, Babble uses Kohana's Auth and ORMs implementation of it with a
 slightly modified users table schema, however, we use an abstract class
 [API_User] that handles authentication so you can add whatever authentication
@@ -80,3 +81,44 @@ ALTER TABLE user_tokens
 ~~~
 
 Going further, you'll want to get an understanding the Auth and ORM modules.
+
+## Authenticating Requests
+Authentication information should be sent in requests in the `Authorization`
+header. The value of the header should contain a username and an
+[hmac](http://en.wikipedia.org/wiki/HMAC) separated by a ":". Example
+authorization header:
+`Authorization: username:aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d`. The
+`username` just corresponds to a username in the users table. The `hmac` is
+desribed below.
+
+### HMAC
+This is a sha1 hmac of a `message` and a `private key`. The `private_key` is
+simply a password (or API supplied private key). The `message` is a string of the
+following items each separated by a "-".
+
+* username
+* private key - The same private key described above.
+* request method - The request's request method (i.e., GET, POST, PUT etc).
+* urlencoded body - This should be a urlencoded query string of the data passed
+in the body of the request. This should be only the "data" part of data sent.
+For example, if you are posting a "resource" (as defined in the
+[Resources](resources) section) then this urlencoded body should __only__
+contain the data part. That is to say that the links and embedded resource are
+not part of this.
+
+For additional understanding of how this hash should be generated, see the
+[API_Util::generate_auth_key()](http://pilot.xxx/guide-api/API_Util#generate_auth_key)
+method.
+
+You can also check out PHP's [hash_hmac](http://us1.php.net/hash_hmac).
+
+## Bypassing Authentication
+Authentication is enabled by default. You can turn it off by setting the
+`authentication` config value to FALSE.
+
+You can also "act" as a user by setting the `test_user` config value to a
+username. This will log you in as that user on each request.
+
+[!!]Both of these are only allowable when the Kohana::$environment is ==
+Kohana::DEVELOPMENT. Meaning, these config values are ignored unless your app is
+in development mode.
