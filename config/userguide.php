@@ -17,5 +17,19 @@ return array(
 			// Copyright message, shown in the footer for this module
 			'copyright' => '&copy; 2012-2013 John Pancoast',
 		)
-	)
+	),
+ 
+    /*
+     * If you use transparent extension outside the Kohana_ namespace,
+     * add your class prefix here. Both common Kohana naming conventions are
+     * excluded: 
+     *   - Modulename extends Modulename_Core
+     *   - Foo extends Modulename_Foo
+     * 
+     * For example, if you use Modulename_<class_name> for your base classes
+     * then you would define:
+     */
+    'transparent_prefixes' => array(
+        'Babble' => TRUE,
+    )
 );
