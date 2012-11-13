@@ -6,7 +6,7 @@
 class Babble_Core {
 	/**
 	 * @var Babble Singleton instance
-	 * @access private
+	 * @access protected
 	 * @static
 	 */
 	protected static $instance = NULL;
