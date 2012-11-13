@@ -122,3 +122,5 @@ username. This will log you in as that user on each request.
 [!!]Both of these are only allowable when the Kohana::$environment is ==
 Kohana::DEVELOPMENT. Meaning, these config values are ignored unless your app is
 in development mode.
+
+Next Section: [Requests](requests)

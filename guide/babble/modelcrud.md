@@ -38,8 +38,8 @@ in the response instead of the model fields themselves.
 ## Adding to Response
 It is sometimes desirable to add to the response of a Model CRUD method. For
 example, perhaps you want to add
-[links](http://pilot.xxx/guide/babble/resources#links) or [embedded
-resources](http://pilot.xxx/guide/babble/resources#embedded-resources) to the
+[links](resources#links) or [embedded
+resources](resources#embedded-resources) to the
 resource that the model assigned to the response.
 
 You can do so like this.
@@ -84,3 +84,5 @@ wish, then reassign it to the response with
 This is useful when you want to create simple CRUD functionality on top of your
 models in your REST api but you want to add custom things to the resources that
 the model assigned to the response.
+
+Next Section: [Resources](resources)

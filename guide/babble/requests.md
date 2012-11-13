@@ -54,3 +54,5 @@ abstracted so you can put whatever ORM / model layer you want behind it. It
 currently ships with support for Kohana ORM. 
 
 View the [Model CRUD](modelcrud) section for more details.
+
+Next Section: [Model CRUD](modelcrud)

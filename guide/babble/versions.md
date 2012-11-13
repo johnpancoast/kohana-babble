@@ -34,9 +34,11 @@ version 3 version module? The answer is that you still have to pass a vendor
 media type (i.e., application/vnd.myname-v3+json). You can either create a
 custom media type that matches this type or an easier option is to use a
 [Default Media
-Type](http://pilot.xxx/guide/babble/mediatypes#specifying-default-media-types).
+Type](mediatypes#specifying-default-media-types).
 
 These are things that have prompted more thought and they may be changed..
 
 # What Version Module Got Loaded?
 You can use [Logging](logging) to see what version(s) were loaded.
+
+Next Section: [Logging](logging)

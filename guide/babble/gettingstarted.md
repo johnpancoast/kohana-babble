@@ -68,7 +68,7 @@ overriding general Babble classes.
 Now that you have version 1 configured, let's create a Hello, World.
 
 1. The first thing you'll need to do is disable the authentication that normally
-occurs. You can see the [Authentication]() section for more details. For now,
+occurs. You can see the [Authentication](authentication) section for more details. For now,
 you can set the `authentication` value to FALSE in your babble config (which
 should now be located at APPPATH/config/babble.php).
 1. Place the following code in a file at
@@ -98,7 +98,7 @@ should now be located at APPPATH/config/babble.php).
 	  routed to action_post().
 	- It creates a new [API_Resource] and assigns some data.
 	- Using $this->api_response, it sets a response by passing a babble [message
-	  code]() and an [API_Resource] object. You can also pass a string message
+	  code](messagecodes) and an [API_Resource] object. You can also pass a string message
 	  instead of the resource object and a resource object will be created for
 	  you.
 
@@ -147,3 +147,5 @@ You should see a response like this.
 
 This is a simple example of how easy it is to create a resource and respond with
 different content via content negotiation.
+
+Next Section: [Authentication](authentication)

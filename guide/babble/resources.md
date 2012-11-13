@@ -1,6 +1,6 @@
 # Resources
-[Controller](controllers.md) methods will generally set the response with an
-[API_Resource] as seen in the [Getting Started](gettingstarted.md) section.
+[Controller](requests#controllers) methods will generally set the response with an
+[API_Resource] as seen in the [Getting Started](gettingstarted) section.
 ~~~
 <?php defined('SYSPATH') or die('No direct script access.');
 
@@ -17,8 +17,9 @@ class Controller_Public_API_Helloworld extends Controller_API {
 }
 ~~~
 
-The [API_Resource] class also provides the ability to add embedded resources and
-create links (adding support for [HATEOAS]()). Babble adopted ideas found in
+The [API_Resource] class also provides the ability to add embedded resources
+and create links (adding support for [hypermedia as the engine of application
+state](http://en.wikipedia.org/wiki/HATEOAS)). Babble adopted ideas found in
 [Hypertext Application Language](http://stateless.co/hal_specification.html).
 
 We'll continue using the "Hello, World" controller above.
@@ -86,7 +87,7 @@ You can nest embedded resources as far as you want.
 
 ## Links
 Links are an important part of a REST API since they allow for
-[hypermedia as the engine of application state]().
+[hypermedia as the engine of application state](http://en.wikipedia.org/wiki/HATEOAS).
 
 You can add a link using the
 [add_link()](http://pilot.xxx/guide-api/API_Resource#add_link) or
@@ -229,3 +230,5 @@ _application/xml_
   </resource>
 </resource>
 ~~~
+
+Next Section: [Media Types](mediatypes)

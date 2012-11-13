@@ -92,3 +92,5 @@ were matched, then application/json will be served.
 
 [!!]Note that the "version" portion passed in a media type is ignored when matching
 types in this config value.
+
+Next Section: [Versions](versions)
