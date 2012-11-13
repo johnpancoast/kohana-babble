@@ -219,7 +219,7 @@ class Babble_API_Response {
 	/**
 	 * set response
 	 * @access public
-	 * @param string $code Response code. Should match our codes in config/base/api.php.
+	 * @param string $code Response code. Should match our codes in messages/babble.php..
 	 * @param mixed $response Instance of Babble_API_Resource or a string message
 	 * @throws API_Response_Exception Upon error
 	 */
