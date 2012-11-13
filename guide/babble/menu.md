@@ -5,4 +5,5 @@
 	- [Requests](requests)
 	- [Model CRUD](modelcrud)
 	- [Resources](resources)
+	- [Media Types](mediatypes)
 	- [Message Codes](messagecodes)
