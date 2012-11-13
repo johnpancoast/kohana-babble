@@ -1,9 +1,26 @@
-# Controllers
+# Requests
 
-## General Usage
+## Routes
+A Babble route looks like so.
+
+`/route_path/<resource_controller>(/<resource_id>)`
+
+* route_path - This is a config value `route_path`. It defaults to `api`.
+* resource_controller - This should map to a controller in the
+`classes/Controller/Public/API/` directory.
+* resource_id - This is a "resource_id". It can be an ID, a title, whatever you wish.
+
+So an example route is: `/api/user/3`.
+
+Routes that match `route_path` (i.e., "/api") are first routed to the Babble
+front controller at `classes/Controller/Public/APIFrontend.php`. This controller
+initializes Babble then routes internally to the actual API controller in the
+`classes/Controller/Public/API/` directory.
+
+## Controllers
 Controllers should be located at `classes/Controller/Public/API/`. They must
 extend either `Controller_API` or `Controller_API_Model` (which extends
-Controller_API and in the Model CRUD section).
+Controller_API and is discussed in the Model CRUD section).
 
 A controller responds to API requests by having controller methods for request
 methods. For example, a GET request will be routed to action_get() and a PUT
