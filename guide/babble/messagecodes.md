@@ -5,8 +5,8 @@ The second part is an internal code. Codes are defined in `messages/babble.php`.
 In the messages file the key is the message code and the value is an array
 containing messages of these types.
 
-- public (required) - The public message printed to user. Generally
-  corresponds to an HTTP message. This message is printed in the response.
+- public (required) - A public message that generally corresponds to an HTTP
+  message. This message is printed in the response.
 - public_hint (optional) - A more detailed public message. This message can
   be printed in the response.
 - private (optional) - An internal message for logging purposes. This _is

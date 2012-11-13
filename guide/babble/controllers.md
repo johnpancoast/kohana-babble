@@ -16,7 +16,7 @@ API_Response::factory().
 
 A controller method must set a response via the API response'
 [set_response()](http://pilot.xxx/guide-api/API_Response#set_response)  method i.e.
-`$this->api_response->set_response()`. The first param is a [message code]() and
+`$this->api_response->set_response()`. The first param is a [message code](messagecodes) and
 the second is either an [API_Resource] object, a string message which will
 create an API_Resource object internally, or NULL. Generally you will pass a
 resource object as the response. These are documented in the
@@ -27,22 +27,4 @@ Babble has the ability to quickly add model CRUD functionality. This has been
 abstracted so you can put whatever ORM / model layer you want behind it. It
 currently ships with support for Kohana ORM. 
 
-To add Kohana ORM CRUD functionality, you simply create a controller class that
-extends Controller_API_Model and sets a $model propery to the model it works
-with. Let's assume we have a model called 'user' and we want to expose CRUD
-operations via an API. We can create a controller like this.
-~~~
-<?php defined('SYSPATH') or die('No direct script access.');
-
-class Controller_Public_API_User extends Controller_API_Model { 
-	protected $model = 'user';
-}
-~~~
-
-That's it! So a few things to note...
-
-- You must extend `Controller_API_Model`.
-- You set the model you're working with using the $model property. The
-  controller class name does _not_ need to match the model name.
-- There's no need to add controller methods since they are defined in
-  [Controller_API_Model]. You can, however, override them when needed.
+View the [Model CRUD](modelcrud) section for more details.
