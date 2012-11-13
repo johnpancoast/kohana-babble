@@ -1,5 +1,14 @@
 # Requests
 
+## Request Methods
+You should have an understanding of [request
+methods](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) and their
+different uses. Knowing the differences between PUT and POST is important.
+
+At present, Babble supports GET, PUT, POST, and DELETE. There are plans for
+HEAD, and OPTIONS in the future. In addition, if the PATCH method gets approved
+we'll add that.
+
 ## Routes
 A Babble route looks like so.
 
