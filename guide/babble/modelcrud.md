@@ -3,10 +3,11 @@ Babble has the ability to quickly add model CRUD functionality. This has been
 abstracted so you can put whatever ORM / model layer you want behind it. It
 currently ships with support for Kohana ORM. 
 
-To add Kohana ORM CRUD functionality, you simply create a controller class that
-extends Controller_API_Model and sets a $model propery to the model it works
-with. Let's assume we have a model called 'user' and we want to expose CRUD
-operations via an API. We can create a controller like this.
+To add Kohana ORM CRUD functionality, you simply enable the ORM module then
+create a controller class that extends Controller_API_Model and sets a $model
+propery to the model it works with. Let's assume we have a model called 'user'
+and we want to expose CRUD operations via an API. We can create a controller
+like this.
 ~~~
 <?php defined('SYSPATH') or die('No direct script access.');
 
