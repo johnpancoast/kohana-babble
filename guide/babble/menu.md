@@ -3,6 +3,6 @@
 - [Technical Overview](techoverview)
 	- [Authentication](authentication)
 	- [Requests](requests)
-	- [Resources](resources)
 	- [Model CRUD](modelcrud)
+	- [Resources](resources)
 	- [Message Codes](messagecodes)
