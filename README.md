@@ -4,9 +4,9 @@ A RESTful API framework module for the Kohana PHP framework aiming to adhere to 
 the tenets of the REST architectural style. This is also a learning experience for me.
 =)
 
-## Version 0.4.0
-This is release 0.4.0 of kohana-babble. See the
-[changelog](https://github.com/shideon/kohana-babble/blob/0.4.0/master/CHANGELOG.md)
+## Version 0.4.1
+This is release 0.4.1 of kohana-babble. See the
+[changelog](https://github.com/shideon/kohana-babble/blob/0.4.1/master/CHANGELOG.md)
 for what this version includes.
 
 To see recent developments of this project, check out the latest /develop
