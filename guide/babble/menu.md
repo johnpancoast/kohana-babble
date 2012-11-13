@@ -6,4 +6,6 @@
 	- [Model CRUD](modelcrud)
 	- [Resources](resources)
 	- [Media Types](mediatypes)
+	- [Versions](versions)
+	- [Logging](logging)
 	- [Message Codes](messagecodes)
