@@ -1,3 +1,7 @@
+## 0.5.0 - 11/13/12
+* Userguide
+* Bug fixes
+
 ## 0.4.0 - 11/10/12
 * HATEOAS support, embedded resources, resource/link/collection classes.
 * Added application/xml.
