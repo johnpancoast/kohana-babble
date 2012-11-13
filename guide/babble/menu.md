@@ -1,3 +1,5 @@
 ## [Babble]()
-- [Using a REST Client](restclient)
-- [Configuration](configuration)
+- [Getting Started](gettingstarted)
+- [Technical Overview](techoverview)
+	- [Controllers](controllers)
+	- [Resources](resources)

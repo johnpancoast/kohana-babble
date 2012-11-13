@@ -9,4 +9,4 @@ links](http://en.wikipedia.org/wiki/HATEOAS) & embedded resources, and the
 abililty to easily add CRUD support on top of ORM models. You can also add
 support for other ORMs fairly easily.
 
-Check out [Using a REST Client](restclient) next.
+Next Section: [Getting Started](gettingstarted)
