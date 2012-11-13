@@ -83,13 +83,13 @@ ALTER TABLE user_tokens
 Going further, you'll want to get an understanding the Auth and ORM modules.
 
 ## Authenticating Requests
-Authentication information should be sent in requests in the `Authorization`
+Authentication information should be sent in requests in the
+[Authorization](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.8)
 header. The value of the header should contain a username and an
 [hmac](http://en.wikipedia.org/wiki/HMAC) separated by a ":". Example
-authorization header:
-`Authorization: username:aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d`. The
-`username` just corresponds to a username in the users table. The `hmac` is
-desribed below.
+authorization header: `Authorization:
+username:aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d`. The `username` just
+corresponds to a username in the users table. The `hmac` is desribed below.
 
 ### HMAC
 This is a sha1 hmac of a `message` and a `private key`. The `private_key` is
