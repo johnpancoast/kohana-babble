@@ -39,6 +39,6 @@ Type](mediatypes#specifying-default-media-types).
 These are things that have prompted more thought and they may be changed..
 
 # What Version Module Got Loaded?
-You can use [Logging](logging) to see what version(s) were loaded.
+You can use [Logging](logging) to see what version(s) were loaded in a request.
 
 Next Section: [Logging](logging)
