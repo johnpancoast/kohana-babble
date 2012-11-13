@@ -47,7 +47,7 @@ class Babble_API_MediaType_Driver_Application_XML extends API_MediaType {
 		}
 
 		// add links
-		$link_keys = array('href', 'templated');
+		$link_keys = array('href', 'title', 'name', 'templated');
 		foreach ($links AS $rel => $link)
 		{
 			// skip self links since they are written in the resource element itself.

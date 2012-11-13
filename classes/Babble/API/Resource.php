@@ -131,7 +131,7 @@ class Babble_API_Resource {
 	 */
 	public function add_link_array($rel, $href, $title = NULL, $name = NULL, $templated = NULL)
 	{
-		$link = new API_Resource_Link($rel, $href, $title, $name, $templated);
+		$link = new API_Resource_Link($href, $title, $name, $templated);
 		$this->add_link($rel, $link);
 	}
 

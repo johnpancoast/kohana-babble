@@ -6,13 +6,7 @@
  */
 class Babble_API_Resource_Link {
 	/**
-	 * @var string $rel Link rel
-	 * @access private
-	 */
-	private $rel = NULL;
-
-	/**
-	 * @var string $rel Link rel
+	 * @var string $href Link href
 	 * @access private
 	 */
 	private $href = NULL;
@@ -37,16 +31,14 @@ class Babble_API_Resource_Link {
 
 	/**
 	 * constructor
-	 * @param string $rel The link relation
 	 * @param string $href The link location
 	 * @param string $title Link title
 	 * @param string $name Link name
 	 * @param bool $templated Is the link templated
 	 */
-	public function __construct($rel, $href, $title = NULL, $name = NULL, $templated = FALSE)
+	public function __construct($href, $title = NULL, $name = NULL, $templated = FALSE)
 	{
 		$this->set_href($href);
-		$this->set_rel($rel);
 		$this->set_title($title);
 		$this->set_name($name);
 		$this->set_templated($templated);
@@ -77,15 +69,6 @@ class Babble_API_Resource_Link {
 			$arr['templated'] = $templated;
 		}
 		return $arr;
-	}
-
-	/**
-	 * set link rel
-	 * @access public
-	 */
-	public function set_rel($rel)
-	{
-		$this->rel = $rel;
 	}
 
 	/**
@@ -122,16 +105,6 @@ class Babble_API_Resource_Link {
 	public function set_templated($templated)
 	{
 		$this->templated = (bool)$templated;
-	}
-
-	/**
-	 * get link rel
-	 * @access public
-	 * @return string
-	 */
-	public function get_rel()
-	{
-		return $this->rel;
 	}
 
 	/**
