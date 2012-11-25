@@ -23,6 +23,7 @@ class Babble_API_MediaType_Driver_Text_Plain extends API_MediaType {
 
 	/**
 	 * @see parent::_get_encoded_resource()
+	 * FIXME - Does not support embedded objects
 	 */
 	protected function _get_encoded_resource(Babble_API_Resource $resource)
 	{
@@ -40,6 +41,7 @@ class Babble_API_MediaType_Driver_Text_Plain extends API_MediaType {
 	 */
 	protected function _get_decoded_resource($data = NULL)
 	{
+		// at present our api doesn't support passing in text/*
 		return new Babble_API_Resource;
 	}
 }
