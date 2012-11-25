@@ -73,7 +73,7 @@ class Controller_Public_API_Test_Index extends Controller {
 		$content = http_build_query($resource_post);
 
 		// setup header
-		$header = array_merge($config['header'], $header);
+		$header = array_merge((array)$config['header'], (array)$header);
 
 		// add auth header.
 		// this header and {@see API_Util::generate_auth_key()} is a good hint into how the API handles authentication.
