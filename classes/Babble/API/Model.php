@@ -18,13 +18,6 @@ abstract class Babble_API_Model {
 	 */
 	protected $model_fields = array();
 
-	/**
-	 * load specific api model driver class
-	 * @param string $model the model the class is working with
-	 * @return API_Model a child instance of this class API_Model
-	 * @access public
-	 * @static
-	 */
 	public static function factory($model)
 	{
 		// if no driver passed pull from config or default to 'ORM'
