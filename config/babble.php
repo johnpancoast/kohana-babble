@@ -95,7 +95,7 @@ return array
 	'testing' => array(
 		'user' => NULL,
 		'pass' => NULL,
-		'header' => NULL,
+		'header' => array(),
 		'curl_debug_file' => NULL,
 	),
 );
