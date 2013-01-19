@@ -73,8 +73,8 @@ return array
 	/**
 	 * [debug]
 	 *
-	 * Log debugging info. This _should not_ be done in production environments as
-	 * your logs will fill up quickly.
+	 * Log debugging info.
+	 * !!WARNING!! This should be thought about. If you're logging all requests, you will have many logs.
 	 */
 	'debug' => FALSE,
 
