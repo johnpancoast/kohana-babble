@@ -166,7 +166,7 @@ class Babble_API_Request {
 	}
 
 	/**
-	 * get resource data
+	 * get request (decoded if we have a media type)
 	 * @access public
 	 * @return mixed
 	 */

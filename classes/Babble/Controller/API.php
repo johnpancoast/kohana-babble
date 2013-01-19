@@ -85,7 +85,7 @@ class Babble_Controller_API extends Controller {
 			// if hashes match then the user has authenticated and we can log them in.
 			$query = http_build_query($koh_request->query());
 			$url = URL::base($koh_request).$koh_request->uri().( ! empty($query) ? '?'.$query : '');
-			$check_key = API_Util::generate_auth_key($user['username'], $user['password'], $url, $_SERVER['REQUEST_METHOD'], (array)$this->api_request->get_request_decoded()->get_data());
+			$check_key = API_Util::generate_auth_key($user['username'], $user['password'], $url, $_SERVER['REQUEST_METHOD'], $this->api_request->kohana_request()->body());
 			if ( ! empty($key) && $key == $check_key)
 			{
 				API_User::factory()->login($user['username']);
@@ -96,7 +96,6 @@ class Babble_Controller_API extends Controller {
 			}
 		}
 	}
-
 
 	/**
 	 * We override Controller::execute() so that we can handle API

@@ -220,13 +220,6 @@ class Babble_API_Util {
 
 		// sort media types, break into data sets, return
 		krsort($sorted);
-		$bt = debug_backtrace();
-		#echo $bt[1]['file'].':'.$bt[1]['line']."<br/>";
-		foreach ($bt as $x)
-		{
-			#echo $x['file'].":".$x['line'];
-		}
-		#echo "<hr/>";
 		foreach ($sorted as $k => $v)
 		{
 			$return[$v] = self::get_media_type($v);
@@ -242,12 +235,11 @@ class Babble_API_Util {
 	 * @param string $private_key Private key
 	 * @param string $url Request url
 	 * @param string $method Request method
-	 * @param array $body The request body as an array
+	 * @param array $body The request body
 	 * @return string A hash
 	 */
-	public static function generate_auth_key($user, $private_key, $url, $method, $post = array()) {
-		ksort($post);
-		$hash_data = $user.'-'.$private_key.'-'.$method.'-'.http_build_query($post);
+	public static function generate_auth_key($user, $private_key, $url, $method, $body = NULL) {
+		$hash_data = $user.'-'.$private_key.'-'.$method.'-'.$body;
 		return hash_hmac('sha1', $hash_data, $private_key);
 	}
 }

@@ -62,22 +62,19 @@ class Controller_Public_API_Test_Index extends Controller {
 		}
 
 		// setup passed content
-		$resource_post = array();
+		$body = NULL;
 		if ($method == 'POST' || $method == 'PUT')
 		{
 			ksort($post);
-			$resource_post = $post;
+			$body = http_build_query($post);
 		}
-		#$header[] = 'Content-type: application/json';
-		#$content = json_encode($resource_post);
-		$content = http_build_query($resource_post);
 
 		// setup header
 		$header = array_merge((array)$config['header'], (array)$header);
 
 		// add auth header.
 		// this header and {@see API_Util::generate_auth_key()} is a good hint into how the API handles authentication.
-		$header[] = 'Authorization: '.$config['user'].':'.API_Util::generate_auth_key($config['user'], $config['pass'], $url, $method, $resource_post);
+		$header[] = 'Authorization: '.$config['user'].':'.API_Util::generate_auth_key($config['user'], $config['pass'], $url, $method, $body);
 
 		// call api
 		$ch = curl_init($url);
@@ -87,7 +84,7 @@ class Controller_Public_API_Test_Index extends Controller {
 		curl_setopt($ch, CURLOPT_VERBOSE, TRUE);
 		if ($method == 'POST' || $method == 'PUT')
 		{
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $content);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 		}
 		if ($config['curl_debug_file'])
 		{
@@ -115,6 +112,11 @@ class Controller_Public_API_Test_Index extends Controller {
 			{
 				$resource_id = $match[3];
 			}
+		}
+
+		if ( ! isset($resource))
+		{
+			throw new Exception('Incorrect usage of test api controller.');
 		}
 
 		// create proper POST and query string data.
