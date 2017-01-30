@@ -1,3 +1,5 @@
+*This was written years ago... I save it for some of the API stuff I was learning at the time but Kohana's old school =P*
+
 kohana-babble
 =============
 A RESTful API framework module for the Kohana PHP framework aiming to adhere to all of
