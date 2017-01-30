@@ -1,4 +1,4 @@
-*This was written years ago... I save it for some of the API stuff I was learning at the time but Kohana's old school =P*
+*This was written years ago... I save it to revisit some of the API stuff I was learning at the time but Kohana's old school =P*
 
 kohana-babble
 =============
